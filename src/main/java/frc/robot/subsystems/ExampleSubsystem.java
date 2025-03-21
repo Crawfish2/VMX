@@ -24,7 +24,9 @@ public class ExampleSubsystem extends SubsystemBase {
   private NetworkTableEntry globalSpeed;
   private NetworkTableEntry globalAngle;
 
-  private ShuffleboardTab tab = Shuffleboard.getTab("VMX");
+  public ShuffleboardTab tab = Shuffleboard.getTab("VMX");
+
+  public double angle = 0.0;
 
   public ExampleSubsystem() {
     motors = new TitanQuad[4];
@@ -40,7 +42,7 @@ public class ExampleSubsystem extends SubsystemBase {
 
     globalAngle = tab.add("Global Angle", 0.0)
         .withWidget(BuiltInWidgets.kNumberSlider)
-        .withProperties(Map.of("min", -180.0, "max", 180.0))
+        .withProperties(Map.of("min", -360.0, "max", 360.0))
         .getEntry();
 
     for (int i = 0; i < 4; i++) {
@@ -60,10 +62,22 @@ public class ExampleSubsystem extends SubsystemBase {
     double speed = globalSpeed.getDouble(0.0);
     double angle = globalAngle.getDouble(0.0);
 
+    this.angle = angle;
+
+    drive(speed, angle);
+
+    for (int i = 0; i < 4; i++) {
+      MotorsEncoderValue[i].setDouble(motors_enc[i].getEncoderDistance());
+      MotorsLimH_Value[i].setDouble(motors[i].getLimitSwitch(i, false));
+      MotorsLimL_Value[i].setDouble(motors[i].getLimitSwitch(i, true));
+    }
+  }
+
+  public void drive(double speed, double angle) {
     double[] motorsSpeed = new double[3];
-    motorsSpeed[0] = speed * Math.sin(Math.toRadians(angle - 60));
-    motorsSpeed[1] = speed * Math.sin(Math.toRadians(angle + 60));
-    motorsSpeed[2] = speed * Math.sin(Math.toRadians(angle - 180));
+    motorsSpeed[0] = Math.sin(Math.toRadians(angle + 180));
+    motorsSpeed[1] = Math.sin(Math.toRadians(angle - 60));
+    motorsSpeed[2] = Math.sin(Math.toRadians(angle + 60));
 
     double x = Arrays.stream(motorsSpeed).map(s -> Math.abs(s)).max().getAsDouble();
 
@@ -74,10 +88,5 @@ public class ExampleSubsystem extends SubsystemBase {
     motors[0].set(motorsSpeed[0]);
     motors[1].set(motorsSpeed[1]);
     motors[2].set(motorsSpeed[2]);
-    for (int i = 0; i < 4; i++) {
-      MotorsEncoderValue[i].setDouble(motors_enc[i].getEncoderDistance());
-      MotorsLimH_Value[i].setDouble(motors[i].getLimitSwitch(i, false));
-      MotorsLimL_Value[i].setDouble(motors[i].getLimitSwitch(i, true));
-    }
   }
 }
