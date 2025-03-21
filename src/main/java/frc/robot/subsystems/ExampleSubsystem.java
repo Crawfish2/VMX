@@ -8,7 +8,17 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 
+import java.util.Map;
+
+import frc.robot.Constants;
+import com.studica.frc.TitanQuad;
+import com.studica.frc.TitanQuadEncode;
+import frc.robot.
 public class ExampleSubsystem extends SubsystemBase {
   /**
    * Creates a new ExampleSubsystem.
