@@ -12,37 +12,52 @@ import frc.robot.Constants;
 import com.studica.frc.TitanQuad;
 import com.studica.frc.TitanQuadEncoder;
 
-
 public class ExampleSubsystem extends SubsystemBase {
-  
-  private TitanQuad motor0;
-  private TitanQuadEncoder motor0_enc;
-  
-  private ShuffleboardTab tab = Shuffleboard.getTab("VMX");
-  
-  private NetworkTableEntry motorPos0 = tab.add("Motor0", 0)
-                                          .withWidget(BuiltInWidgets.kNumberSlider)
-                                          .withProperties(Map.of("min", -1, "max", 1))
-                                          .getEntry(); 
 
-  private NetworkTableEntry M0EncoderValue = tab.add("M0", 0) .getEntry();                                        
-  private NetworkTableEntry M0LimH_Value = tab.add("M0 nLim.H", 0) .getEntry();              
-  private NetworkTableEntry M0LimL_Value = tab.add("M0 nLim.L", 0) .getEntry();              
-  public ExampleSubsystem()
-    {
-    motor0 = new TitanQuad(Constants.TITAN_ID, Constants.MOTOR0);
-    motor0_enc = new TitanQuadEncoder(motor0, Constants.MOTOR0, Constants.WHEEL_DIST_PER_TICK);
-    motorPos0.setDouble(0);
-   
-    motor0_enc.reset();
+  private TitanQuad[] motors;
+  private TitanQuadEncoder[] motors_enc;
+  private NetworkTableEntry[] motorsPos;
+  private NetworkTableEntry[] MotorsEncoderValue;
+  private NetworkTableEntry[] MotorsLimH_Value;
+  private NetworkTableEntry[] MotorsLimL_Value;
+
+  private ShuffleboardTab tab = Shuffleboard.getTab("VMX");
+
+  public ExampleSubsystem() {
+    motors = new TitanQuad[4];
+    motors_enc = new TitanQuadEncoder[4];
+    motorsPos = new NetworkTableEntry[4];
+    MotorsEncoderValue = new NetworkTableEntry[4];
+    MotorsLimH_Value = new NetworkTableEntry[4];
+    MotorsLimL_Value = new NetworkTableEntry[4];
+
+    
+
+    for (int i = 0; i < 4; i++) {
+      motors[i] = new TitanQuad(Constants.TITAN_ID, i);
+      motors_enc[i] = new TitanQuadEncoder(motors[i], i, Constants.WHEEL_DIST_PER_TICK);
+
+      motorsPos[i] = tab.add("Motor" + i, 0)
+          .withWidget(BuiltInWidgets.kNumberSlider)
+          .withProperties(Map.of("min", -1, "max", 1))
+          .getEntry();
+
+      MotorsEncoderValue[i] = tab.add("M" + i, 0).getEntry();
+      MotorsLimH_Value[i] = tab.add("M" + i + " nLim.H", 0).getEntry();
+      MotorsLimL_Value[i] = tab.add("M" + i + " nLim.L", 0).getEntry();
+
+      motorsPos[i].setDouble(0);
+      motors_enc[i].reset();
     }
-  
+  }
+
   @Override
-  public void periodic()
-    {
-     motor0.set(motorPos0.getDouble(0.0));
-     M0EncoderValue.setDouble( motor0_enc.getEncoderDistance());
-     M0LimH_Value.setDouble( motor0.getLimitSwitch(0,false)); //direction nLim.H = false
-     M0LimL_Value.setDouble( motor0.getLimitSwitch(0,true)); //direction nLim.L = true
+  public void periodic() {
+    for (int i = 0; i < 4; i++) {
+      motors[i].set(motorsPos[i].getDouble(0.0));
+      MotorsEncoderValue[i].setDouble(motors_enc[i].getEncoderDistance());
+      MotorsLimH_Value[i].setDouble(motors[i].getLimitSwitch(i, false));
+      MotorsLimL_Value[i].setDouble(motors[i].getLimitSwitch(i, true));
     }
+  }
 }
