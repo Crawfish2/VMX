@@ -29,13 +29,13 @@ public class test1 extends CommandBase{
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        drive.drive(speed, angle);
+        drive.omniDrive.move(speed, angle);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        drive.drive(0.0, 0.0);
+        drive.omniDrive.move(0.0, 0.0);
     }
 
     // Returns true when the command should end.
