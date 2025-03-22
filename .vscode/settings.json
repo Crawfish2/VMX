@@ -16,5 +16,12 @@
   "terminal.integrated.env.windows": {
     "JAVA_HOME": "C:\\Users\\Public\\wpilib\\2020\\jdk",
     "PATH": "C:\\Users\\Public\\wpilib\\2020\\jdk\\bin;${env:PATH}"
+  },
+
+  "files.autoSave": "onFocusChange",
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "modifications",
+  "[java]": {
+    "editor.defaultFormatter": "redhat.java"
   }
 }
