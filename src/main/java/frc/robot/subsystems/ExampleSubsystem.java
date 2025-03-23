@@ -1,13 +1,18 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 
 import java.util.Map;
+import java.util.function.Supplier;
 
+import frc.robot.commands.auto.DriveMotor;
+import frc.robot.commands.driveCommands.Rotate;
 import frc.robot.util.OmniDrive;
 
 public class ExampleSubsystem extends SubsystemBase {
@@ -17,6 +22,8 @@ public class ExampleSubsystem extends SubsystemBase {
   private NetworkTableEntry[] MotorsEncoderValue;
   private NetworkTableEntry[] MotorsLimH_Value;
   private NetworkTableEntry[] MotorsLimL_Value;
+
+  public SendableChooser<Supplier<Command>> chooser;
 
   private NetworkTableEntry globalSpeed;
   private NetworkTableEntry globalAngle;
@@ -30,6 +37,13 @@ public class ExampleSubsystem extends SubsystemBase {
     MotorsEncoderValue = new NetworkTableEntry[4];
     MotorsLimH_Value = new NetworkTableEntry[4];
     MotorsLimL_Value = new NetworkTableEntry[4];
+
+    chooser = new SendableChooser<>();
+    // 角度はchooser.getSelected().get()が呼ばれた時点の値を使う
+    chooser.setDefaultOption("DriveMotor", () -> new DriveMotor(this.angle));
+    chooser.addOption("DriveMotor", () -> new DriveMotor(this.angle));
+    chooser.addOption("Rotate", () -> new Rotate(this.angle).withTimeout(5));
+    tab.add(chooser);
 
     globalSpeed = tab.add("Global Speed", 0.0)
         .withWidget(BuiltInWidgets.kNumberSlider)
