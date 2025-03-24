@@ -1,6 +1,8 @@
 package frc.robot.commands.test1;
 
+// AutoCommandクラスをインポート
 import frc.robot.commands.auto.AutoCommand;
+// Driveクラスをインポート
 import frc.robot.commands.driveCommands.Drive;
 
 public class DriveMotor extends AutoCommand {
@@ -8,12 +10,5 @@ public class DriveMotor extends AutoCommand {
     public DriveMotor(double angle) {
         // Driveクラスを呼び出し、angleを引数に渡す
         super(new Drive(angle).withTimeout(5));
-    }
-
-    // ロボットを直進させるメソッド
-    public void driveStraight(double speed) {
-        // 直進するために角度を0に設定
-        new Drive(0).withTimeout(5).schedule();
-        
     }
 }
