@@ -56,8 +56,8 @@ public class OmniDrive {
     public void move(double speed, double angle) {
         double[] motorsSpeed = new double[3];
         motorsSpeed[0] = Math.sin(Math.toRadians(angle + 180));
-        motorsSpeed[1] = Math.sin(Math.toRadians(angle - 60));
-        motorsSpeed[2] = Math.sin(Math.toRadians(angle + 60));
+        motorsSpeed[1] = Math.sin(Math.toRadians(angle + 60));
+        motorsSpeed[2] = Math.sin(Math.toRadians(angle - 60));
 
         double x = Arrays.stream(motorsSpeed).map(s -> Math.abs(s)).max().getAsDouble();
 
