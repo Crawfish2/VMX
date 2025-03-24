@@ -1,0 +1,26 @@
+・withTimeout()
+    コマンドにタイムアウト(時間で終了)を追加します。
+    タイムアウトを通ると、コマンドは中断され、終了します。
+
+    記入例(Java)
+    //10秒でコマンドを終了する。
+    new command.withTimeout(10);
+
+・wuthInterrupt()
+    コマンドを中断する条件を追加します。
+
+    記入例(Java)
+    new command.withInterrupt(isLimitHit());
+
+・andThen()
+    コマンド終了後に実行されるメソッドを追加します。
+
+    記入例(Java)
+    new command.andThen(() -> System.out.println("Command Finished"));
+
+・beforeStarting()
+    コマンドの開始前に実行されるメソッドを追加します。
+
+    記入例(Java)
+    new command.beforeStarting(() -> System.out.println("Command Starting"));
+

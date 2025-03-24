@@ -1,0 +1,21 @@
+Java の場合のみ、静的ファクトリメソッドが可能になり、
+コマンドグループを宣言する非常に簡単な方法が提供されます。
+
+sequence()
+    この静的メソッドでは、シーケンシャルコマンドグループを
+    使用できます。
+
+    sequence(new DriveReverse(), new StrafeRight())
+
+parallel()
+    この静的メソッドでは、パラレルコマンドグループを
+    使用できます。
+
+    parallel(new ShootObject(), new LineupGoal())
+
+race()
+    この静的メソッドでは、パラレルレースグループを
+    使用できます。
+
+    race(new DriveForward(), new ElevatorUP())
+

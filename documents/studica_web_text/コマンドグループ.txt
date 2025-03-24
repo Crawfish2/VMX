@@ -1,0 +1,68 @@
+・シーケンシャルコマンドグループ
+    よく使われるコマンドグループ。これはコマンドのリストを順番に実行することで機能します。
+    リストの最初のコマンドから、二番目のコマンド...のように続きます。
+
+    サンプルコード(Java)
+    import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
+    public class Example extends SequentialCommandGroup
+    {
+        public Example()
+        {
+            addCommands
+            (
+                //Drive Forward
+                new DriveForward(),
+
+                //Drive Reverse
+                new DriveReverse()
+            );
+        }
+    }
+・パラレルコマンドグループ
+    パラレルコマンドグループはシーケンシャルコマンドグループと同じくコマンドを実行しますが、
+    パラレルコマンドグループはすべてのコマンドが同時に実行されます。
+
+    サンプルコード(Java)
+    import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+
+    public class Example extends ParallelCommandGroup
+    {
+        public Example()
+        {
+            addCommands
+            (
+                //Drive Forward
+                new DriveForward(),
+
+                //Move Arm to Home Position
+                new Arm(Pos.Home)
+            );
+        }
+    }
+・パラレルレースグループ
+    パラレルレースグループはパラレルコマンドグループと似ていますが、競合が発生します。
+    すべてのコマンドは、同時に開始しますが、ひとつのコマンドが終了すると、
+    実行中の他のすべてのコマンドに割り込みが発生します。
+
+    サンプルコード(Java)
+    import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+
+    public class Example extends ParallelRaceGroup
+    {
+        public Example()
+        {
+            addCommands
+            (
+                //Drive Forward
+                new DriveForward(),
+
+                //Move Arm to Home Position
+                new Arm(Pos.Home)
+            );
+        }
+    }
+
+    上記のサンプルはDriveForward()とarm(Pos.Home)が同時に実行されます。
+    *もしDriveForward()またはarm(Pos.Home)の一方が他方より先に完了すると、
+    もう一方は中断され、実行が停止します。
