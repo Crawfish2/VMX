@@ -20,7 +20,7 @@
 
   "files.autoSave": "onFocusChange",
   "editor.formatOnSave": true,
-  "editor.formatOnSaveMode": "modifications",
+  "editor.formatOnSaveMode": "modificationsIfAvailable",
   "[java]": {
     "editor.defaultFormatter": "redhat.java"
   }
