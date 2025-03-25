@@ -1,0 +1,16 @@
+constantsクラスは、Titan Quad Motor Controller の
+モーター定義に必要な 2 つの定数を保持します。
+
+package frc.robot;
+
+public final class Constants
+{
+    /**
+     * モーターコンスタンス
+     */
+     // タイタンクアッドのID
+    public static final int TITAN_ID        = 42;
+    // モーターが接続されたタイタンクアッドのモーターポート(M2)
+    public static final int MOTOR           = 2;
+}
+

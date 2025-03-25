@@ -1,0 +1,23 @@
+・条件付きコマンド(コンディショナルコマンド)
+    条件を満たした際にコマンドを実行する。
+    サンプルコード
+    // ベースパラメータ
+    new ConditionalCommand(trueCommand, falseCommand, boolean condition);
+
+    // 使用例
+    new ConditionalCommand(new DriveForward(), new DriveReverse(), isLimitHit());
+
+・待機コマンド
+    指定した時間、コマンドが待機される。
+
+    // 10秒待機する。
+    new WaitCommand(10);
+
+・コマンドまで待機
+    待機コマンドにブーリアン条件を追加できる。
+
+    // 10秒待機する。
+    new WaitUntilCommand(10);
+
+    // 値が真になるまで待機
+    new WaitUntilCommand(isLimitHit());
