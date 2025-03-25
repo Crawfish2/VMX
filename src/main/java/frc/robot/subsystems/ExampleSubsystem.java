@@ -6,11 +6,13 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 
 import java.util.Map;
 import java.util.function.Supplier;
 
+import frc.robot.commands.LambdaCommand;
 import frc.robot.commands.auto.DriveMotor;
 import frc.robot.commands.driveCommands.Rotate;
 import frc.robot.commands.task.DriveCorners;
@@ -47,6 +49,14 @@ public class ExampleSubsystem extends SubsystemBase {
     chooser.addOption("Rotate", () -> new Rotate(this.angle).withTimeout(5).andThen(new Rotate(0).withTimeout(1)));
     chooser.addOption("DriveCorners", () -> new DriveCorners());
     chooser.addOption("DriveTri", () -> new DriveTri());
+    {
+      Ultrasonic[] sonar = new Ultrasonic[1];
+      NetworkTableEntry sonarValue = tab.add("LambdaTest", 0.0).getEntry();
+
+      chooser.addOption("LambdaTest", () -> new LambdaCommand(() -> {
+        sonar[0] = new Ultrasonic(8, 9);
+      }, () -> sonarValue.setDouble(sonar[0].getRangeMM()), () -> sonar[0].close(), this));
+    }
     tab.add(chooser);
 
     globalSpeed = tab.add("Global Speed", 0.0)
