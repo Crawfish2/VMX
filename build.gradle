@@ -3,6 +3,22 @@ plugins {
     id "com.kauailabs.first.GradleRIO" version "2020.3.2.30"
 }
 
+repositories.all {
+    it.metadataSources {
+        mavenPom()
+        artifact()
+    }
+    it.mavenContent {
+        releasesOnly()
+    }
+}
+
+// 依存関係の更新チェック頻度を設定
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 7, 'days'
+    resolutionStrategy.cacheDynamicVersionsFor 7, 'days'
+}
+
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
 
