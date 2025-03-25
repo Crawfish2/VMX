@@ -14,6 +14,7 @@ import java.util.function.Supplier;
 import frc.robot.commands.auto.DriveMotor;
 import frc.robot.commands.driveCommands.Rotate;
 import frc.robot.commands.task.DriveCorners;
+import frc.robot.commands.test1.DriveTri;
 import frc.robot.util.OmniDrive;
 
 public class ExampleSubsystem extends SubsystemBase {
@@ -45,6 +46,7 @@ public class ExampleSubsystem extends SubsystemBase {
     chooser.addOption("DriveMotor", () -> new DriveMotor(this.angle).andThen(new Rotate(0).withTimeout(1)));
     chooser.addOption("Rotate", () -> new Rotate(this.angle).withTimeout(5).andThen(new Rotate(0).withTimeout(1)));
     chooser.addOption("DriveCorners", () -> new DriveCorners());
+    chooser.addOption("DriveTri", () -> new DriveTri());
     tab.add(chooser);
 
     globalSpeed = tab.add("Global Speed", 0.0)
