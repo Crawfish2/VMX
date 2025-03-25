@@ -29,11 +29,12 @@ public class ExampleSubsystem extends SubsystemBase {
 
   public SendableChooser<Supplier<Command>> chooser;
 
-  private NetworkTableEntry globalSpeed;
-  private NetworkTableEntry globalAngle;
+  private NetworkTableEntry globalSpeedValue;
+  private NetworkTableEntry globalAngleValue;
 
   public ShuffleboardTab tab = Shuffleboard.getTab("VMX");
 
+  public double speed = 0.0;
   public double angle = 0.0;
 
   public ExampleSubsystem() {
@@ -43,10 +44,9 @@ public class ExampleSubsystem extends SubsystemBase {
     MotorsLimL_Value = new NetworkTableEntry[4];
 
     chooser = new SendableChooser<>();
-    // 角度はchooser.getSelected().get()が呼ばれた時点の値を使う
+    // 速度や角度はchooser.getSelected().get()が呼ばれた時点の値を使う
     chooser.setDefaultOption("DriveMotor", () -> new DriveMotor(this.angle).andThen(new Rotate(0).withTimeout(1)));
-    chooser.addOption("DriveMotor", () -> new DriveMotor(this.angle).andThen(new Rotate(0).withTimeout(1)));
-    chooser.addOption("Rotate", () -> new Rotate(this.angle).withTimeout(5).andThen(new Rotate(0).withTimeout(1)));
+    chooser.addOption("Rotate", () -> new Rotate(this.speed).withTimeout(5).andThen(new Rotate(0).withTimeout(1)));
     chooser.addOption("DriveCorners", () -> new DriveCorners());
     chooser.addOption("DriveTri", () -> new DriveTri());
     {
@@ -59,12 +59,12 @@ public class ExampleSubsystem extends SubsystemBase {
     }
     tab.add(chooser);
 
-    globalSpeed = tab.add("Global Speed", 0.0)
+    globalSpeedValue = tab.add("Global Speed", 0.0)
         .withWidget(BuiltInWidgets.kNumberSlider)
         .withProperties(Map.of("min", -1.0, "max", 1.0))
         .getEntry();
 
-    globalAngle = tab.add("Global Angle", 0.0)
+    globalAngleValue = tab.add("Global Angle", 0.0)
         .withWidget(BuiltInWidgets.kNumberSlider)
         .withProperties(Map.of("min", -360.0, "max", 360.0))
         .getEntry();
@@ -78,12 +78,11 @@ public class ExampleSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    double speed = globalSpeed.getDouble(0.0);
-    double angle = globalAngle.getDouble(0.0);
+    double speed = globalSpeedValue.getDouble(0.0);
+    double angle = globalAngleValue.getDouble(0.0);
 
+    this.speed = speed;
     this.angle = angle;
-
-    // omniDrive.move(speed, angle);
 
     for (int i = 0; i < OmniDrive.MOTOR_NUM; i++) {
       MotorsEncoderValue[i].setDouble(omniDrive.getEncoderDistance(i));
