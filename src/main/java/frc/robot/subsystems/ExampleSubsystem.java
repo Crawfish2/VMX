@@ -16,7 +16,7 @@ import frc.robot.commands.LambdaCommand;
 import frc.robot.commands.auto.DriveMotor;
 import frc.robot.commands.driveCommands.Rotate;
 import frc.robot.commands.task.DriveCorners;
-import frc.robot.commands.test1.DriveTri;
+import frc.robot.commands.test.DriveTri;
 import frc.robot.util.OmniDrive;
 
 public class ExampleSubsystem extends SubsystemBase {
@@ -83,7 +83,7 @@ public class ExampleSubsystem extends SubsystemBase {
 
     this.angle = angle;
 
-    omniDrive.move(speed, angle);
+    // omniDrive.move(speed, angle);
 
     for (int i = 0; i < OmniDrive.MOTOR_NUM; i++) {
       MotorsEncoderValue[i].setDouble(omniDrive.getEncoderDistance(i));
