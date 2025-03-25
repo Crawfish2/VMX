@@ -33,6 +33,27 @@ public class OmniDrive {
     }
 
     /**
+     * 指定された角度方向の移動距離を計算します
+     *
+     * @param angle 移動方向の角度（度数法）
+     * @return 指定方向の移動距離
+     */
+    public double getDistance(double angle) {
+        // 各モーターのエンコーダー距離を取得
+        double d0 = getEncoderDistance(0);
+        double d1 = getEncoderDistance(1);
+        double d2 = getEncoderDistance(2);
+
+        // 各ホイールの寄与を計算（move()メソッドの逆の計算）
+        double contribution0 = d0 * Math.sin(Math.toRadians(angle + 180));
+        double contribution1 = d1 * Math.sin(Math.toRadians(angle + 60));
+        double contribution2 = d2 * Math.sin(Math.toRadians(angle - 60));
+
+        // 3つの寄与の平均を取ることで、指定方向の距離を得る
+        return (contribution0 + contribution1 + contribution2) / 3.0;
+    }
+
+    /**
      * Gets limit switch status for specified motor
      *
      * @param motor     Motor number
@@ -78,10 +99,17 @@ public class OmniDrive {
      */
     public void rotate(double speed) {
         double[] motorsSpeed = new double[MOTOR_NUM];
-        motorsSpeed[0] = speed;
-        motorsSpeed[1] = speed;
-        motorsSpeed[2] = speed;
+        Arrays.fill(motorsSpeed, speed);
 
+        setMotorsSpeed(motorsSpeed);
+    }
+
+    /**
+     * Stops the robot's wheels
+     */
+    public void stop() {
+        double[] motorsSpeed = new double[MOTOR_NUM];
+        Arrays.fill(motorsSpeed, 0.0);
         setMotorsSpeed(motorsSpeed);
     }
 }

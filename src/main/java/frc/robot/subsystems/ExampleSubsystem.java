@@ -15,6 +15,7 @@ import java.util.function.Supplier;
 import frc.robot.commands.LambdaCommand;
 import frc.robot.commands.auto.DriveMotor;
 import frc.robot.commands.driveCommands.Rotate;
+import frc.robot.commands.driveCommands.Stop;
 import frc.robot.commands.task.DriveCorners;
 import frc.robot.commands.test.DriveTri;
 import frc.robot.util.OmniDrive;
@@ -45,8 +46,8 @@ public class ExampleSubsystem extends SubsystemBase {
 
     chooser = new SendableChooser<>();
     // 速度や角度はchooser.getSelected().get()が呼ばれた時点の値を使う
-    chooser.setDefaultOption("DriveMotor", () -> new DriveMotor(this.angle).andThen(new Rotate(0).withTimeout(1)));
-    chooser.addOption("Rotate", () -> new Rotate(this.speed).withTimeout(5).andThen(new Rotate(0).withTimeout(1)));
+    chooser.setDefaultOption("DriveMotor", () -> new DriveMotor(this.angle).andThen(new Stop(1)));
+    chooser.addOption("Rotate", () -> new Rotate(this.speed).withTimeout(5).andThen(new Stop(1)));
     chooser.addOption("DriveCorners", () -> new DriveCorners());
     chooser.addOption("DriveTri", () -> new DriveTri());
     {
