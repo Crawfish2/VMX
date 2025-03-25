@@ -4,8 +4,8 @@ import frc.robot.commands.auto.AutoCommand;
 import frc.robot.commands.driveCommands.Drive;
 import frc.robot.commands.driveCommands.Rotate;
 
-public class DriveTrai extends AutoCommand {
-    public DriveTrai() {
+public class DriveTri extends AutoCommand {
+    public DriveTri() {
         super(new Drive(90).withTimeout(2.5),
                 new Drive(0).withTimeout(10),
                 new Drive(-90).withTimeout(5),
