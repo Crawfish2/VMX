@@ -55,7 +55,7 @@ public class ExampleSubsystem extends SubsystemBase {
         .withProperties(Map.of("min", -360.0, "max", 360.0))
         .getEntry();
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < OmniDrive.MOTOR_NUM; i++) {
       MotorsEncoderValue[i] = tab.add("M" + i, 0).getEntry();
       MotorsLimH_Value[i] = tab.add("M" + i + " nLim.H", 0).getEntry();
       MotorsLimL_Value[i] = tab.add("M" + i + " nLim.L", 0).getEntry();
@@ -71,7 +71,7 @@ public class ExampleSubsystem extends SubsystemBase {
 
     omniDrive.move(speed, angle);
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < OmniDrive.MOTOR_NUM; i++) {
       MotorsEncoderValue[i].setDouble(omniDrive.getEncoderDistance(i));
       MotorsLimH_Value[i].setDouble(omniDrive.getLimitSwitch(i, false));
       MotorsLimL_Value[i].setDouble(omniDrive.getLimitSwitch(i, true));

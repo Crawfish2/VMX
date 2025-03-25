@@ -11,10 +11,12 @@ import frc.robot.Constants;
 public class OmniDrive {
     private TitanQuad[] motors;
     private TitanQuadEncoder[] motors_enc;
+    public static final int MOTOR_NUM = 3;
 
     public OmniDrive() {
-        motors = IntStream.range(0, 3).mapToObj(i -> new TitanQuad(Constants.TITAN_ID, i)).toArray(TitanQuad[]::new);
-        motors_enc = IntStream.range(0, 3)
+        motors = IntStream.range(0, MOTOR_NUM).mapToObj(i -> new TitanQuad(Constants.TITAN_ID, i))
+                .toArray(TitanQuad[]::new);
+        motors_enc = IntStream.range(0, MOTOR_NUM)
                 .mapToObj(i -> new TitanQuadEncoder(motors[i], i, Constants.WHEEL_DIST_PER_TICK))
                 .toArray(TitanQuadEncoder[]::new);
         Arrays.stream(motors_enc).forEach(motor_enc -> motor_enc.reset());
@@ -42,7 +44,7 @@ public class OmniDrive {
     }
 
     private void setMotorsSpeed(double[] speeds) {
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < MOTOR_NUM; i++) {
             motors[i].set(speeds[i]);
         }
     }
@@ -54,7 +56,7 @@ public class OmniDrive {
      * @param angle The angle in degrees (0 degrees is forward)
      */
     public void move(double speed, double angle) {
-        double[] motorsSpeed = new double[3];
+        double[] motorsSpeed = new double[MOTOR_NUM];
         motorsSpeed[0] = Math.sin(Math.toRadians(angle + 180));
         motorsSpeed[1] = Math.sin(Math.toRadians(angle + 60));
         motorsSpeed[2] = Math.sin(Math.toRadians(angle - 60));
@@ -75,7 +77,7 @@ public class OmniDrive {
      * @param speed The speed to rotate (range -1.0 to 1.0)
      */
     public void rotate(double speed) {
-        double[] motorsSpeed = new double[3];
+        double[] motorsSpeed = new double[MOTOR_NUM];
         motorsSpeed[0] = speed;
         motorsSpeed[1] = speed;
         motorsSpeed[2] = speed;
