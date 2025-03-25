@@ -13,6 +13,7 @@ import java.util.function.Supplier;
 
 import frc.robot.commands.auto.DriveMotor;
 import frc.robot.commands.driveCommands.Rotate;
+import frc.robot.commands.task.DriveCorners;
 import frc.robot.util.OmniDrive;
 
 public class ExampleSubsystem extends SubsystemBase {
@@ -40,9 +41,10 @@ public class ExampleSubsystem extends SubsystemBase {
 
     chooser = new SendableChooser<>();
     // 角度はchooser.getSelected().get()が呼ばれた時点の値を使う
-    chooser.setDefaultOption("DriveMotor", () -> new DriveMotor(this.angle));
-    chooser.addOption("DriveMotor", () -> new DriveMotor(this.angle));
-    chooser.addOption("Rotate", () -> new Rotate(this.angle).withTimeout(5));
+    chooser.setDefaultOption("DriveMotor", () -> new DriveMotor(this.angle).andThen(new Rotate(0).withTimeout(1)));
+    chooser.addOption("DriveMotor", () -> new DriveMotor(this.angle).andThen(new Rotate(0).withTimeout(1)));
+    chooser.addOption("Rotate", () -> new Rotate(this.angle).withTimeout(5).andThen(new Rotate(0).withTimeout(1)));
+    chooser.addOption("DriveCorners", () -> new DriveCorners());
     tab.add(chooser);
 
     globalSpeed = tab.add("Global Speed", 0.0)
