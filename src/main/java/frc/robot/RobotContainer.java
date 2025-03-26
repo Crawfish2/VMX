@@ -9,7 +9,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.subsystems.DepthCamera;
+// import frc.robot.subsystems.DepthCamera;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public static final ExampleSubsystem drive = new ExampleSubsystem();
-  public static final DepthCamera camera = new DepthCamera();
+  // public static final DepthCamera camera = new DepthCamera();
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
