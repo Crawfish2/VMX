@@ -1,21 +1,22 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 
 import java.util.Map;
 import java.util.function.Supplier;
 
-import frc.robot.commands.LambdaCommand;
 import frc.robot.commands.auto.DriveMotor;
+import frc.robot.commands.driveCommands.Drive;
 import frc.robot.commands.driveCommands.Rotate;
 import frc.robot.commands.driveCommands.Stop;
+import frc.robot.commands.sensors.SonicSensor;
 import frc.robot.commands.task.DriveCorners;
 import frc.robot.commands.test.DriveTri;
 import frc.robot.util.OmniDrive;
@@ -33,6 +34,8 @@ public class ExampleSubsystem extends SubsystemBase {
   private NetworkTableEntry globalSpeedValue;
   private NetworkTableEntry globalAngleValue;
 
+  private NetworkTableEntry distanceValue;
+
   public ShuffleboardTab tab = Shuffleboard.getTab("VMX");
 
   public double speed = 0.0;
@@ -44,20 +47,16 @@ public class ExampleSubsystem extends SubsystemBase {
     MotorsLimH_Value = new NetworkTableEntry[4];
     MotorsLimL_Value = new NetworkTableEntry[4];
 
+    distanceValue = tab.add("Distance", 0.0).getEntry();
+
     chooser = new SendableChooser<>();
     // 速度や角度はchooser.getSelected().get()が呼ばれた時点の値を使う
     chooser.setDefaultOption("DriveMotor", () -> new DriveMotor(this.angle).andThen(new Stop(1)));
     chooser.addOption("Rotate", () -> new Rotate(this.speed).withTimeout(5).andThen(new Stop(1)));
     chooser.addOption("DriveCorners", () -> new DriveCorners());
     chooser.addOption("DriveTri", () -> new DriveTri());
-    {
-      Ultrasonic[] sonar = new Ultrasonic[1];
-      NetworkTableEntry sonarValue = tab.add("LambdaTest", 0.0).getEntry();
-
-      chooser.addOption("LambdaTest", () -> new LambdaCommand(() -> {
-        sonar[0] = new Ultrasonic(8, 9);
-      }, () -> sonarValue.setDouble(sonar[0].getRangeMM()), () -> sonar[0].close(), this));
-    }
+    chooser.addOption("SonicSensor",
+        () -> new ParallelRaceGroup(new SonicSensor(this.angle), new Drive(this.angle)));
     tab.add(chooser);
 
     globalSpeedValue = tab.add("Global Speed", 0.0)
@@ -84,6 +83,8 @@ public class ExampleSubsystem extends SubsystemBase {
 
     this.speed = speed;
     this.angle = angle;
+
+    distanceValue.setDouble(omniDrive.getDistance(angle));
 
     for (int i = 0; i < OmniDrive.MOTOR_NUM; i++) {
       MotorsEncoderValue[i].setDouble(omniDrive.getEncoderDistance(i));
