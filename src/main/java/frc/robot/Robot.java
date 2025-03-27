@@ -96,7 +96,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    RobotContainer.drive.omniDrive.move(RobotContainer.drive.speed, RobotContainer.drive.angle);
   }
 
   @Override
