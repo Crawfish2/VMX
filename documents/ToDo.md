@@ -7,7 +7,7 @@
 ## 今週やること
 
 # 書き出し
-- [ ] 省略コマンドの作成
+- [x] 省略コマンドの作成 => [FunctionalCommand](https://docs.wpilib.org/en/2020/docs/software/commandbased/convenience-features.html#functionalcommand)を使用する
 - [ ] ログの方法
 - [ ] 全方位距離センサー
     - [ ] どんな形であれ動作させる
