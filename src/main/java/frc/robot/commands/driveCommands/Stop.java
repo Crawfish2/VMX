@@ -14,11 +14,6 @@ public class Stop extends CommandBase {
         addRequirements(drive);
     }
 
-    public Stop(double timeoutSecond) {
-        this();
-        withTimeout(timeoutSecond);
-    }
-
     // 初期化
     @Override
     public void initialize() {
