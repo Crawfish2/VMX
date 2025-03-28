@@ -14,7 +14,7 @@ public class DistanceSensor extends AutoCommand {
                 new Drive(0).withTimeout(10),
                 new Rotate(0).withTimeout(1)
         );
-        new ConditionalCommand(new Drive(0).withTimeout(0.1), new Drive(0), );
+        // new ConditionalCommand(new Drive(0).withTimeout(0.1), new Drive(0), );
     }
     
 }
