@@ -20,48 +20,48 @@ import frc.robot.commands.task.DriveCorners;
 import frc.robot.commands.test.DriveTri;
 
 public class CommandTester {
-    private final SendableChooser<Supplier<Command>> chooser;
+  private final SendableChooser<Supplier<Command>> chooser;
 
-    private final NetworkTableEntry speed;
-    private final NetworkTableEntry angle;
-    private final NetworkTableEntry distance;
+  private final NetworkTableEntry speed;
+  private final NetworkTableEntry angle;
+  private final NetworkTableEntry distance;
 
-    public CommandTester() {
-        final ShuffleboardTab tab = Shuffleboard.getTab("CommandTester");
+  public CommandTester() {
+    final ShuffleboardTab tab = Shuffleboard.getTab("CommandTester");
 
-        speed = tab.add("Speed", 0.0)
-                .withWidget(BuiltInWidgets.kNumberSlider)
-                .withProperties(Map.of("min", -1.0, "max", 1.0))
-                .getEntry();
+    speed = tab.add("Speed", 0.0)
+        .withWidget(BuiltInWidgets.kNumberSlider)
+        .withProperties(Map.of("min", -1.0, "max", 1.0))
+        .getEntry();
 
-        angle = tab.add("Angle", 0.0)
-                .withWidget(BuiltInWidgets.kNumberSlider)
-                .withProperties(Map.of("min", -360.0, "max", 360.0))
-                .getEntry();
+    angle = tab.add("Angle", 0.0)
+        .withWidget(BuiltInWidgets.kNumberSlider)
+        .withProperties(Map.of("min", -360.0, "max", 360.0))
+        .getEntry();
 
-        distance = tab.add("Distance", 0.0)
-                .withWidget(BuiltInWidgets.kNumberSlider)
-                .withProperties(Map.of("min", 0.0, "max", 50.0))
-                .getEntry();
+    distance = tab.add("Distance", 0.0)
+        .withWidget(BuiltInWidgets.kNumberSlider)
+        .withProperties(Map.of("min", 0.0, "max", 50.0))
+        .getEntry();
 
-        chooser = new SendableChooser<>();
-        // 速度や角度はchooser.getSelected().get()が呼ばれた時点の値を使う
-        chooser.setDefaultOption("DriveMotor",
-                () -> new SequentialCommandGroup(new DriveMotor(speed.getDouble(0.0)),
-                        new Stop().withTimeout(1)));
-        chooser.addOption("Rotate", () -> new Rotate(speed.getDouble(0.0))
-                .withTimeout(5)
-                .andThen(new Stop().withTimeout(1)));
-        chooser.addOption("DriveCorners", () -> new DriveCorners());
-        chooser.addOption("DriveTri", () -> new DriveTri());
-        chooser.addOption("SonicSensor",
-                () -> new ParallelRaceGroup(
-                        new SonicSensor(distance.getDouble(0.0)),
-                        new Drive(angle.getDouble(0.0))));
-        tab.add(chooser);
-    }
+    chooser = new SendableChooser<>();
+    // 速度や角度はchooser.getSelected().get()が呼ばれた時点の値を使う
+    chooser.setDefaultOption("DriveMotor",
+        () -> new SequentialCommandGroup(new DriveMotor(speed.getDouble(0.0)),
+            new Stop().withTimeout(1)));
+    chooser.addOption("Rotate", () -> new Rotate(speed.getDouble(0.0))
+        .withTimeout(5)
+        .andThen(new Stop().withTimeout(1)));
+    chooser.addOption("DriveCorners", () -> new DriveCorners());
+    chooser.addOption("DriveTri", () -> new DriveTri());
+    chooser.addOption("SonicSensor",
+        () -> new ParallelRaceGroup(
+            new SonicSensor(distance.getDouble(0.0)),
+            new Drive(angle.getDouble(0.0))));
+    tab.add(chooser);
+  }
 
-    public Command getSelectedCommand() {
-        return chooser.getSelected().get();
-    }
+  public Command getSelectedCommand() {
+    return chooser.getSelected().get();
+  }
 }

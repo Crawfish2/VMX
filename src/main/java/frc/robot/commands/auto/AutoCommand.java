@@ -11,20 +11,20 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
  * routines
  */
 public abstract class AutoCommand extends SequentialCommandGroup {
-    /**
-     * Base Constructor
-     */
-    public AutoCommand() {
-        super();
-    }
+  /**
+   * Base Constructor
+   */
+  public AutoCommand() {
+    super();
+  }
 
-    /**
-     * Overloaded Constructor to create inline commands
-     * <p>
-     * 
-     * @param cmd The cmd to be executed
-     */
-    public AutoCommand(Command... cmd) {
-        super(cmd);
-    }
+  /**
+   * Overloaded Constructor to create inline commands
+   * <p>
+   *
+   * @param cmd The cmd to be executed
+   */
+  public AutoCommand(Command... cmd) {
+    super(cmd);
+  }
 }
