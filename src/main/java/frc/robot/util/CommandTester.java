@@ -24,6 +24,7 @@ public class CommandTester {
 
     private final NetworkTableEntry speed;
     private final NetworkTableEntry angle;
+    private final NetworkTableEntry distance;
 
     public CommandTester() {
         final ShuffleboardTab tab = Shuffleboard.getTab("CommandTester");
@@ -38,6 +39,11 @@ public class CommandTester {
                 .withProperties(Map.of("min", -360.0, "max", 360.0))
                 .getEntry();
 
+        distance = tab.add("Distance", 0.0)
+                .withWidget(BuiltInWidgets.kNumberSlider)
+                .withProperties(Map.of("min", 0.0, "max", 50.0))
+                .getEntry();
+
         chooser = new SendableChooser<>();
         // 速度や角度はchooser.getSelected().get()が呼ばれた時点の値を使う
         chooser.setDefaultOption("DriveMotor",
@@ -50,9 +56,8 @@ public class CommandTester {
         chooser.addOption("DriveTri", () -> new DriveTri());
         chooser.addOption("SonicSensor",
                 () -> new ParallelRaceGroup(
-                        new SonicSensor(angle.getDouble(0.0)),
+                        new SonicSensor(distance.getDouble(0.0)),
                         new Drive(angle.getDouble(0.0))));
-
         tab.add(chooser);
     }
 
