@@ -8,32 +8,32 @@ import frc.robot.subsystems.ExampleSubsystem;
  * 停止するコマンド
  */
 public class Stop extends CommandBase {
-    private static final ExampleSubsystem drive = RobotContainer.drive;
+  private static final ExampleSubsystem drive = RobotContainer.drive;
 
-    public Stop() {
-        addRequirements(drive);
-    }
+  public Stop() {
+    addRequirements(drive);
+  }
 
-    // 初期化
-    @Override
-    public void initialize() {
-        drive.omniDrive.stop();
-    }
+  // 初期化
+  @Override
+  public void initialize() {
+    drive.omniDrive.stop();
+  }
 
-    // コマンドが実行されるたびに呼び出される。
-    @Override
-    public void execute() {
-        drive.omniDrive.stop();
-    }
+  // コマンドが実行されるたびに呼び出される。
+  @Override
+  public void execute() {
+    drive.omniDrive.stop();
+  }
 
-    @Override
-    public void end(boolean interrupted) {
-        drive.omniDrive.stop();
-    }
+  @Override
+  public void end(boolean interrupted) {
+    drive.omniDrive.stop();
+  }
 
-    // コマンドが終了するべきときにtrueを返す。
-    @Override
-    public boolean isFinished() {
-        return false;
-    }
+  // コマンドが終了するべきときにtrueを返す。
+  @Override
+  public boolean isFinished() {
+    return false;
+  }
 }

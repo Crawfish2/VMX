@@ -23,5 +23,7 @@
   "editor.formatOnSaveMode": "modificationsIfAvailable",
   "[java]": {
     "editor.defaultFormatter": "redhat.java"
-  }
+  },
+  "java.format.settings.url": "formatter/eclipse-java-google-style.xml",
+  "java.format.settings.profile": "GoogleStyle",
 }
