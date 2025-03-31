@@ -6,6 +6,8 @@ import frc.robot.subsystems.ExampleSubsystem;
 
 /**
  * 回転するコマンド
+ * -1で右回転、1で左回転する。
+ * 角度は度数法で指定する。
  */
 public class Rotate extends CommandBase {
   private static final ExampleSubsystem drive = RobotContainer.drive;

@@ -6,6 +6,8 @@ import frc.robot.subsystems.ExampleSubsystem;
 
 /**
  * 直進するコマンド
+ * 0で前進、90で右、-90で左に移動する。
+ * 角度は度数法で指定する。
  */
 public class Drive extends CommandBase {
   private static final ExampleSubsystem drive = RobotContainer.drive;

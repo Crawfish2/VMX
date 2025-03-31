@@ -9,9 +9,8 @@ import frc.robot.commands.driveCommands.Stop;;
 public class DriveCir extends AutoCommand {
     public DriveCir() {
         super(
-                new Rotate(0.3).withTimeout(1.5),
                 new ParallelCommandGroup(
-                        new Drive(0).withTimeout(2),
+                        new Drive(90).withTimeout(2),
                         new Rotate(-0.3).withTimeout(2)),
                 new Stop().withTimeout(0.1));
     }
