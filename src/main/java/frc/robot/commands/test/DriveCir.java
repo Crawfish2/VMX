@@ -7,11 +7,11 @@ import frc.robot.commands.driveCommands.Rotate;
 import frc.robot.commands.driveCommands.Stop;;
 
 public class DriveCir extends AutoCommand {
-    public DriveCir() {
-        super(
-                new ParallelCommandGroup(
-                        new Drive(90).withTimeout(2),
-                        new Rotate(-0.3).withTimeout(2)),
-                new Stop().withTimeout(0.1));
-    }
+  public DriveCir() {
+    super(
+        new ParallelCommandGroup(
+            new Drive(90).withTimeout(2),
+            new Rotate(-0.3).withTimeout(2)),
+        new Stop().withTimeout(0.1));
+  }
 }
