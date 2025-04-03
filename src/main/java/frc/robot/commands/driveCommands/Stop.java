@@ -17,18 +17,18 @@ public class Stop extends CommandBase {
   // 初期化
   @Override
   public void initialize() {
-    drive.omniDrive.stop();
+    drive.omniDrive.stopMotor();
   }
 
   // コマンドが実行されるたびに呼び出される。
   @Override
   public void execute() {
-    drive.omniDrive.stop();
+    drive.omniDrive.stopMotor();
   }
 
   @Override
   public void end(boolean interrupted) {
-    drive.omniDrive.stop();
+    drive.omniDrive.stopMotor();
   }
 
   // コマンドが終了するべきときにtrueを返す。

@@ -5,10 +5,10 @@ import java.util.stream.IntStream;
 
 import com.studica.frc.TitanQuad;
 import com.studica.frc.TitanQuadEncoder;
-
+import edu.wpi.first.wpilibj.drive.RobotDriveBase;
 import frc.robot.Constants;
 
-public class OmniDrive {
+public class OmniDrive extends RobotDriveBase {
   private TitanQuad[] motors;
   private TitanQuadEncoder[] motors_enc;
   public static final int MOTOR_NUM = 3;
@@ -68,6 +68,7 @@ public class OmniDrive {
     for (int i = 0; i < MOTOR_NUM; i++) {
       motors[i].set(speeds[i]);
     }
+    feed();
   }
 
   /**
@@ -104,12 +105,19 @@ public class OmniDrive {
     setMotorsSpeed(motorsSpeed);
   }
 
+  @Override
+  public String getDescription() {
+    return "KilloughDrive";
+  }
+
   /**
    * Stops the robot's wheels
    */
-  public void stop() {
-    double[] motorsSpeed = new double[MOTOR_NUM];
-    Arrays.fill(motorsSpeed, 0.0);
-    setMotorsSpeed(motorsSpeed);
+  @Override
+  public void stopMotor() {
+    for (int i = 0; i < MOTOR_NUM; i++) {
+      motors[i].stopMotor();
+    }
+    feed();
   }
 }
