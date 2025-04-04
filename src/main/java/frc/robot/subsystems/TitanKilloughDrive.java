@@ -29,8 +29,8 @@ public class TitanKilloughDrive extends SubsystemBase {
 
   private final KilloughDrive drive;
 
-  private double deadband = 0.1;
-  private double maxOutput = 0.3;
+  private double deadband = 0.05;
+  private double maxOutput = 0.5;
 
   public TitanKilloughDrive() {
     motorLeft = new TitanQuad(TITAN_ID, WHEEL_LEFT);
@@ -50,12 +50,12 @@ public class TitanKilloughDrive extends SubsystemBase {
     Shuffleboard.getTab("Titan").add(this);
   }
 
-  private void setDeadband(double deadband) {
+  public void setDeadband(double deadband) {
     drive.setDeadband(deadband);
     this.deadband = deadband;
   }
 
-  private void setMaxOutput(double maxOutput) {
+  public void setMaxOutput(double maxOutput) {
     drive.setMaxOutput(maxOutput);
     this.maxOutput = maxOutput;
   }
