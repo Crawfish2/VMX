@@ -16,4 +16,6 @@ public final class Constants {
   // Distance per tick
   public static final double WHEEL_DIST_PER_TICK = (Math.PI * 2 * wheelRadius) / wheelPulseRatio;
 
+  public static final int UltrasonicPing = 8;
+  public static final int UltrasonicEcho = 9;
 }
