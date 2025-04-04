@@ -8,11 +8,13 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.XboxController;
 // import frc.robot.subsystems.DepthCamera;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.util.CommandTester;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -26,12 +28,18 @@ public class RobotContainer {
   private final CommandTester tester = new CommandTester();
   // public static final DepthCamera camera = new DepthCamera();
 
+  private final PS4Controller controller = new PS4Controller(0);
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+    // Set default commands
+    drive.setDefaultCommand(
+        new RunCommand(() -> drive.omniDrive.move(0.3, Math.atan2(-controller.getLeftX(),
+            -controller.getLeftY())), drive));
   }
 
   /**
