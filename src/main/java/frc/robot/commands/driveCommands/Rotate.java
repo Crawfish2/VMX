@@ -2,7 +2,7 @@ package frc.robot.commands.driveCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.TitanKilloughDrive;
 
 /**
  * 回転するコマンド
@@ -10,7 +10,7 @@ import frc.robot.subsystems.ExampleSubsystem;
  * 角度は度数法で指定する。
  */
 public class Rotate extends CommandBase {
-  private static final ExampleSubsystem drive = RobotContainer.drive;
+  private static final TitanKilloughDrive drive = RobotContainer.drive;
   private double speed;
 
   public Rotate(double speed) {
@@ -26,13 +26,13 @@ public class Rotate extends CommandBase {
   // コマンドが実行されるたびに呼び出される。
   @Override
   public void execute() {
-    drive.omniDrive.rotate(speed);
+    drive.driveCartesian(0, 0, speed);
   }
 
   // コマンドが終了したか割り込まれたときに呼び出される。
   @Override
   public void end(boolean interrupted) {
-    drive.omniDrive.move(0.0, 0.0);
+    drive.stopMotor();
   }
 
   // コマンドが終了するべきときにtrueを返す。

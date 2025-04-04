@@ -2,7 +2,7 @@ package frc.robot.commands.driveCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.TitanKilloughDrive;
 
 /**
  * 直進するコマンド
@@ -10,7 +10,7 @@ import frc.robot.subsystems.ExampleSubsystem;
  * 角度は度数法で指定する。
  */
 public class Drive extends CommandBase {
-  private static final ExampleSubsystem drive = RobotContainer.drive;
+  private static final TitanKilloughDrive drive = RobotContainer.drive;
   private double speed;
   private double angle;
 
@@ -37,14 +37,14 @@ public class Drive extends CommandBase {
   // コマンドが実行されるたびに呼び出される。
   @Override
   public void execute() {
-    drive.omniDrive.move(speed, angle);
+    drive.drivePolar(speed, angle, 0);
   }
 
   // Called once the command ends or is interrupted.
   // コマンドが終了したか割り込まれたときに呼び出される。
   @Override
   public void end(boolean interrupted) {
-    drive.omniDrive.move(0.0, 0.0);
+    drive.stopMotor();
   }
 
   // Returns true when the command should end.

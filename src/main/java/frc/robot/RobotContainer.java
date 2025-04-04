@@ -10,8 +10,10 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 // import frc.robot.subsystems.DepthCamera;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.TitanKilloughDrive;
 import frc.robot.util.CommandTester;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -24,7 +26,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  public static final ExampleSubsystem drive = new ExampleSubsystem();
+  public static final TitanKilloughDrive drive = new TitanKilloughDrive();
   private final CommandTester tester = new CommandTester();
   // public static final DepthCamera camera = new DepthCamera();
 
@@ -37,9 +39,18 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
     // Set default commands
+    final ShuffleboardTab tab = Shuffleboard.getTab("test");
+    final var X = tab.add("X", 0).getEntry();
+    final var Y = tab.add("Y", 0).getEntry();
+
     drive.setDefaultCommand(
-        new RunCommand(() -> drive.omniDrive.move(0.3, Math.atan2(-controller.getLeftX(),
-            -controller.getLeftY())), drive));
+        new RunCommand(
+            () -> {
+              X.setDouble(controller.getLeftX());
+              Y.setDouble(controller.getLeftY());
+              drive.driveCartesian(controller.getLeftX(), controller.getLeftY(),
+                  controller.getRightX());
+            }, drive));
   }
 
   /**
