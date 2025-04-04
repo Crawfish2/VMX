@@ -32,6 +32,12 @@ public class OmniDrive extends RobotDriveBase {
     return motors_enc[motor].getEncoderDistance();
   }
 
+  public void resetEncodersDistance() {
+    for (int i = 0; i < MOTOR_NUM; i++) {
+      motors_enc[i].reset();
+    }
+  }
+
   /**
    * 指定された角度方向の移動距離を計算します
    *

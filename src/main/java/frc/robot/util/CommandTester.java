@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.auto.DriveMotor;
 import frc.robot.commands.driveCommands.Drive;
+import frc.robot.commands.driveCommands.DriveDistance;
 import frc.robot.commands.driveCommands.Rotate;
 import frc.robot.commands.driveCommands.Stop;
 import frc.robot.commands.sensors.SonicSensor;
@@ -58,6 +59,8 @@ public class CommandTester {
         () -> new ParallelRaceGroup(
             new SonicSensor(distance.getDouble(0.0)),
             new Drive(angle.getDouble(0.0))));
+    chooser.addOption("DriveDistance",
+        () -> new DriveDistance(angle.getDouble(0), distance.getDouble(0)));
     tab.add(chooser);
   }
 
