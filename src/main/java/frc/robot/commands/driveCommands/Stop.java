@@ -1,16 +1,16 @@
 package frc.robot.commands.driveCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.TitanKilloughDrive;
 
 /**
  * 停止するコマンド
  */
 public class Stop extends CommandBase {
-  private static final TitanKilloughDrive drive = RobotContainer.drive;
+  private final TitanKilloughDrive drive;
 
-  public Stop() {
+  public Stop(TitanKilloughDrive drive) {
+    this.drive = drive;
     addRequirements(drive);
   }
 

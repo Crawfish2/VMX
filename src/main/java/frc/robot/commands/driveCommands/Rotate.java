@@ -1,7 +1,6 @@
 package frc.robot.commands.driveCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.TitanKilloughDrive;
 
 /**
@@ -10,12 +9,13 @@ import frc.robot.subsystems.TitanKilloughDrive;
  * 角度は度数法で指定する。
  */
 public class Rotate extends CommandBase {
-  private static final TitanKilloughDrive drive = RobotContainer.drive;
+  private final TitanKilloughDrive drive;
   private double speed;
 
-  public Rotate(double speed) {
+  public Rotate(double speed, TitanKilloughDrive drive) {
     // ドライブにサブシステムを追加する。
     this.speed = speed;
+    this.drive = drive;
     addRequirements(drive);
   }
 

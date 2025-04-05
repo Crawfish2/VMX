@@ -19,6 +19,8 @@ import frc.robot.commands.driveCommands.Stop;
 // import frc.robot.commands.sensors.SonicSensorDeadline;
 import frc.robot.commands.task.DriveCorners;
 import frc.robot.commands.test.DriveTri;
+import frc.robot.subsystems.TitanKilloughDrive;
+import frc.robot.subsystems.UltraSonicSensor;
 
 public class CommandTester {
   private final SendableChooser<Supplier<Command>> chooser;
@@ -27,7 +29,7 @@ public class CommandTester {
   private final NetworkTableEntry angle;
   private final NetworkTableEntry distance;
 
-  public CommandTester() {
+  public CommandTester(TitanKilloughDrive drive, UltraSonicSensor sonar) {
     final ShuffleboardTab tab = Shuffleboard.getTab("CommandTester");
 
     speed = tab.add("Speed", 0.0)
@@ -48,18 +50,18 @@ public class CommandTester {
     chooser = new SendableChooser<>();
     // 速度や角度はchooser.getSelected().get()が呼ばれた時点の値を使う
     chooser.setDefaultOption("DriveMotor",
-        () -> new SequentialCommandGroup(new DriveMotor(speed.getDouble(0.0)),
-            new Stop().withTimeout(1)));
-    chooser.addOption("Rotate", () -> new Rotate(speed.getDouble(0.0))
+        () -> new SequentialCommandGroup(new DriveMotor(speed.getDouble(0.0), drive),
+            new Stop(drive).withTimeout(1)));
+    chooser.addOption("Rotate", () -> new Rotate(speed.getDouble(0.0), drive)
         .withTimeout(5)
-        .andThen(new Stop().withTimeout(1)));
-    chooser.addOption("DriveCorners", () -> new DriveCorners());
-    chooser.addOption("DriveTri", () -> new DriveTri());
+        .andThen(new Stop(drive).withTimeout(1)));
+    chooser.addOption("DriveCorners", () -> new DriveCorners(drive));
+    chooser.addOption("DriveTri", () -> new DriveTri(drive));
     // chooser.addOption("SonicSensor",
     // () -> new ParallelDeadlineGroup(new SonicSensorDeadline(distance.getDouble(0), null),
     // new Drive(angle.getDouble(0.0))));
     chooser.addOption("DriveDistance",
-        () -> new DriveDistance(angle.getDouble(0), distance.getDouble(0)));
+        () -> new DriveDistance(angle.getDouble(0), distance.getDouble(0), drive));
     tab.add(chooser);
   }
 
