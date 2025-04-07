@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import frc.robot.subsystems.SimpleCamera;
 // import frc.robot.subsystems.DepthCamera;
 import frc.robot.subsystems.TitanKilloughDrive;
 import frc.robot.subsystems.UltraSonicSensor;
@@ -29,6 +30,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final TitanKilloughDrive drive = new TitanKilloughDrive();
   private final UltraSonicSensor sonar = new UltraSonicSensor();
+  private final SimpleCamera camera = new SimpleCamera();
   // public static final DepthCamera camera = new DepthCamera();
   private final CommandTester tester = new CommandTester(drive, sonar);
 
