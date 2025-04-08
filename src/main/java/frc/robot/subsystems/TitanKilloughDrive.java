@@ -5,6 +5,8 @@ import com.studica.frc.TitanQuadEncoder;
 import edu.wpi.first.wpilibj.drive.KilloughDrive;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.TITAN_ID;
 import static frc.robot.Constants.WHEEL_DIST_PER_TICK;
@@ -90,6 +92,16 @@ public class TitanKilloughDrive extends SubsystemBase {
    */
   public void drivePolar(double magnitude, double angle, double zRotation) {
     drive.drivePolar(magnitude, angle, zRotation);
+  }
+
+  /**
+   * 直進するコマンド
+   * 0で前進、90で右、-90で左に移動する。
+   * 角度は度数法で指定する。
+   */
+  public Command DriveCommand(double angle) {
+    final double speed = 0.3;
+    return new RunCommand(() -> drivePolar(speed, angle, 0), this);
   }
 
   /**
