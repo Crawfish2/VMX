@@ -39,8 +39,8 @@ public class SimpleCamera extends SubsystemBase {
     } else {
       camera = null;
 
-      testStream = cameraServer.putVideo("Server Test", width, height);
-      mat = new Mat(new int[] {height, width}, CvType.CV_8U);
+      testStream = cameraServer.putVideo("Simulation Camera", width, height);
+      mat = new Mat(new int[] {height, width}, CvType.CV_8UC3);
       timer = new Timer();
       timer.start();
     }
