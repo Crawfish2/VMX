@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import static frc.robot.Constants.isReal;
 import java.util.function.DoubleBinaryOperator;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -10,10 +11,8 @@ import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode;
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 
 
 public class SimpleCamera extends SubsystemBase {
@@ -25,7 +24,6 @@ public class SimpleCamera extends SubsystemBase {
   private final int fps = 5;
 
   // シミュレーション用
-  private static final boolean isReal = HALUtil.getHALRuntimeType() == 1;
   private final CvSource testStream;
   private final Mat mat;
   private final Timer timer;
