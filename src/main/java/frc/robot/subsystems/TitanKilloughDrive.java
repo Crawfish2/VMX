@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.drive.KilloughDrive;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.TITAN_ID;
@@ -140,6 +141,30 @@ public class TitanKilloughDrive extends SubsystemBase {
 
     // 3つの寄与の平均を取ることで、指定方向の距離を得る
     return (contribution_left + contribution_right + contribution_front) / 3.0;
+  }
+
+  /**
+   * 回転する距離を取得する
+   *
+   * @param angle [-180..180] 回転する角度
+   * @return 指定した角度の回転距離
+   */
+  public double getRotateDistance(double angle) {
+    double distance = Math.toRadians(angle) * 245;
+    return distance;
+  }
+
+  /**
+   * 回転するコマンド
+   * -1で右回転、1で左回転する。
+   * 角度は度数法で指定する。
+   */
+  public Command RotateDistanceCommand(double angle) {
+    double speed = 0.3;
+    double distance = getRotateDistance(angle);
+    return new FunctionalCommand(() -> {
+    }, () -> drivePolar(0, 0, speed), (interrupted) -> {
+    }, () -> encoderLeft.getEncoderDistance() > distance, this);
   }
 
   /**
