@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import static frc.robot.Constants.isReal;
 import java.util.function.DoubleBinaryOperator;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -12,8 +13,6 @@ import edu.wpi.cscore.VideoMode;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Robot;
-
 
 
 public class SimpleCamera extends SubsystemBase {
@@ -30,7 +29,7 @@ public class SimpleCamera extends SubsystemBase {
   private final Timer timer;
 
   public SimpleCamera() {
-    if (Robot.isReal()) {
+    if (isReal) {
       camera = cameraServer.startAutomaticCapture();
       camera.setVideoMode(VideoMode.PixelFormat.kMJPEG, width, height, fps);
 
@@ -40,8 +39,8 @@ public class SimpleCamera extends SubsystemBase {
     } else {
       camera = null;
 
-      testStream = cameraServer.putVideo("Server Test", width, height);
-      mat = new Mat(new int[] {height, width}, CvType.CV_8U);
+      testStream = cameraServer.putVideo("Simulation Camera", width, height);
+      mat = new Mat(new int[] {height, width}, CvType.CV_8UC3);
       timer = new Timer();
       timer.start();
     }
@@ -49,7 +48,7 @@ public class SimpleCamera extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (Robot.isReal()) {
+    if (isReal) {
     } else {
       if (timer.hasPeriodPassed(1.0 / fps)) {
         DoubleBinaryOperator randDouble = (min, max) -> (Math.random() * (max - min)) + min;

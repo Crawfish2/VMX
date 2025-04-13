@@ -29,4 +29,16 @@ public final class Constants {
 
   public static final int UltrasonicPing = 8;
   public static final int UltrasonicEcho = 9;
+
+  /** 実行環境がVMX-Pi上かどうか */
+  public static final boolean isReal =
+      // VMX-PiではHALUtil.getHALRuntimeType()==1となり、
+      // RobotBase.isReal()は正しい結果を返さない
+
+      // OSのCPUアーキテクチャの情報を読んで、arm(VMX-Pi)かどうかを判定する
+      // armのWindowsなどでは正しく動かないが、暫定的な対応
+      System.getProperty("os.arch").contains("arm");
+
+  public static final boolean isSimulation = !isReal;
+
 }
