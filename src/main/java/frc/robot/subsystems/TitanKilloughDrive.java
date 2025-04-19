@@ -137,9 +137,10 @@ public class TitanKilloughDrive extends SubsystemBase {
     // 各ホイールの寄与を計算
     double contribution_left = d_l * Math.sin(Math.toRadians(angle + WHEEL_LEFT_Angle));
     double contribution_right = d_r * Math.sin(Math.toRadians(angle + WHEEL_RIGHT_Angle));
-    double contribution_front = d_f * Math.sin(Math.toRadians(angle - WHEEL_FRONT_Angle));
+    double contribution_front = d_f * Math.sin(Math.toRadians(angle + WHEEL_FRONT_Angle));
 
     // 3つの寄与の平均を取ることで、指定方向の距離を得る
+    // FIXME: 距離が実際よりもかなり小さい値を返すので、修正する
     return (contribution_left + contribution_right + contribution_front) / 3.0;
   }
 
