@@ -33,7 +33,7 @@ public class TitanKilloughDrive extends SubsystemBase {
   private final KilloughDrive drive;
 
   private double deadband = 0.05;
-  private double maxOutput = 0.5;
+  private double maxOutput = 1.0;
 
   public TitanKilloughDrive() {
     motorLeft = new TitanQuad(TITAN_ID, WHEEL_LEFT);
@@ -137,9 +137,10 @@ public class TitanKilloughDrive extends SubsystemBase {
     // 各ホイールの寄与を計算
     double contribution_left = d_l * Math.sin(Math.toRadians(angle + WHEEL_LEFT_Angle));
     double contribution_right = d_r * Math.sin(Math.toRadians(angle + WHEEL_RIGHT_Angle));
-    double contribution_front = d_f * Math.sin(Math.toRadians(angle - WHEEL_FRONT_Angle));
+    double contribution_front = d_f * Math.sin(Math.toRadians(angle + WHEEL_FRONT_Angle));
 
     // 3つの寄与の平均を取ることで、指定方向の距離を得る
+    // FIXME: 距離が実際よりもかなり小さい値を返すので、修正する
     return (contribution_left + contribution_right + contribution_front) / 3.0;
   }
 
@@ -156,15 +157,18 @@ public class TitanKilloughDrive extends SubsystemBase {
 
   /**
    * 回転するコマンド
-   * -1で右回転、1で左回転する。
-   * 角度は度数法で指定する。
+   *
+   * @param angle [-180..180] 回転する角度
    */
   public Command RotateDistanceCommand(double angle) {
-    double speed = 0.3;
-    double distance = getRotateDistance(angle);
-    return new FunctionalCommand(() -> {
-    }, () -> drivePolar(0, 0, speed), (interrupted) -> {
-    }, () -> encoderLeft.getEncoderDistance() > distance, this);
+    double speed = Math.copySign(0.3, angle); // 左(負)向きなら、左回転する
+
+    double distance = getRotateDistance(Math.abs(angle));
+    return new FunctionalCommand(this::resetEncodersDistance,
+        () -> drivePolar(0, 0, speed),
+        (interrupted) -> {
+          // TODO: 3つのエンコーダーの距離の平均をとるようにする
+        }, () -> Math.abs(encoderLeft.getEncoderDistance()) > distance, this);
   }
 
   /**

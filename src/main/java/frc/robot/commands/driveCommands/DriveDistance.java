@@ -14,6 +14,10 @@ public class DriveDistance extends CommandBase {
     this.distance = distance;
     this.drive = drive;
     addRequirements(drive);
+  }
+
+  @Override
+  public void initialize() {
     drive.resetEncodersDistance();
   }
 
@@ -24,7 +28,6 @@ public class DriveDistance extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    drive.resetEncodersDistance();
   }
 
   @Override
