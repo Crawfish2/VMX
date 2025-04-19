@@ -156,15 +156,18 @@ public class TitanKilloughDrive extends SubsystemBase {
 
   /**
    * 回転するコマンド
-   * -1で右回転、1で左回転する。
-   * 角度は度数法で指定する。
+   *
+   * @param angle [-180..180] 回転する角度
    */
   public Command RotateDistanceCommand(double angle) {
-    double speed = 0.3;
-    double distance = getRotateDistance(angle);
-    return new FunctionalCommand(() -> {
-    }, () -> drivePolar(0, 0, speed), (interrupted) -> {
-    }, () -> encoderLeft.getEncoderDistance() > distance, this);
+    double speed = Math.copySign(0.3, angle); // 左(負)向きなら、左回転する
+
+    double distance = getRotateDistance(Math.abs(angle));
+    return new FunctionalCommand(this::resetEncodersDistance,
+        () -> drivePolar(0, 0, speed),
+        (interrupted) -> {
+          // TODO: 3つのエンコーダーの距離の平均をとるようにする
+        }, () -> Math.abs(encoderLeft.getEncoderDistance()) > distance, this);
   }
 
   /**
