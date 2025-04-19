@@ -33,7 +33,7 @@ public class TitanKilloughDrive extends SubsystemBase {
   private final KilloughDrive drive;
 
   private double deadband = 0.05;
-  private double maxOutput = 0.5;
+  private double maxOutput = 1.0;
 
   public TitanKilloughDrive() {
     motorLeft = new TitanQuad(TITAN_ID, WHEEL_LEFT);
