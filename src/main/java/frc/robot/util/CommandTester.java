@@ -18,6 +18,7 @@ import frc.robot.commands.driveCommands.Rotate;
 import frc.robot.commands.driveCommands.Stop;
 // import frc.robot.commands.sensors.SonicSensorDeadline;
 import frc.robot.commands.task.DriveCorners;
+import frc.robot.commands.task.PubKadai1;
 import frc.robot.commands.test.DriveTri;
 import frc.robot.subsystems.TitanKilloughDrive;
 import frc.robot.subsystems.UltraSonicSensor;
@@ -62,6 +63,8 @@ public class CommandTester {
     // new Drive(angle.getDouble(0.0))));
     chooser.addOption("DriveDistance",
         () -> new DriveDistance(angle.getDouble(0), distance.getDouble(0), drive));
+
+    chooser.addOption("Public Kadai 1", () -> new PubKadai1(drive));
     tab.add(chooser);
   }
 
