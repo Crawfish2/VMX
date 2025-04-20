@@ -6,9 +6,7 @@ import edu.wpi.first.wpilibj.drive.KilloughDrive;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.SubsystemExBase;
 import static frc.robot.Constants.TITAN_ID;
 import static frc.robot.Constants.WHEEL_DIST_PER_TICK;
 import static frc.robot.Constants.WHEEL_FRONT;
@@ -21,7 +19,7 @@ import static frc.robot.Constants.WHEEL_RIGHT_Angle;
 /**
  * ロボットのホイールを制御する
  */
-public class TitanKilloughDrive extends SubsystemBase {
+public class TitanKilloughDrive extends SubsystemExBase {
   private final TitanQuad motorFront;
   private final TitanQuad motorLeft;
   private final TitanQuad motorRight;
@@ -102,7 +100,7 @@ public class TitanKilloughDrive extends SubsystemBase {
    */
   public Command DriveCommand(double angle) {
     final double speed = 0.3;
-    return new RunCommand(() -> drivePolar(speed, angle, 0), this);
+    return run(() -> drivePolar(speed, angle, 0));
   }
 
   /**
@@ -164,11 +162,10 @@ public class TitanKilloughDrive extends SubsystemBase {
     double speed = Math.copySign(0.3, angle); // 左(負)向きなら、左回転する
 
     double distance = getRotateDistance(Math.abs(angle));
-    return new FunctionalCommand(this::resetEncodersDistance,
-        () -> drivePolar(0, 0, speed),
-        (interrupted) -> {
-          // TODO: 3つのエンコーダーの距離の平均をとるようにする
-        }, () -> Math.abs(encoderLeft.getEncoderDistance()) > distance, this);
+    return functional(this::resetEncodersDistance,
+        () -> drivePolar(0, 0, speed), null,
+        // TODO: 3つのエンコーダーの距離の平均をとるようにする
+        () -> Math.abs(encoderLeft.getEncoderDistance()) > distance);
   }
 
   /**
