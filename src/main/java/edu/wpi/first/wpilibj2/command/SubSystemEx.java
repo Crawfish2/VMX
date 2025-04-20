@@ -98,6 +98,11 @@ public interface SubSystemEx extends Subsystem {
         Util.nullFallback(isFinished, Util::alwaysFalse), this);
   }
 
+
+  default Command runDeadline(Runnable run, BooleanSupplier isFinished) {
+    return new RunDeadlineCommand(run, isFinished, this);
+  }
+
 }
 
 
