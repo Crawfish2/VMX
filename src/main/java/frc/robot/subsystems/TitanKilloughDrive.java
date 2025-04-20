@@ -5,6 +5,7 @@ import com.studica.frc.TitanQuadEncoder;
 import edu.wpi.first.wpilibj.drive.KilloughDrive;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemExBase;
 import static frc.robot.Constants.Titan.TITAN_ID;
@@ -47,6 +48,8 @@ public class TitanKilloughDrive extends SubsystemExBase {
         WHEEL_LEFT_ANGLE, WHEEL_RIGHT_ANGLE, WHEEL_FRONT_ANGLE);
     drive.setDeadband(deadband);
     drive.setMaxOutput(maxOutput);
+
+    SendableRegistry.addChild(this, drive);
 
     Shuffleboard.getTab("Titan").add(this);
   }
