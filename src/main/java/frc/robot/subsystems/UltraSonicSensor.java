@@ -1,14 +1,16 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Ultrasonic;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SubsystemExBase;
+import frc.robot.commands.util.DeadlineCommand;
 import static frc.robot.Constants.Ultrasonic.EchoPin;
 import static frc.robot.Constants.Ultrasonic.PingPin;
 
 /**
  * 超音波距離センサー
  */
-public class UltraSonicSensor extends SubsystemBase {
+public class UltraSonicSensor extends SubsystemExBase {
   private Ultrasonic sonar;
 
   public UltraSonicSensor() {
@@ -23,6 +25,16 @@ public class UltraSonicSensor extends SubsystemBase {
    */
   public double getRangeMM() {
     return sonar.getRangeMM();
+  }
+
+  /**
+   * 超音波距離センサーの読み取った距離が短くなると終了するデッドライン用コマンド
+   *
+   * @param deadline
+   * @return
+   */
+  public Command SonicDeadlineCommand(double deadline) {
+    return new DeadlineCommand(() -> sonar.getRangeMM() > deadline, this);
   }
 
   /**
