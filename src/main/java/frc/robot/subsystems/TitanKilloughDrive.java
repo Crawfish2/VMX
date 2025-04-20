@@ -7,14 +7,14 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemExBase;
-import static frc.robot.Constants.TITAN_ID;
-import static frc.robot.Constants.WHEEL_DIST_PER_TICK;
-import static frc.robot.Constants.WHEEL_FRONT;
-import static frc.robot.Constants.WHEEL_FRONT_Angle;
-import static frc.robot.Constants.WHEEL_LEFT;
-import static frc.robot.Constants.WHEEL_LEFT_Angle;
-import static frc.robot.Constants.WHEEL_RIGHT;
-import static frc.robot.Constants.WHEEL_RIGHT_Angle;
+import static frc.robot.Constants.Titan.TITAN_ID;
+import static frc.robot.Constants.Titan.Drive.WHEEL_DIST_PER_TICK;
+import static frc.robot.Constants.Titan.Drive.WHEEL_FRONT;
+import static frc.robot.Constants.Titan.Drive.WHEEL_FRONT_ANGLE;
+import static frc.robot.Constants.Titan.Drive.WHEEL_LEFT;
+import static frc.robot.Constants.Titan.Drive.WHEEL_LEFT_ANGLE;
+import static frc.robot.Constants.Titan.Drive.WHEEL_RIGHT;
+import static frc.robot.Constants.Titan.Drive.WHEEL_RIGHT_ANGLE;
 
 /**
  * ロボットのホイールを制御する
@@ -44,7 +44,7 @@ public class TitanKilloughDrive extends SubsystemExBase {
 
     drive = new KilloughDrive(
         motorLeft, motorRight, motorFront,
-        WHEEL_LEFT_Angle, WHEEL_RIGHT_Angle, WHEEL_FRONT_Angle);
+        WHEEL_LEFT_ANGLE, WHEEL_RIGHT_ANGLE, WHEEL_FRONT_ANGLE);
     drive.setDeadband(deadband);
     drive.setMaxOutput(maxOutput);
 
@@ -133,9 +133,9 @@ public class TitanKilloughDrive extends SubsystemExBase {
     double d_f = encoderFront.getEncoderDistance();
 
     // 各ホイールの寄与を計算
-    double contribution_left = d_l * Math.sin(Math.toRadians(angle + WHEEL_LEFT_Angle));
-    double contribution_right = d_r * Math.sin(Math.toRadians(angle + WHEEL_RIGHT_Angle));
-    double contribution_front = d_f * Math.sin(Math.toRadians(angle + WHEEL_FRONT_Angle));
+    double contribution_left = d_l * Math.sin(Math.toRadians(angle + WHEEL_LEFT_ANGLE));
+    double contribution_right = d_r * Math.sin(Math.toRadians(angle + WHEEL_RIGHT_ANGLE));
+    double contribution_front = d_f * Math.sin(Math.toRadians(angle + WHEEL_FRONT_ANGLE));
 
     // 3つの寄与の平均を取ることで、指定方向の距離を得る
     // FIXME: 距離が実際よりもかなり小さい値を返すので、修正する

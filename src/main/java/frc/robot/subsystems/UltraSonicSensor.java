@@ -2,8 +2,8 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import static frc.robot.Constants.UltrasonicEcho;
-import static frc.robot.Constants.UltrasonicPing;
+import static frc.robot.Constants.Ultrasonic.EchoPin;
+import static frc.robot.Constants.Ultrasonic.PingPin;
 
 /**
  * 超音波距離センサー
@@ -12,7 +12,7 @@ public class UltraSonicSensor extends SubsystemBase {
   private Ultrasonic sonar;
 
   public UltraSonicSensor() {
-    sonar = new Ultrasonic(UltrasonicPing, UltrasonicEcho);
+    sonar = new Ultrasonic(EchoPin, PingPin);
   }
 
   /**
