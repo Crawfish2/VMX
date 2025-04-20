@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.SimpleCamera;
 // import frc.robot.subsystems.DepthCamera;
 import frc.robot.subsystems.TitanKilloughDrive;
@@ -31,8 +32,9 @@ public class RobotContainer {
   private final TitanKilloughDrive drive = new TitanKilloughDrive();
   private final UltraSonicSensor sonar = new UltraSonicSensor();
   private final SimpleCamera camera = new SimpleCamera();
-  // public static final DepthCamera camera = new DepthCamera();
-  private final CommandTester tester = new CommandTester(drive, sonar);
+  private final Elevator elevator = new Elevator();
+
+  private final CommandTester tester = new CommandTester(drive, sonar, camera, elevator);
 
   private final PS4Controller controller = new PS4Controller(0);
 

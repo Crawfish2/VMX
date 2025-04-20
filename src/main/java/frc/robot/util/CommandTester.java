@@ -20,6 +20,8 @@ import frc.robot.commands.driveCommands.Stop;
 import frc.robot.commands.task.DriveCorners;
 import frc.robot.commands.task.PubKadai1;
 import frc.robot.commands.test.DriveTri;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.SimpleCamera;
 import frc.robot.subsystems.TitanKilloughDrive;
 import frc.robot.subsystems.UltraSonicSensor;
 
@@ -30,7 +32,8 @@ public class CommandTester {
   private final NetworkTableEntry angle;
   private final NetworkTableEntry distance;
 
-  public CommandTester(TitanKilloughDrive drive, UltraSonicSensor sonar) {
+  public CommandTester(TitanKilloughDrive drive, UltraSonicSensor sonar, SimpleCamera camera,
+      Elevator elevator) {
     final ShuffleboardTab tab = Shuffleboard.getTab("CommandTester");
 
     speed = tab.add("Speed", 0.0)
