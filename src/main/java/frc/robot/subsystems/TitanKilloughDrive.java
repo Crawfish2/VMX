@@ -86,7 +86,7 @@ public class TitanKilloughDrive extends SubsystemExBase {
   }
 
   /**
-   * 速度、角度を指定して進む
+   * 速度、向き、回転速度を指定して進む
    *
    * @param magnitude [-1.0..1.0] 進行方向の速度、角度に対して正の方向は前
    * @param angle [-180..180] 進行方向の角度
@@ -100,10 +100,36 @@ public class TitanKilloughDrive extends SubsystemExBase {
    * 直進するコマンド
    * 0で前進、90で右、-90で左に移動する。
    * 角度は度数法で指定する。
+   *
+   * @param angle [-180..180] 進行方向の角度
    */
   public Command DriveCommand(double angle) {
     final double speed = 0.3;
-    return run(() -> drivePolar(speed, angle, 0));
+    return DrivePolarCommand(speed, angle, 0);
+  }
+
+  /**
+   * 速度、向き、回転速度を指定して進むコマンド
+   *
+   * @param speed [-1.0..1.0] 移動速度
+   * @param angle [-180..180] 進行方向の角度
+   * @param rotation [-1.0..1.0] 回転速度、正の方向は時計回り
+   */
+  public Command DrivePolarCommand(double speed, double angle, double rotation) {
+    return run(() -> drivePolar(speed, angle, rotation));
+  }
+
+  /**
+   * エンコーダーを値をもとに、指定した距離進むコマンド
+   * コマンド初期化時に、エンコーダーの値をリセットする
+   *
+   * @param angle [-180..180] 進行方向の速度、角度に対して正の方向は前
+   * @param distance [mm] 移動したい距離
+   */
+  public Command DriveDistanceCommand(double angle, double distance) {
+    final double speed = 0.3;
+    return functional(this::resetEncodersDistance, () -> drivePolar(speed, angle, 0), null,
+        () -> getDistancePolar(angle) > distance);
   }
 
   /**
@@ -157,7 +183,7 @@ public class TitanKilloughDrive extends SubsystemExBase {
   }
 
   /**
-   * 回転するコマンド
+   * 指定した角度だけ回転するコマンド
    *
    * @param angle [-180..180] 回転する角度
    */
@@ -169,6 +195,15 @@ public class TitanKilloughDrive extends SubsystemExBase {
         () -> drivePolar(0, 0, speed), null,
         // TODO: 3つのエンコーダーの距離の平均をとるようにする
         () -> Math.abs(encoderLeft.getEncoderDistance()) > distance);
+  }
+
+  /**
+   * 指定した速度で、回転し続けるコマンド
+   *
+   * @param angle [-1..1] 回転する速度
+   */
+  public Command RotateCommand(double angle) {
+    return run(() -> driveCartesian(0, 0, angle));
   }
 
   /**
