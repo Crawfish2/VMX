@@ -3,7 +3,7 @@ package frc.robot;
 
 public final class Constants {
 
-  public static class Titan {
+  public static class TitanConstants {
     public static final int TITAN_ID = 42;
 
     public static final int MOTOR0 = 0;
@@ -11,7 +11,7 @@ public final class Constants {
     public static final int MOTOR2 = 2;
     public static final int MOTOR3 = 2;
 
-    public static class Drive {
+    public static class DriveConstants {
       public static final int WHEEL_LEFT = MOTOR1;
       public static final int WHEEL_RIGHT = MOTOR0;
       public static final int WHEEL_FRONT = MOTOR2;
@@ -33,7 +33,7 @@ public final class Constants {
           (Math.PI * 2 * wheelRadius) / wheelPulseRatio;
     }
 
-    public static class Elevator {
+    public static class ElevatorConstants {
       public static final int ELEVATOR = MOTOR3;
 
       /** gear radius(mm) */

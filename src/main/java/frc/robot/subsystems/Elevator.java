@@ -11,9 +11,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemExBase;
-import static frc.robot.Constants.Titan.TITAN_ID;
-import static frc.robot.Constants.Titan.Elevator.ELEVATOR;
-import static frc.robot.Constants.Titan.Elevator.WHEEL_DIST_PER_TICK;
+import static frc.robot.Constants.TitanConstants.TITAN_ID;
+import static frc.robot.Constants.TitanConstants.ElevatorConstants.ELEVATOR;
+import static frc.robot.Constants.TitanConstants.ElevatorConstants.WHEEL_DIST_PER_TICK;
 
 
 /** アームのエレベーター */
