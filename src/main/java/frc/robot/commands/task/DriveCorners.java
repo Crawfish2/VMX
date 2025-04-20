@@ -1,18 +1,16 @@
 package frc.robot.commands.task;
 
 import frc.robot.commands.auto.AutoCommand;
-import frc.robot.commands.driveCommands.Drive;
-import frc.robot.commands.driveCommands.Rotate;
 import frc.robot.subsystems.TitanKilloughDrive;
 
 public class DriveCorners extends AutoCommand {
   public DriveCorners(TitanKilloughDrive drive) {
-    super(new Drive(90, drive).withTimeout(2.5),
-        new Drive(0, drive).withTimeout(10),
-        new Drive(-90, drive).withTimeout(5),
-        new Rotate(0.3, drive).withTimeout(5),
-        new Drive(0, drive).withTimeout(10),
-        new Rotate(0.3, drive).withTimeout(2.5),
-        new Drive(0, drive).withTimeout(2.5));
+    super(drive.DriveCommand(90).withTimeout(2.5),
+        drive.DriveCommand(0).withTimeout(10),
+        drive.DriveCommand(-90).withTimeout(5),
+        drive.RotateDistanceCommand(180),
+        drive.DriveCommand(0).withTimeout(10),
+        drive.RotateDistanceCommand(90),
+        drive.DriveCommand(0).withTimeout(2.5));
   }
 }

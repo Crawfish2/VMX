@@ -9,14 +9,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-// import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.auto.DriveMotor;
-// import frc.robot.commands.driveCommands.Drive;
-import frc.robot.commands.driveCommands.DriveDistance;
-import frc.robot.commands.driveCommands.Rotate;
-import frc.robot.commands.driveCommands.Stop;
-// import frc.robot.commands.sensors.SonicSensorDeadline;
 import frc.robot.commands.task.DriveCorners;
 import frc.robot.commands.task.PubKadai1;
 import frc.robot.commands.test.DriveTri;
@@ -54,18 +47,17 @@ public class CommandTester {
     chooser = new SendableChooser<>();
     // 速度や角度はchooser.getSelected().get()が呼ばれた時点の値を使う
     chooser.setDefaultOption("DriveMotor",
-        () -> new SequentialCommandGroup(new DriveMotor(speed.getDouble(0.0), drive),
-            new Stop(drive).withTimeout(1)));
-    chooser.addOption("Rotate", () -> new Rotate(speed.getDouble(0.0), drive)
-        .withTimeout(5)
-        .andThen(new Stop(drive).withTimeout(1)));
+        () -> new SequentialCommandGroup(drive.DriveCommand(speed.getDouble(0.0)).withTimeout(5)));
+
+    chooser.addOption("Rotate", () -> drive.RotateCommand(speed.getDouble(0.0)).withTimeout(5));
     chooser.addOption("DriveCorners", () -> new DriveCorners(drive));
     chooser.addOption("DriveTri", () -> new DriveTri(drive));
-    // chooser.addOption("SonicSensor",
-    // () -> new ParallelDeadlineGroup(new SonicSensorDeadline(distance.getDouble(0), null),
-    // new Drive(angle.getDouble(0.0))));
+    chooser.addOption("SonicSensor",
+        () -> drive.DriveCommand(angle.getDouble(0.0))
+            .deadlineWith(sonar.SonicDeadlineCommand(distance.getDouble(0))));
+
     chooser.addOption("DriveDistance",
-        () -> new DriveDistance(angle.getDouble(0), distance.getDouble(0), drive));
+        () -> drive.DriveDistanceCommand(angle.getDouble(0), distance.getDouble(0)));
 
     chooser.addOption("Public Kadai 1", () -> new PubKadai1(drive));
     tab.add(chooser);
