@@ -3,7 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemExBase;
-import frc.robot.commands.util.DeadlineCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import static frc.robot.Constants.Ultrasonic.EchoPin;
 import static frc.robot.Constants.Ultrasonic.PingPin;
 
@@ -34,7 +34,7 @@ public class UltraSonicSensor extends SubsystemExBase {
    * @return
    */
   public Command SonicDeadlineCommand(double deadline) {
-    return new DeadlineCommand(() -> sonar.getRangeMM() > deadline, this);
+    return new WaitUntilCommand(() -> sonar.getRangeMM() > deadline);
   }
 
   /**
