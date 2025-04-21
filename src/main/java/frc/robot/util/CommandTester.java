@@ -59,7 +59,7 @@ public class CommandTester {
     chooser.addOption("DriveDistance",
         () -> drive.DriveDistanceCommand(angle.getDouble(0), distance.getDouble(0)));
 
-    chooser.addOption("Public Kadai 1", () -> new PubKadai1(drive));
+    chooser.addOption("Public Kadai 1", () -> new PubKadai1(drive, camera));
     tab.add(chooser);
   }
 
