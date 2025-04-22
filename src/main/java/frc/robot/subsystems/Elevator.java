@@ -101,7 +101,7 @@ public class Elevator extends SubsystemExBase {
     builder.setActuator(true);
     builder.setSafeState(this::stopMotor);
     builder.addDoubleProperty("Encoder", encoder::getEncoderDistance, null);
-    builder.addDoubleProperty("Motor Speed", motor::get, motor::set);
+    builder.addDoubleProperty("Motor Speed", motor::get, drive::drive);
   }
 }
 
@@ -144,6 +144,6 @@ class SaferMotor extends MotorSafety implements Sendable, AutoCloseable {
     builder.setSmartDashboardType("SaferMotor");
     builder.setActuator(true);
     builder.setSafeState(this::stopMotor);
-    builder.addDoubleProperty("Motor Speed", motor::get, motor::set);
+    builder.addDoubleProperty("Motor Speed", motor::get, this::drive);
   }
 }
