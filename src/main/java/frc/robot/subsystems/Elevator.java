@@ -66,7 +66,7 @@ public class Elevator extends SubsystemExBase {
    * @param position 最低でも上がってほしい位置
    */
   public Command RaiseElevatorCommand(double position) {
-    return runDeadline(() -> drive.drive(SPEED),
+    return runDeadline(this::raise,
         () -> getPosition() > position);
   }
 
@@ -76,7 +76,7 @@ public class Elevator extends SubsystemExBase {
    * @param position 最高でも下がってほしい位置
    */
   public Command LowerElevatorCommand(double position) {
-    return runDeadline(() -> drive.drive(SPEED),
+    return runDeadline(this::lower,
         () -> getPosition() < position);
   }
 
