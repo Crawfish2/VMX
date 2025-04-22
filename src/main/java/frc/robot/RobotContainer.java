@@ -10,8 +10,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.SimpleCamera;
 import frc.robot.subsystems.TitanKilloughDrive;
@@ -43,19 +41,27 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-    // Set default commands
-    final ShuffleboardTab tab = Shuffleboard.getTab("test");
-    final var X = tab.add("X", 0).getEntry();
-    final var Y = tab.add("Y", 0).getEntry();
 
+
+    // 左スティック X,Y: 水平移動
+    // 右スティック X: 回転
+    // R1, R2: エレベーター下降、上昇
+    // L1, L2: アーム閉じる、開く (予定)
+    // Set default commands
     drive.setDefaultCommand(
         new RunCommand(
             () -> {
-              X.setDouble(controller.getLeftX());
-              Y.setDouble(controller.getLeftY());
               drive.driveCartesian(controller.getLeftX(), controller.getLeftY(),
                   controller.getRightX());
             }, drive));
+
+    elevator.setDefaultCommand(new RunCommand(() -> {
+      if (controller.getR1Button()) {
+        elevator.lower();
+      } else if (controller.getR2Button()) {
+        elevator.raise();
+      }
+    }, elevator));
   }
 
   /**
