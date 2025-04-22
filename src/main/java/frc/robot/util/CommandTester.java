@@ -59,6 +59,11 @@ public class CommandTester {
     chooser.addOption("DriveDistance",
         () -> drive.DriveDistanceCommand(angle.getDouble(0), distance.getDouble(0)));
 
+    chooser.addOption("ResetElevatorEncoder", () -> elevator.ResetElevatorEncoderCommand());
+    chooser.addOption("RaiseElevator", () -> elevator.RaiseElevatorCommand(distance.getDouble(0)));
+
+    chooser.addOption("LowerElevator", () -> elevator.LowerElevatorCommand(distance.getDouble(0)));
+
     chooser.addOption("Public Kadai 1", () -> new PubKadai1(drive, camera));
     tab.add(chooser);
   }
