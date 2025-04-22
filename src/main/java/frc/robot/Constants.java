@@ -9,7 +9,7 @@ public final class Constants {
     public static final int MOTOR0 = 0;
     public static final int MOTOR1 = 1;
     public static final int MOTOR2 = 2;
-    public static final int MOTOR3 = 2;
+    public static final int MOTOR3 = 3;
 
     public static class DriveConstants {
       public static final int WHEEL_LEFT = MOTOR1;
