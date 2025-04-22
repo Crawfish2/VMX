@@ -11,6 +11,9 @@ public final class Constants {
     public static final int MOTOR2 = 2;
     public static final int MOTOR3 = 3;
 
+    /** Encoder pulse per revolution */
+    public static final double pulsePerRevolution = 1464;
+
     public static class DriveConstants {
       public static final int WHEEL_LEFT = MOTOR1;
       public static final int WHEEL_RIGHT = MOTOR0;
@@ -22,8 +25,6 @@ public final class Constants {
 
       /** Omni wheel radius(mm) */
       public static final double wheelRadius = 50;
-      /** Encoder pulse per revolution */
-      public static final double pulsePerRevolution = 1464;
       /** Gear Ratio between encoder and wheel */
       public static final double gearRatio = 1 / 1;
       /** Pulse per revolution of wheel */
@@ -39,8 +40,6 @@ public final class Constants {
       /** gear radius(mm) */
       // TODO: ギア半径を調べる
       public static final double gearRadius = 50;
-      /** Encoder pulse per revolution */
-      public static final double pulsePerRevolution = 1464;
       /** Gear Ratio between encoder and wheel */
       // TODO: ギア比を調べる
       public static final double gearRatio = 1 / 1;
