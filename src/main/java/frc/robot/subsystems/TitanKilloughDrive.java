@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemExBase;
 import static frc.robot.Constants.TitanConstants.TITAN_ID;
 import static frc.robot.Constants.TitanConstants.DriveConstants.WHEEL_DIST_PER_TICK;
-import static frc.robot.Constants.TitanConstants.DriveConstants.WHEEL_FRONT;
-import static frc.robot.Constants.TitanConstants.DriveConstants.WHEEL_FRONT_ANGLE;
+import static frc.robot.Constants.TitanConstants.DriveConstants.WHEEL_BACK;
+import static frc.robot.Constants.TitanConstants.DriveConstants.WHEEL_BACK_ANGLE;
 import static frc.robot.Constants.TitanConstants.DriveConstants.WHEEL_LEFT;
 import static frc.robot.Constants.TitanConstants.DriveConstants.WHEEL_LEFT_ANGLE;
 import static frc.robot.Constants.TitanConstants.DriveConstants.WHEEL_RIGHT;
@@ -21,11 +21,11 @@ import static frc.robot.Constants.TitanConstants.DriveConstants.WHEEL_RIGHT_ANGL
  * ロボットのホイールを制御する
  */
 public class TitanKilloughDrive extends SubsystemExBase {
-  private final TitanQuad motorFront;
+  private final TitanQuad motorBack;
   private final TitanQuad motorLeft;
   private final TitanQuad motorRight;
 
-  private final TitanQuadEncoder encoderFront;
+  private final TitanQuadEncoder encoderBack;
   private final TitanQuadEncoder encoderLeft;
   private final TitanQuadEncoder encoderRight;
 
@@ -37,15 +37,15 @@ public class TitanKilloughDrive extends SubsystemExBase {
   public TitanKilloughDrive() {
     motorLeft = new TitanQuad(TITAN_ID, WHEEL_LEFT);
     motorRight = new TitanQuad(TITAN_ID, WHEEL_RIGHT);
-    motorFront = new TitanQuad(TITAN_ID, WHEEL_FRONT);
+    motorBack = new TitanQuad(TITAN_ID, WHEEL_BACK);
 
     encoderLeft = new TitanQuadEncoder(motorLeft, WHEEL_LEFT, WHEEL_DIST_PER_TICK);
     encoderRight = new TitanQuadEncoder(motorRight, WHEEL_RIGHT, WHEEL_DIST_PER_TICK);
-    encoderFront = new TitanQuadEncoder(motorFront, WHEEL_FRONT, WHEEL_DIST_PER_TICK);
+    encoderBack = new TitanQuadEncoder(motorBack, WHEEL_BACK, WHEEL_DIST_PER_TICK);
 
     drive = new KilloughDrive(
-        motorLeft, motorRight, motorFront,
-        WHEEL_LEFT_ANGLE, WHEEL_RIGHT_ANGLE, WHEEL_FRONT_ANGLE);
+        motorLeft, motorRight, motorBack,
+        WHEEL_LEFT_ANGLE, WHEEL_RIGHT_ANGLE, WHEEL_BACK_ANGLE);
     drive.setDeadband(deadband);
     drive.setMaxOutput(maxOutput);
 
@@ -145,7 +145,7 @@ public class TitanKilloughDrive extends SubsystemExBase {
   public void resetEncodersDistance() {
     encoderLeft.reset();
     encoderRight.reset();
-    encoderFront.reset();
+    encoderBack.reset();
   }
 
   /**
@@ -159,16 +159,16 @@ public class TitanKilloughDrive extends SubsystemExBase {
     // 各モーターのエンコーダー距離を取得
     double d_l = encoderLeft.getEncoderDistance();
     double d_r = encoderRight.getEncoderDistance();
-    double d_f = encoderFront.getEncoderDistance();
+    double d_b = encoderBack.getEncoderDistance();
 
     // 各ホイールの寄与を計算
     double contribution_left = d_l * Math.sin(Math.toRadians(angle + WHEEL_LEFT_ANGLE));
     double contribution_right = d_r * Math.sin(Math.toRadians(angle + WHEEL_RIGHT_ANGLE));
-    double contribution_front = d_f * Math.sin(Math.toRadians(angle + WHEEL_FRONT_ANGLE));
+    double contribution_back = d_b * Math.sin(Math.toRadians(angle + WHEEL_BACK_ANGLE));
 
     // 3つの寄与の平均を取ることで、指定方向の距離を得る
     // FIXME: 距離が実際よりもかなり小さい値を返すので、修正する
-    return (contribution_left + contribution_right + contribution_front) / 3.0;
+    return (contribution_left + contribution_right + contribution_back) / 3.0;
   }
 
   /**
@@ -214,7 +214,7 @@ public class TitanKilloughDrive extends SubsystemExBase {
   public void initSendable(SendableBuilder builder) {
     builder.addDoubleProperty("Encoder Left", encoderLeft::getEncoderDistance, null);
     builder.addDoubleProperty("Encoder Right", encoderRight::getEncoderDistance, null);
-    builder.addDoubleProperty("Encoder Front", encoderFront::getEncoderDistance, null);
+    builder.addDoubleProperty("Encoder Back", encoderBack::getEncoderDistance, null);
     builder.addDoubleProperty("Deadband", () -> deadband, this::setDeadband);
     builder.addDoubleProperty("MaxOutput", () -> maxOutput, this::setMaxOutput);
   }
