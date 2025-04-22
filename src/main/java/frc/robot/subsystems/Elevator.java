@@ -95,7 +95,7 @@ public class Elevator extends SubsystemExBase {
   public void initSendable(SendableBuilder builder) {
     builder.setActuator(true);
     builder.setSafeState(this::stopMotor);
-    builder.addDoubleProperty("Encoder", encoder::get, null);
+    builder.addDoubleProperty("Encoder", encoder::getEncoderDistance, null);
     builder.addDoubleProperty("Motor Speed", motor::get, motor::set);
   }
 }
