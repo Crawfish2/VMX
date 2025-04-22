@@ -12,8 +12,9 @@ public class RunDeadlineCommand extends CommandBase {
     addRequirements(requirements);
   }
 
+
   @Override
-  public void initialize() {
+  public void execute() {
     run.run();
   }
 
