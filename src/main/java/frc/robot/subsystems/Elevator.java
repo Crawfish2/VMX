@@ -60,6 +60,11 @@ public class Elevator extends SubsystemExBase {
     drive.stopMotor();
   }
 
+  /** エレベーターのエンコーダーの距離をリセットするコマンド */
+  public Command ResetElevatorEncoderCommand() {
+    return runOnce(encoder::reset);
+  }
+
   /**
    * エレベーターを指定した位置まで上げるコマンド
    *
