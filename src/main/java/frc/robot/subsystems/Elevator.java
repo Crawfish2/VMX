@@ -108,6 +108,9 @@ class SaferMotor extends MotorSafety implements Sendable, AutoCloseable {
     this.motor = motor;
     SendableRegistry.addChild(this, this.motor);
     SendableRegistry.addLW(this, "SaferMotor");
+
+    // 一定時間経過後に、自動で停止する
+    setSafetyEnabled(true);
   }
 
   public void drive(double speed) {
