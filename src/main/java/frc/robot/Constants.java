@@ -38,11 +38,9 @@ public final class Constants {
       public static final int ELEVATOR = MOTOR3;
 
       /** gear radius(mm) */
-      // TODO: ギア半径を調べる
-      public static final double gearRadius = 50;
+      public static final double gearRadius = 6; // 3?
       /** Gear Ratio between encoder and wheel */
-      // TODO: ギア比を調べる
-      public static final double gearRatio = 1 / 1;
+      public static final double gearRatio = 24.0 / 64;
       /** Pulse per revolution of wheel */
       public static final double wheelPulseRatio = pulsePerRevolution * gearRatio;
       /** Distance per tick */
