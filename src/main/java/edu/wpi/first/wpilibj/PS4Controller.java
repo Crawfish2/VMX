@@ -85,10 +85,20 @@ public class PS4Controller extends GenericHID {
     }
   }
 
+  /**
+   * @deprecated 代わりに、getLeftX()か、getRightX()を使うこと
+   */
+  @Override
+  @Deprecated
   public double getX(Hand hand) {
     return hand == Hand.kLeft ? getLeftX() : getRightX();
   }
 
+  /**
+   * @deprecated 代わりに、getLeftY()か、getRightY()を使うこと
+   */
+  @Override
+  @Deprecated
   public double getY(Hand hand) {
     return hand == Hand.kLeft ? getLeftY() : getRightY();
   }
