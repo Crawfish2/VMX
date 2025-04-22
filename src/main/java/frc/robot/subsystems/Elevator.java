@@ -88,7 +88,7 @@ public class Elevator extends SubsystemExBase {
    */
   public Command ElevatorToPositionCommand(double position) {
     return new ConditionalCommand(RaiseElevatorCommand(position), LowerElevatorCommand(position),
-        (() -> getPosition() > position));
+        (() -> getPosition() < position));
   }
 
   @Override
