@@ -29,6 +29,7 @@ import frc.robot.subsystems.SimpleCamera.ColorType;
  * |----.    |    |
  * |    .    .    |
  * |    .    .    |
+ * |    .    .    |
  * |..............|
  * |    . -> . xx |
  * |    . -> . xx |
