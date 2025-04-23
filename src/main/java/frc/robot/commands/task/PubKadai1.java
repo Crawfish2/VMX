@@ -44,6 +44,7 @@ public class PubKadai1 extends AutoCommand {
     // TODO: テストする
     super(
         camera.DetectColorCommand(),
+        drive.ResetEncodersDistanceCommand(),
         drive.RotateDistanceCommand(-90),
         new ConditionalCommand(
             // 赤、青のとき
@@ -59,7 +60,11 @@ public class PubKadai1 extends AutoCommand {
                     () -> camera.getDetectedColor().equals(ColorType.BLUE))),
 
             // 黄のとき
-            drive.DriveDistanceCommand(0, 1 * 600),
+            sequence(
+                drive.DriveDistanceCommand(0, 1 * 600),
+                drive.DriveDistanceCommand(90, 1 * 600),
+                drive.DriveDistanceCommand(0, 1 * 600)),
+
             () -> !camera.getDetectedColor().equals(ColorType.YELLOW)));
   }
 }
