@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.studica.frc.TitanQuad;
 import com.studica.frc.TitanQuadEncoder;
 import edu.wpi.first.wpilibj.drive.KilloughDrive;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -8,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemExBase;
+import frc.robot.util.TitanQuadPID;
 import static frc.robot.Constants.TitanConstants.TITAN_ID;
 import static frc.robot.Constants.TitanConstants.DriveConstants.WHEEL_DIST_PER_TICK;
 import static frc.robot.Constants.TitanConstants.DriveConstants.WHEEL_BACK;
@@ -21,9 +21,9 @@ import static frc.robot.Constants.TitanConstants.DriveConstants.WHEEL_RIGHT_ANGL
  * ロボットのホイールを制御する
  */
 public class TitanKilloughDrive extends SubsystemExBase {
-  private final TitanQuad motorBack;
-  private final TitanQuad motorLeft;
-  private final TitanQuad motorRight;
+  private final TitanQuadPID motorBack;
+  private final TitanQuadPID motorLeft;
+  private final TitanQuadPID motorRight;
 
   private final TitanQuadEncoder encoderBack;
   private final TitanQuadEncoder encoderLeft;
@@ -35,9 +35,9 @@ public class TitanKilloughDrive extends SubsystemExBase {
   private double maxOutput = 1.0;
 
   public TitanKilloughDrive() {
-    motorLeft = new TitanQuad(TITAN_ID, WHEEL_LEFT);
-    motorRight = new TitanQuad(TITAN_ID, WHEEL_RIGHT);
-    motorBack = new TitanQuad(TITAN_ID, WHEEL_BACK);
+    motorLeft = new TitanQuadPID(TITAN_ID, WHEEL_LEFT);
+    motorRight = new TitanQuadPID(TITAN_ID, WHEEL_RIGHT);
+    motorBack = new TitanQuadPID(TITAN_ID, WHEEL_BACK);
 
     encoderLeft = new TitanQuadEncoder(motorLeft, WHEEL_LEFT, WHEEL_DIST_PER_TICK);
     encoderRight = new TitanQuadEncoder(motorRight, WHEEL_RIGHT, WHEEL_DIST_PER_TICK);
