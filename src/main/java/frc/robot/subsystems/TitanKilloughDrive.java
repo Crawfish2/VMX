@@ -43,6 +43,8 @@ public class TitanKilloughDrive extends SubsystemExBase {
     encoderRight = new TitanQuadEncoder(motorRight, WHEEL_RIGHT, WHEEL_DIST_PER_TICK);
     encoderBack = new TitanQuadEncoder(motorBack, WHEEL_BACK, WHEEL_DIST_PER_TICK);
 
+    resetEncodersDistance();
+
     drive = new KilloughDrive(
         motorLeft, motorRight, motorBack,
         WHEEL_LEFT_ANGLE, WHEEL_RIGHT_ANGLE, WHEEL_BACK_ANGLE);
@@ -146,6 +148,13 @@ public class TitanKilloughDrive extends SubsystemExBase {
     encoderLeft.reset();
     encoderRight.reset();
     encoderBack.reset();
+  }
+
+  /**
+   * エンコーダーの距離をリセットするコマンド
+   */
+  public Command ResetEncodersDistanceCommand() {
+    return runOnce(this::resetEncodersDistance);
   }
 
   /**
