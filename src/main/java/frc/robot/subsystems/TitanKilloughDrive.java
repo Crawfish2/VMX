@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemExBase;
+import frc.robot.util.Odometry;
 import frc.robot.util.TitanQuadPID;
 import static frc.robot.Constants.TitanConstants.TITAN_ID;
 import static frc.robot.Constants.TitanConstants.DriveConstants.WHEEL_DIST_PER_TICK;
@@ -32,6 +33,8 @@ public class TitanKilloughDrive extends SubsystemExBase {
 
   private final KilloughDrive drive;
 
+  private final Odometry odometry;
+
   private double deadband = 0.05;
   private double maxOutput = 1.0;
 
@@ -52,9 +55,16 @@ public class TitanKilloughDrive extends SubsystemExBase {
     drive.setDeadband(deadband);
     drive.setMaxOutput(maxOutput);
 
-    SendableRegistry.addChild(this, drive);
+    odometry = new Odometry();
 
-    Shuffleboard.getTab("Titan").add(this);
+    SendableRegistry.addChild(this, drive);
+    SendableRegistry.addChild(this, odometry);
+
+    final var tab = Shuffleboard.getTab("Titan");
+
+    tab.add(this);
+    tab.add(drive);
+    tab.add(odometry);
   }
 
   public void setDeadband(double deadband) {
@@ -214,6 +224,14 @@ public class TitanKilloughDrive extends SubsystemExBase {
    */
   public Command RotateCommand(double angle) {
     return run(() -> driveCartesian(0, 0, angle));
+  }
+
+  @Override
+  public void periodic() {
+    odometry.update(
+        encoderLeft.getEncoderDistance(),
+        encoderLeft.getEncoderDistance(),
+        encoderLeft.getEncoderDistance());
   }
 
   /**
