@@ -51,7 +51,7 @@ public class RobotContainer {
     drive.setDefaultCommand(
         new RunCommand(
             () -> {
-              drive.driveCartesian(-controller.getLeftX() * 0.5, -controller.getLeftY() * 0.5,
+              drive.driveCartesian(controller.getLeftX() * 0.5, -controller.getLeftY() * 0.5,
                   controller.getRightX() * 0.5);
             }, drive));
 
