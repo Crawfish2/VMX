@@ -60,6 +60,8 @@ public class RobotContainer {
         elevator.lower();
       } else if (controller.getR2Button()) {
         elevator.raise();
+      } else {
+        elevator.stopMotor();
       }
     }, elevator));
   }
