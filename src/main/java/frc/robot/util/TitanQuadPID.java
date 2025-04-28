@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 public class TitanQuadPID extends TitanQuad implements Sendable {
   private final PIDController controller;
 
-  private final double kP = 0.3;
+  private final double kP = 0.04;
   private final double kD = 0.002;
 
   public TitanQuadPID(int deviceID, int frequency, int motor) {
