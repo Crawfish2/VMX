@@ -1,22 +1,20 @@
 package edu.wpi.first.wpilibj2.command;
 
+import java.util.Objects;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import javax.annotation.Nullable;
 
-// 元のドキュメント: Original document:
-// https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj2/command/Subsystem.html
-
-public interface SubSystemEx extends Subsystem {
+public class Commands {
   /**
    * Constructs a command that runs an action every iteration until interrupted.
    *
    * @param action - the action to run
    * @see RunCommand
    */
-  default CommandBase run(Runnable action) {
-    return Commands.run(action, this);
+  public static CommandBase run(Runnable action, Subsystem... requirements) {
+    return new RunCommand(action, requirements);
   }
 
   /**
@@ -27,8 +25,8 @@ public interface SubSystemEx extends Subsystem {
    * @param end - the action to run on interrupt
    * @see RunEndCommand
    */
-  default CommandBase runEnd(Runnable run, Runnable end) {
-    return Commands.runEnd(run, end, this);
+  public static CommandBase runEnd(Runnable run, Runnable end, Subsystem... requirements) {
+    return new RunEndCommand(run, end, requirements);
   }
 
   /**
@@ -37,8 +35,8 @@ public interface SubSystemEx extends Subsystem {
    * @param action - the action to run
    * @see InstantCommand
    */
-  default CommandBase runOnce(Runnable action) {
-    return Commands.runOnce(action, this);
+  public static CommandBase runOnce(Runnable action, Subsystem... requirements) {
+    return new InstantCommand(action, requirements);
   }
 
   /**
@@ -49,8 +47,8 @@ public interface SubSystemEx extends Subsystem {
    * @param end - the action to run on interrupt
    * @see StartEndCommand
    */
-  default CommandBase startEnd(Runnable start, Runnable end) {
-    return Commands.startEnd(start, end, this);
+  public static CommandBase startEnd(Runnable start, Runnable end, Subsystem... requirements) {
+    return new StartEndCommand(start, end, requirements);
   }
 
   /**
@@ -61,8 +59,8 @@ public interface SubSystemEx extends Subsystem {
    * @param run - the action to run every iteration
    * @see RunStartCommand
    */
-  default CommandBase startRun(Runnable start, Runnable run) {
-    return Commands.startRun(start, run);
+  public static CommandBase startRun(Runnable start, Runnable run, Subsystem... requirements) {
+    return new RunStartCommand(start, run);
   }
 
   /**
@@ -72,8 +70,8 @@ public interface SubSystemEx extends Subsystem {
    * @param supplier - the command supplier.
    * @see DeferredCommand
    */
-  default CommandBase defer(Supplier<Command> supplier) {
-    return Commands.defer(supplier, this);
+  public static CommandBase defer(Supplier<Command> supplier, Subsystem... requirements) {
+    return new DeferredCommand(supplier, requirements);
   }
 
   // 追加のメソッド
@@ -88,13 +86,39 @@ public interface SubSystemEx extends Subsystem {
    * @param isFinished - 終了条件
    * @see FunctionalCommand
    */
-  default CommandBase functional(@Nullable Runnable start, @Nullable Runnable run,
+  public static CommandBase functional(@Nullable Runnable start, @Nullable Runnable run,
       @Nullable Consumer<Boolean> end,
-      @Nullable BooleanSupplier isFinished) {
-    return Commands.functional(start, run, end, isFinished, this);
+      @Nullable BooleanSupplier isFinished, Subsystem... requirements) {
+    return new FunctionalCommand(Util.nullFallback(start, Util::doNothing),
+        Util.nullFallback(run, Util::doNothing),
+        Util.nullFallback(end, Util::justConsume),
+        Util.nullFallback(isFinished, Util::alwaysFalse), requirements);
   }
 
-  default CommandBase runDeadline(Runnable run, BooleanSupplier isFinished) {
-    return Commands.runDeadline(run, isFinished, this);
+
+  public static CommandBase runDeadline(Runnable run, BooleanSupplier isFinished,
+      Subsystem... requirements) {
+    return new RunDeadlineCommand(run, isFinished, requirements);
+  }
+
+}
+
+
+
+class Util {
+  static void doNothing() {
+    return;
+  }
+
+  static void justConsume(Object value) {
+    return;
+  }
+
+  static boolean alwaysFalse() {
+    return false;
+  }
+
+  static <T> T nullFallback(@Nullable T value, T fallback) {
+    return Objects.nonNull(value) ? value : fallback;
   }
 }
