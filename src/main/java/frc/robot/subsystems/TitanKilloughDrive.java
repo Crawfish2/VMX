@@ -230,8 +230,8 @@ public class TitanKilloughDrive extends SubsystemExBase {
   public void periodic() {
     odometry.update(
         encoderLeft.getEncoderDistance(),
-        encoderLeft.getEncoderDistance(),
-        encoderLeft.getEncoderDistance());
+        encoderRight.getEncoderDistance(),
+        encoderBack.getEncoderDistance());
   }
 
   /**
