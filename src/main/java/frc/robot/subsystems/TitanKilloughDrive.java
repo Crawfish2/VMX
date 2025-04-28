@@ -16,6 +16,7 @@ import static frc.robot.Constants.TitanConstants.DriveConstants.WHEEL_LEFT;
 import static frc.robot.Constants.TitanConstants.DriveConstants.WHEEL_LEFT_ANGLE;
 import static frc.robot.Constants.TitanConstants.DriveConstants.WHEEL_RIGHT;
 import static frc.robot.Constants.TitanConstants.DriveConstants.WHEEL_RIGHT_ANGLE;
+import static frc.robot.Constants.TitanConstants.DriveConstants.wheelDistanceFromCenter;
 
 /**
  * ロボットのホイールを制御する
@@ -187,7 +188,7 @@ public class TitanKilloughDrive extends SubsystemExBase {
    * @return 指定した角度の回転距離
    */
   public double getRotateDistance(double angle) {
-    double distance = Math.toRadians(angle) * 245;
+    double distance = Math.toRadians(angle) * wheelDistanceFromCenter;
     return distance;
   }
 

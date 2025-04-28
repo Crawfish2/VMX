@@ -51,7 +51,7 @@ public class RobotContainer {
     drive.setDefaultCommand(
         new RunCommand(
             () -> {
-              drive.driveCartesian(-controller.getLeftX() * 0.5, -controller.getLeftY() * 0.5,
+              drive.driveCartesian(controller.getLeftX() * 0.5, -controller.getLeftY() * 0.5,
                   controller.getRightX() * 0.5);
             }, drive));
 
@@ -60,6 +60,8 @@ public class RobotContainer {
         elevator.lower();
       } else if (controller.getR2Button()) {
         elevator.raise();
+      } else {
+        elevator.stopMotor();
       }
     }, elevator));
   }

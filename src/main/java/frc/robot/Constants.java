@@ -19,9 +19,12 @@ public final class Constants {
       public static final int WHEEL_RIGHT = MOTOR0;
       public static final int WHEEL_BACK = MOTOR1;
 
-      public static final int WHEEL_LEFT_ANGLE = 120;
-      public static final int WHEEL_RIGHT_ANGLE = -120;
-      public static final int WHEEL_BACK_ANGLE = 0;
+      public static final int WHEEL_LEFT_ANGLE = 60;
+      public static final int WHEEL_RIGHT_ANGLE = -60;
+      public static final int WHEEL_BACK_ANGLE = 180;
+
+      /** オムニホイールの取り付け位置のロボットの回転中心からの距離 (mm) */
+      public static final double wheelDistanceFromCenter = 245.0;
 
       /** Omni wheel radius(mm) */
       public static final double wheelRadius = 50;
