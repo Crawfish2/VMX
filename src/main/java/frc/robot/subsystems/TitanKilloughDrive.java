@@ -225,6 +225,9 @@ public class TitanKilloughDrive extends SubsystemExBase {
     builder.addDoubleProperty("Encoder Left", encoderLeft::getEncoderDistance, null);
     builder.addDoubleProperty("Encoder Right", encoderRight::getEncoderDistance, null);
     builder.addDoubleProperty("Encoder Back", encoderBack::getEncoderDistance, null);
+    builder.addDoubleProperty("Motor Left RPM", motorLeft::getRPM, null);
+    builder.addDoubleProperty("Motor Right RPM", motorRight::getRPM, null);
+    builder.addDoubleProperty("Motor Back RPM", motorBack::getRPM, null);
     builder.addDoubleProperty("Deadband", () -> deadband, this::setDeadband);
     builder.addDoubleProperty("MaxOutput", () -> maxOutput, this::setMaxOutput);
   }
