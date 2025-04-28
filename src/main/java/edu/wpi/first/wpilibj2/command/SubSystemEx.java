@@ -16,7 +16,7 @@ public interface SubSystemEx extends Subsystem {
    * @param action - the action to run
    * @see RunCommand
    */
-  default Command run(Runnable action) {
+  default CommandBase run(Runnable action) {
     return new RunCommand(action, this);
   }
 
@@ -28,7 +28,7 @@ public interface SubSystemEx extends Subsystem {
    * @param end - the action to run on interrupt
    * @see RunEndCommand
    */
-  default Command runEnd(Runnable run, Runnable end) {
+  default CommandBase runEnd(Runnable run, Runnable end) {
     return new RunEndCommand(run, end, this);
   }
 
@@ -38,7 +38,7 @@ public interface SubSystemEx extends Subsystem {
    * @param action - the action to run
    * @see InstantCommand
    */
-  default Command runOnce(Runnable action) {
+  default CommandBase runOnce(Runnable action) {
     return new InstantCommand(action, this);
   }
 
@@ -50,7 +50,7 @@ public interface SubSystemEx extends Subsystem {
    * @param end - the action to run on interrupt
    * @see StartEndCommand
    */
-  default Command startEnd(Runnable start, Runnable end) {
+  default CommandBase startEnd(Runnable start, Runnable end) {
     return new StartEndCommand(start, end, this);
   }
 
@@ -62,7 +62,7 @@ public interface SubSystemEx extends Subsystem {
    * @param run - the action to run every iteration
    * @see RunStartCommand
    */
-  default Command startRun(Runnable start, Runnable run) {
+  default CommandBase startRun(Runnable start, Runnable run) {
     return new RunStartCommand(start, run);
   }
 
@@ -73,7 +73,7 @@ public interface SubSystemEx extends Subsystem {
    * @param supplier - the command supplier.
    * @see DeferredCommand
    */
-  default Command defer(Supplier<Command> supplier) {
+  default CommandBase defer(Supplier<Command> supplier) {
     return new DeferredCommand(supplier, this);
   }
 
@@ -89,7 +89,7 @@ public interface SubSystemEx extends Subsystem {
    * @param isFinished - 終了条件
    * @see FunctionalCommand
    */
-  default Command functional(@Nullable Runnable start, @Nullable Runnable run,
+  default CommandBase functional(@Nullable Runnable start, @Nullable Runnable run,
       @Nullable Consumer<Boolean> end,
       @Nullable BooleanSupplier isFinished) {
     return new FunctionalCommand(Util.nullFallback(start, Util::doNothing),
@@ -99,7 +99,7 @@ public interface SubSystemEx extends Subsystem {
   }
 
 
-  default Command runDeadline(Runnable run, BooleanSupplier isFinished) {
+  default CommandBase runDeadline(Runnable run, BooleanSupplier isFinished) {
     return new RunDeadlineCommand(run, isFinished, this);
   }
 
