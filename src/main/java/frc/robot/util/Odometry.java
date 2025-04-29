@@ -34,6 +34,7 @@ public class Odometry implements Sendable {
         Math.toRadians(WHEEL_RIGHT_ANGLE),
         Math.toRadians(WHEEL_BACK_ANGLE));
     gyro = new AHRS();
+    gyro.reset();
 
     odometry =
         new KilloughDriveOdometry(kinematics, getGyroAngle(),
