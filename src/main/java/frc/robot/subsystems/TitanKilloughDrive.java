@@ -33,7 +33,8 @@ public class TitanKilloughDrive extends SubsystemExBase {
 
   private final KilloughDrive drive;
 
-  private final Odometry odometry;
+  /** コマンド呼び出しのみpublicとして使うこと */
+  public final Odometry odometry;
 
   private double deadband = 0.05;
   private double maxOutput = 1.0;
