@@ -17,7 +17,7 @@ public final class Constants {
     public static class DriveConstants {
       public static final int WHEEL_LEFT = MOTOR2;
       public static final int WHEEL_RIGHT = MOTOR0;
-      public static final int WHEEL_BACK = MOTOR1;
+      public static final int WHEEL_BACK = MOTOR3;
 
       public static final int WHEEL_LEFT_ANGLE = 60;
       public static final int WHEEL_RIGHT_ANGLE = -60;
@@ -38,7 +38,7 @@ public final class Constants {
     }
 
     public static class ElevatorConstants {
-      public static final int ELEVATOR = MOTOR3;
+      public static final int ELEVATOR = MOTOR1;
 
       /** gear radius(mm) */
       public static final double gearRadius = 6; // 3?
