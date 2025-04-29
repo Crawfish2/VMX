@@ -12,8 +12,11 @@ import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 
 public class Odometry implements Sendable {
   private final KilloughDriveKinematics kinematics;
@@ -40,6 +43,8 @@ public class Odometry implements Sendable {
         new KilloughDriveOdometry(kinematics, getGyroAngle(),
             new KilloughDriveWheelPositions());
 
+    final var tab = Shuffleboard.getTab("Odometry");
+    tab.add("Reset Pose", this.ResetPoseCommand(new Pose2d()));
     SendableRegistry.addChild(this, gyro);
     SendableRegistry.addLW(this, "Odometry");
   }
@@ -74,6 +79,10 @@ public class Odometry implements Sendable {
 
   public void resetPose(Pose2d pose) {
     odometry.resetPose(pose);
+  }
+
+  public CommandBase ResetPoseCommand(Pose2d pose) {
+    return Commands.runOnce(() -> resetPose(pose));
   }
 
   @Override
