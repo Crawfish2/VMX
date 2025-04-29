@@ -18,7 +18,6 @@ import frc.robot.subsystems.UltraSonicSensor;
 import frc.robot.util.CommandTester;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -52,13 +51,13 @@ public class RobotContainer {
     // L1, L2: アーム閉じる、開く (予定)
     // Set default commands
     drive.setDefaultCommand(
-        new RunCommand(
+        Commands.run(
             () -> {
               drive.driveCartesian(controller.getLeftX() * 0.5, -controller.getLeftY() * 0.5,
                   controller.getRightX() * 0.5);
             }, drive));
 
-    elevator.setDefaultCommand(new RunCommand(() -> {
+    elevator.setDefaultCommand(Commands.run(() -> {
       if (controller.getR1Button()) {
         elevator.lower();
       } else if (controller.getR2Button()) {
