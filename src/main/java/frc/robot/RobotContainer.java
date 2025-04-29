@@ -11,11 +11,13 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.SimpleCamera;
 import frc.robot.subsystems.TitanKilloughDrive;
 import frc.robot.subsystems.UltraSonicSensor;
 import frc.robot.util.CommandTester;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 
 /**
@@ -30,6 +32,7 @@ public class RobotContainer {
   private final UltraSonicSensor sonar = new UltraSonicSensor();
   private final SimpleCamera camera = new SimpleCamera();
   private final Elevator elevator = new Elevator();
+  private final Arm arm = new Arm();
 
   private final CommandTester tester = new CommandTester(drive, sonar, camera, elevator);
 
@@ -64,6 +67,16 @@ public class RobotContainer {
         elevator.stopMotor();
       }
     }, elevator));
+
+    arm.setDefaultCommand(Commands.run(() -> {
+      if (controller.getL1Button()) {
+        arm.grab();
+      } else if (controller.getL2Button()) {
+        arm.release();
+      } else {
+        arm.stopMotor();
+      }
+    }, arm));
   }
 
   /**

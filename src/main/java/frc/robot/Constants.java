@@ -57,6 +57,10 @@ public final class Constants {
     public static final int EchoPin = 9;
   }
 
+  public static class ArmConstants {
+    public static final int SERVO_CHANNEL = 0;
+  }
+
 
   /** 実行環境がVMX-Pi上かどうか */
   public static final boolean isReal =
