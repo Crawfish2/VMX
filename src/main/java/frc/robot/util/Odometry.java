@@ -44,7 +44,7 @@ public class Odometry implements Sendable {
             new KilloughDriveWheelPositions());
 
     final var tab = Shuffleboard.getTab("Odometry");
-    tab.add("Reset Pose", this.ResetPoseCommand(new Pose2d()));
+    tab.add(this.ResetPoseCommand(new Pose2d()));
     SendableRegistry.addChild(this, gyro);
     SendableRegistry.addLW(this, "Odometry");
   }
@@ -82,7 +82,7 @@ public class Odometry implements Sendable {
   }
 
   public CommandBase ResetPoseCommand(Pose2d pose) {
-    return Commands.runOnce(() -> resetPose(pose));
+    return Commands.withName("Reset Pose", Commands.runOnce(() -> resetPose(pose)));
   }
 
   @Override
