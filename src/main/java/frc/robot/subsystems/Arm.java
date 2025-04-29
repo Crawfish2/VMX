@@ -9,7 +9,8 @@ import static frc.robot.Constants.ArmConstants.SERVO_CHANNEL;
 
 public class Arm extends SubsystemExBase {
   private final Servo servo;
-  private static final double SPEED = 0.3;
+  private static final double GRAB = 135;
+  private static final double RELEASE = 165;
 
   public Arm() {
     servo = new Servo(SERVO_CHANNEL);
@@ -23,12 +24,12 @@ public class Arm extends SubsystemExBase {
 
   /** ものを掴む(アームを閉じる) */
   public void grab() {
-    servo.set(-SPEED);
+    servo.setAngle(GRAB);
   }
 
   /** 掴んだものを放す(アームを開く) */
   public void release() {
-    servo.set(SPEED);
+    servo.setAngle(RELEASE);
   }
 
   /**
