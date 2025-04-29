@@ -101,6 +101,10 @@ public class Commands {
     return new RunDeadlineCommand(run, isFinished, requirements);
   }
 
+  public static <T extends CommandBase> T withName(String name, T command) {
+    command.setName(name);
+    return command;
+  }
 }
 
 

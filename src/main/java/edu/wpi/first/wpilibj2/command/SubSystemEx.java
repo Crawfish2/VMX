@@ -97,4 +97,8 @@ public interface SubSystemEx extends Subsystem {
   default CommandBase runDeadline(Runnable run, BooleanSupplier isFinished) {
     return Commands.runDeadline(run, isFinished, this);
   }
+
+  default <T extends CommandBase> T withName(String name, T command) {
+    return Commands.withName(name, command);
+  }
 }
