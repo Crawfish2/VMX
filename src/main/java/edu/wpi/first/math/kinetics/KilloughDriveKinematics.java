@@ -92,20 +92,20 @@ public class KilloughDriveKinematics
       Translation2d forwardRightWheelPosCoR,
       Translation2d backWheelPosCoR) {
     // Forward Left Wheel
-    double xFL = Math.cos(m_forwardLeftWheelAngleRad);
-    double yFL = Math.sin(m_forwardLeftWheelAngleRad);
+    double xFL = Math.sin(m_forwardLeftWheelAngleRad);
+    double yFL = Math.cos(m_forwardLeftWheelAngleRad);
     double rVFL = forwardLeftWheelPosCoR.getNorm();
     m_inverseKinematics.setRow(0, 0, xFL, yFL, rVFL);
 
     // Forward Right Wheel
-    double xFR = Math.cos(m_forwardRightWheelAngleRad);
-    double yFR = Math.sin(m_forwardRightWheelAngleRad);
+    double xFR = Math.sin(m_forwardRightWheelAngleRad);
+    double yFR = Math.cos(m_forwardRightWheelAngleRad);
     double rVFR = forwardRightWheelPosCoR.getNorm();
     m_inverseKinematics.setRow(1, 0, xFR, yFR, rVFR);
 
     // Back Wheel
-    double xB = Math.cos(m_backWheelAngleRad);
-    double yB = Math.sin(m_backWheelAngleRad);
+    double xB = Math.sin(m_backWheelAngleRad);
+    double yB = Math.cos(m_backWheelAngleRad);
     double rVB = backWheelPosCoR.getNorm();
     m_inverseKinematics.setRow(2, 0, xB, yB, rVB);
   }
