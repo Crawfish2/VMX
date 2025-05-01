@@ -2,12 +2,16 @@ package frc.robot.subsystems;
 
 import com.studica.frc.TitanQuadEncoder;
 import edu.wpi.first.wpilibj.drive.KilloughDrive;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemExBase;
 import frc.robot.util.Odometry;
+import frc.robot.util.PositionDriver;
 import frc.robot.util.TitanQuadPID;
 import static frc.robot.Constants.TitanConstants.TITAN_ID;
 import static frc.robot.Constants.TitanConstants.DriveConstants.WHEEL_DIST_PER_TICK;
@@ -18,6 +22,7 @@ import static frc.robot.Constants.TitanConstants.DriveConstants.WHEEL_LEFT_ANGLE
 import static frc.robot.Constants.TitanConstants.DriveConstants.WHEEL_RIGHT;
 import static frc.robot.Constants.TitanConstants.DriveConstants.WHEEL_RIGHT_ANGLE;
 import static frc.robot.Constants.TitanConstants.DriveConstants.wheelDistanceFromCenter;
+import java.util.function.Supplier;
 
 /**
  * ロボットのホイールを制御する
@@ -35,6 +40,9 @@ public class TitanKilloughDrive extends SubsystemExBase {
 
   /** コマンド呼び出しのみpublicとして使うこと */
   public final Odometry odometry;
+
+  /** コマンド呼び出しのみpublicとして使うこと */
+  public final PositionDriver posDriver;
 
   private double deadband = 0.05;
   private double maxOutput = 1.0;
@@ -58,6 +66,8 @@ public class TitanKilloughDrive extends SubsystemExBase {
 
     odometry = new Odometry();
 
+    posDriver = new PositionDriver();
+
     SendableRegistry.addChild(this, drive);
     SendableRegistry.addChild(this, odometry);
 
@@ -66,6 +76,16 @@ public class TitanKilloughDrive extends SubsystemExBase {
     tab.add(this);
     tab.add(drive);
     tab.add(odometry);
+
+    final var posTab = Shuffleboard.getTab("Pos Driver");
+    final var targetX = posTab.add("Target X", 0.0).getEntry();
+    final var targetY = posTab.add("Target Y", 0.0).getEntry();
+    final var targetAngle = posTab.add("Target Angle", 0.0).getEntry();
+
+    posTab.add(defer(() -> moveToPoseCommand(
+        new Pose2d(targetX.getDouble(0.0), targetY.getDouble(0.0),
+            Rotation2d.fromDegrees(targetAngle.getDouble(0.0))),
+        odometry::getPose)));
   }
 
   public void setDeadband(double deadband) {
@@ -226,6 +246,17 @@ public class TitanKilloughDrive extends SubsystemExBase {
   public Command RotateCommand(double angle) {
     return run(() -> driveCartesian(0, 0, angle));
   }
+
+  public CommandBase moveToPoseCommand(Pose2d target, Supplier<Pose2d> currentPose) {
+    return functional(() -> posDriver.setTarget(target),
+        () -> {
+          final var velocity = posDriver.getVelocity(currentPose.get());
+          drive.driveCartesian(velocity.vy, velocity.vx,
+              velocity.zRotation);
+        }, null,
+        posDriver::isCompleted);
+  }
+
 
   @Override
   public void periodic() {
