@@ -53,8 +53,15 @@ public final class Constants {
   }
 
   public static class Ultrasonic {
-    public static final int PingPin = 8;
-    public static final int EchoPin = 9;
+    public static final int frontLeftPingPin = 9;
+    public static final int frontLeftEchoPin = 13;
+    public static final int frontRightPingPin = 8;
+    public static final int frontRightEchoPin = 12;
+
+    public static final int middleLeftPingPin = 9;
+    public static final int middleLeftEchoPin = 13;
+    public static final int middleRightPingPin = 10;
+    public static final int middleRightEchoPin = 14;
   }
 
   public static class ArmConstants {
