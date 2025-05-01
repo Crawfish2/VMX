@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.util.Units;
 
 // TODO: テスト、調整する
 public class PositionDriver {
-  private enum Phase {
+  private static enum Phase {
     ALIGN_HEADING, TRANSLATE_POSITION, FINAL_ADJUST, DONE
   }
 
