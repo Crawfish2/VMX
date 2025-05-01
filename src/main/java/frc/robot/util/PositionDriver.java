@@ -1,27 +1,30 @@
 package frc.robot.util;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Units;
 
 // TODO: テスト、調整する
 public class PositionDriver {
+  private enum Phase {
+    ALIGN_HEADING, TRANSLATE_POSITION, FINAL_ADJUST, DONE
+  }
+
   /** 位置の許容誤差（mm） */
-  private final double positionTolerance = 5;
+  private static final double positionTolerance = 5;
   /** 角度の許容誤差（度） */
-  private final double directionTolerance = 2.0;
+  private static final double angleTolerance = 2.0;
+
+  // 最大速度
+  private static final double maxSpeed = 0.5;
   /** 加速時間（秒） */
-  private final double accelerationTime = 3.0;
+  private static final double accelerationTime = 3.0;
 
   private Pose2d targetPose;
   private final Timer timer;
 
-  // flags
-  private boolean positionReached;
-  private boolean directionReached;
-  private boolean completed;
+  private Phase phase;
 
   /**
    * PositionDriverのコンストラクタ
@@ -29,18 +32,17 @@ public class PositionDriver {
   public PositionDriver() {
     timer = new Timer();
     targetPose = new Pose2d();
+
+    timer.start();
     restart();
   }
 
   /**
    * 制御を初期状態に戻す
    */
-  public void restart() {
+  private void restart() {
     timer.reset();
-    timer.start();
-    positionReached = false;
-    directionReached = false;
-    completed = false;
+    phase = Phase.ALIGN_HEADING;
   }
 
   /**
@@ -53,20 +55,6 @@ public class PositionDriver {
     restart();
   }
 
-  /**
-   * 目標位置を設定する（mm単位での指定）
-   *
-   * @param x X座標（mm単位）
-   * @param y Y座標（mm単位）
-   * @param degrees 向き（度単位）
-   */
-  public void setTargetPosition(double x, double y, double degrees) {
-    targetPose = new Pose2d(
-        x,
-        y,
-        Rotation2d.fromDegrees(degrees));
-    restart();
-  }
 
   /**
    * 移動速度を計算する
@@ -74,21 +62,40 @@ public class PositionDriver {
    * @param currentPose オドメトリから取得した現在の位置
    * @return 目標に向かうための速度指令値
    */
-  public ChassisSpeeds getVelocity(Pose2d currentPose) {
-    // 既に完了していたら停止
-    if (isReached()) {
-      return new ChassisSpeeds(0, 0, 0);
-    }
+  public DriveSpeed getVelocity(Pose2d currentPose) {
+    switch (phase) {
+      case ALIGN_HEADING:
+        if (isAngleReached(currentPose)) {
+          phase = Phase.TRANSLATE_POSITION;
+          timer.reset();
+          return getVelocity(currentPose);
+        }
+        return new DriveSpeed(0, 0, computeAngularVelocity(currentPose));
 
-    // まず向きを合わせる
-    if (!isDirectionReached(currentPose)) {
-      double angularVelocity = calculateAngularVelocity(currentPose);
-      return new ChassisSpeeds(0, 0, angularVelocity);
-    }
+      case TRANSLATE_POSITION:
+        if (isPositionReached(currentPose)) {
+          phase = Phase.FINAL_ADJUST;
+          timer.reset();
+          return getVelocity(currentPose);
+        }
+        double[] linear = computeLinearVelocity(currentPose);
+        return new DriveSpeed(linear[0], linear[1], 0);
 
-    // 向きが合っていれば位置へ移動
-    double[] linearVelocities = calculateLinearVelocity(currentPose);
-    return new ChassisSpeeds(linearVelocities[0], linearVelocities[1], 0);
+      case FINAL_ADJUST:
+        boolean angleDone = isAngleReached(currentPose);
+        boolean posDone = isPositionReached(currentPose);
+        if (angleDone && posDone) {
+          phase = Phase.DONE;
+          return new DriveSpeed();
+        }
+        double[] linAdj = computeLinearVelocity(currentPose);
+        double angAdj = computeAngularVelocity(currentPose);
+        return new DriveSpeed(linAdj[0], linAdj[1], angAdj);
+
+      case DONE:
+      default:
+        return new DriveSpeed();
+    }
   }
 
   /**
@@ -97,22 +104,18 @@ public class PositionDriver {
    * @param currentPose 現在の位置
    * @return [vx, vy]の速度ベクトル
    */
-  private double[] calculateLinearVelocity(Pose2d currentPose) {
-    double currentX = currentPose.getTranslation().getX();
-    double currentY = currentPose.getTranslation().getY();
+  private double[] computeLinearVelocity(Pose2d currentPose) {
     double currentAngle = currentPose.getRotation().getRadians();
 
-    // 目標との差分を計算
-    double xDiff = targetPose.getTranslation().getX() - currentX;
-    double yDiff = targetPose.getTranslation().getY() - currentY;
-
     // 極座標に変換
-    double distance = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
-    double angle = Math.atan2(yDiff, xDiff);
+    Translation2d diff = targetPose.getTranslation().minus(currentPose.getTranslation());
+    double distance = diff.getNorm();
+    double angle = Math.atan2(diff.getY(), diff.getX());
 
     // 速度調整
     double velocity = applyVelocityProfile(distance);
     velocity *= getAccelerationFactor();
+    velocity = Math.min(velocity, maxSpeed);
 
     // 現在の姿勢を考慮して速度を変換
     angle -= currentAngle;
@@ -128,7 +131,7 @@ public class PositionDriver {
    * @param currentPose 現在の位置
    * @return 角速度（ラジアン/秒）
    */
-  private double calculateAngularVelocity(Pose2d currentPose) {
+  private double computeAngularVelocity(Pose2d currentPose) {
     double currentAngleDeg = currentPose.getRotation().getDegrees();
     double targetAngleDeg = targetPose.getRotation().getDegrees();
 
@@ -194,85 +197,35 @@ public class PositionDriver {
     return Math.min(timer.get() / accelerationTime, 1.0);
   }
 
+  private double angleDiffDegrees(double from, double to) {
+    double diff = to - from;
+    while (diff > 180)
+      diff -= 360;
+    while (diff < -180)
+      diff += 360;
+    return diff;
+  }
+
+
+  private boolean isPositionReached(Pose2d current) {
+    var error = targetPose.getTranslation().minus(current.getTranslation());
+    return Math.abs(error.getX()) < positionTolerance
+        && Math.abs(error.getY()) < positionTolerance;
+  }
+
+  private boolean isAngleReached(Pose2d current) {
+    double error =
+        angleDiffDegrees(current.getRotation().getDegrees(), targetPose.getRotation().getDegrees());
+    return Math.abs(error) < angleTolerance;
+  }
+
   /**
-   * XY位置が目標に到達したかどうか
+   * 目標に到達したかどうか
    *
    * @param currentPose 現在の位置
    * @return 到達していればtrue
    */
-  public boolean isPositionReached(Pose2d currentPose) {
-    if (positionReached) {
-      return true;
-    }
-
-    final var targetTranslation = targetPose.getTranslation();
-    final var currentTranslation = currentPose.getTranslation();
-
-    double positionErrorX = Math.abs(targetTranslation.getX() - currentTranslation.getX());
-    double positionErrorY = Math.abs(targetTranslation.getY() - currentTranslation.getY());
-
-    boolean reached = (positionErrorX < positionTolerance &&
-        positionErrorY < positionTolerance);
-
-    if (reached) {
-      positionReached = true;
-      timer.reset();
-    }
-
-    return positionReached;
-  }
-
-  /**
-   * 向きが目標に到達したかどうか
-   *
-   * @param currentPose 現在の位置
-   * @return 到達していればtrue
-   */
-  public boolean isDirectionReached(Pose2d currentPose) {
-    if (directionReached) {
-      return true;
-    }
-
-    double currentAngleDeg = currentPose.getRotation().getDegrees();
-    double targetAngleDeg = targetPose.getRotation().getDegrees();
-    double directionError = Math.abs(targetAngleDeg - currentAngleDeg);
-
-    // 180度を超える角度差は短い方向で計算
-    if (directionError > 180) {
-      directionError = 360 - directionError;
-    }
-
-    boolean reached = directionError < directionTolerance;
-
-    if (reached) {
-      directionReached = true;
-      timer.reset();
-    }
-
-    return directionReached;
-  }
-
-  /**
-   * 位置と向きの両方が目標に到達したかどうか
-   *
-   * @param currentPose 現在の位置
-   * @return 到達していればtrue
-   */
-  public boolean isReached(Pose2d currentPose) {
-    if (completed) {
-      return true;
-    }
-
-    completed = isPositionReached(currentPose) && isDirectionReached(currentPose);
-    return completed;
-  }
-
-  /**
-   * 現在の到達状態を返す
-   *
-   * @return 到達していればtrue
-   */
-  public boolean isReached() {
-    return completed;
+  public boolean isCompleted() {
+    return Phase.DONE.equals(phase);
   }
 }
