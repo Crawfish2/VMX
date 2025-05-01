@@ -1,20 +1,60 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemExBase;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import static frc.robot.Constants.Ultrasonic.EchoPin;
-import static frc.robot.Constants.Ultrasonic.PingPin;
+import static frc.robot.Constants.Ultrasonic.frontLeftEchoPin;
+import static frc.robot.Constants.Ultrasonic.frontLeftPingPin;
+import static frc.robot.Constants.Ultrasonic.frontRightEchoPin;
+import static frc.robot.Constants.Ultrasonic.frontRightPingPin;
+import static frc.robot.Constants.Ultrasonic.middleLeftEchoPin;
+import static frc.robot.Constants.Ultrasonic.middleLeftPingPin;
+import static frc.robot.Constants.Ultrasonic.middleRightEchoPin;
+import static frc.robot.Constants.Ultrasonic.middleRightPingPin;
 
 /**
  * 超音波距離センサー
  */
 public class UltraSonicSensor extends SubsystemExBase {
-  private Ultrasonic sonar;
+  public static enum UltraSonicPosition {
+    frontLeft(0), frontRight(1), middleLeft(2), middleRight(3);
+
+    private final int index;
+
+    private UltraSonicPosition(int index) {
+      this.index = index;
+    }
+  }
+
+  private final Ultrasonic[] sonars;
+
 
   public UltraSonicSensor() {
-    sonar = new Ultrasonic(EchoPin, PingPin);
+    sonars = new Ultrasonic[] {
+        new Ultrasonic(frontLeftEchoPin, frontLeftPingPin),
+        new Ultrasonic(frontRightEchoPin, frontRightPingPin),
+        new Ultrasonic(middleLeftEchoPin, middleLeftPingPin),
+        new Ultrasonic(middleRightEchoPin, middleRightPingPin)
+    };
+
+    final var tab = Shuffleboard.getTab("UltraSonic");
+
+    SendableRegistry.addChild(this, getSonar(UltraSonicPosition.frontLeft));
+    SendableRegistry.addChild(this, getSonar(UltraSonicPosition.frontRight));
+    SendableRegistry.addChild(this, getSonar(UltraSonicPosition.middleLeft));
+    SendableRegistry.addChild(this, getSonar(UltraSonicPosition.middleRight));
+
+    tab.add("FrontLeft", getSonar(UltraSonicPosition.frontLeft));
+    tab.add("FrontRight", getSonar(UltraSonicPosition.frontRight));
+    tab.add("MiddleLeft", getSonar(UltraSonicPosition.middleLeft));
+    tab.add("MiddleRight", getSonar(UltraSonicPosition.middleRight));
+  }
+
+  private Ultrasonic getSonar(UltraSonicPosition pos) {
+    return sonars[pos.index];
   }
 
   /**
@@ -23,8 +63,22 @@ public class UltraSonicSensor extends SubsystemExBase {
    *
    * @return mm単位での距離、有効範囲外では、0を返す
    */
-  public double getRangeMM() {
-    return sonar.getRangeMM();
+  public double getRangeMM(UltraSonicPosition pos) {
+    return getSonar(pos).getRangeMM();
+  }
+
+
+  public double getForwardAvg() {
+    return (getSonar(UltraSonicPosition.frontLeft).getRangeMM()
+        + getSonar(UltraSonicPosition.frontRight).getRangeMM()) / 2;
+  }
+
+  /**
+   * (前方左距離 - 前方右距離)
+   */
+  public double getForwardDiff() {
+    return getSonar(UltraSonicPosition.frontLeft).getRangeMM()
+        - getSonar(UltraSonicPosition.frontRight).getRangeMM();
   }
 
   /**
@@ -33,8 +87,8 @@ public class UltraSonicSensor extends SubsystemExBase {
    * @param deadline
    * @return
    */
-  public Command SonicDeadlineCommand(double deadline) {
-    return new WaitUntilCommand(() -> sonar.getRangeMM() > deadline);
+  public Command SonicDeadlineCommand(UltraSonicPosition pos, double deadline) {
+    return new WaitUntilCommand(() -> getSonar(pos).getRangeMM() > deadline);
   }
 
   /**
@@ -42,11 +96,7 @@ public class UltraSonicSensor extends SubsystemExBase {
    *
    * @return 範囲内にある時はtrue
    */
-  public boolean isRangeValid() {
-    return sonar.isRangeValid();
-  }
-
-  public void close() {
-    sonar.close();
+  public boolean isRangeValid(UltraSonicPosition pos) {
+    return getSonar(pos).isRangeValid();
   }
 }

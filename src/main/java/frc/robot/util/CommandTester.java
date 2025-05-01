@@ -52,9 +52,6 @@ public class CommandTester {
     chooser.addOption("Rotate", () -> drive.RotateCommand(speed.getDouble(0.0)).withTimeout(5));
     chooser.addOption("DriveCorners", () -> new DriveCorners(drive));
     chooser.addOption("DriveTri", () -> new DriveTri(drive));
-    chooser.addOption("SonicSensor",
-        () -> drive.DriveCommand(angle.getDouble(0.0))
-            .deadlineWith(sonar.SonicDeadlineCommand(distance.getDouble(0))));
 
     chooser.addOption("DriveDistance",
         () -> drive.DriveDistanceCommand(angle.getDouble(0), distance.getDouble(0)));
