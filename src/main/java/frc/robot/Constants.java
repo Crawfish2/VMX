@@ -58,8 +58,8 @@ public final class Constants {
     public static final int frontRightPingPin = 8;
     public static final int frontRightEchoPin = 12;
 
-    public static final int middleLeftPingPin = 9;
-    public static final int middleLeftEchoPin = 13;
+    public static final int middleLeftPingPin = 11;
+    public static final int middleLeftEchoPin = 15;
     public static final int middleRightPingPin = 10;
     public static final int middleRightEchoPin = 14;
   }
