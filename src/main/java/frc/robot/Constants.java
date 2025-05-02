@@ -27,7 +27,7 @@ public final class Constants {
       public static final double wheelDistanceFromCenter = 245.0;
 
       /** Omni wheel radius(mm) */
-      public static final double wheelRadius = 50;
+      public static final double wheelRadius = 51;
       /** Gear Ratio between encoder and wheel */
       public static final double gearRatio = 1 / 1;
       /** Pulse per revolution of wheel */
