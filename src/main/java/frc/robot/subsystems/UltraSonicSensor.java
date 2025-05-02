@@ -99,4 +99,11 @@ public class UltraSonicSensor extends SubsystemExBase {
   public boolean isRangeValid(UltraSonicPosition pos) {
     return getSonar(pos).isRangeValid();
   }
+
+  @Override
+  public void periodic() {
+    for (Ultrasonic sonar : sonars) {
+      sonar.ping();
+    }
+  }
 }
