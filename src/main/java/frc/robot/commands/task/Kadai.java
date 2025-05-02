@@ -44,9 +44,9 @@ public class Kadai {
             // 赤、青のとき
             new SequentialCommandGroup(
                 comp.moveToPose(2.5 * 600, 600, 0),
-                comp.moveToPose(2.5 * 600, 0, 0),
                 comp.PoseCollection(Direction.Right,
-                    new Pose2d(2.5 * 600, 0, Rotation2d.fromDegrees(0))),
+                    new Pose2d(2.5 * 600, 600, Rotation2d.fromDegrees(0))),
+                comp.moveToPose(2.5 * 600, 0, 0),
 
                 comp.moveToPose(3.5 * 600, 0, 0),
                 new ConditionalCommand(
@@ -62,9 +62,9 @@ public class Kadai {
                 comp.moveToPose(3.5 * 600, 0, 0),
                 comp.moveToPose(2.5 * 600, 0, 0),
 
+                comp.moveToPose(2.5 * 600, 600, 0),
                 comp.PoseCollection(Direction.Right,
-                    new Pose2d(2.5 * 600, 0, Rotation2d.fromDegrees(0))),
-                comp.moveToPose(2.5 * 600, 600, 0)),
+                    new Pose2d(2.5 * 600, 600, Rotation2d.fromDegrees(0)))),
 
 
             // 黄のとき
