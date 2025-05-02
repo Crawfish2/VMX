@@ -159,7 +159,9 @@ public class TitanKilloughDrive extends SubsystemExBase {
    *
    * @param angle [-180..180] 進行方向の速度、角度に対して正の方向は前
    * @param distance [mm] 移動したい距離
+   * @deprecated 代わりにmoveToPoseCommand()を使用すること
    */
+  @Deprecated
   public Command DriveDistanceCommand(double angle, double distance) {
     final double speed = 0.3;
     return functional(this::resetEncodersDistance, () -> drivePolar(speed, angle, 0), null,
@@ -184,7 +186,10 @@ public class TitanKilloughDrive extends SubsystemExBase {
 
   /**
    * エンコーダーの距離をリセットするコマンド
+   *
+   * @deprecated 代わりに.odometry.ResetPoseCommand()を使用すること
    */
+  @Deprecated
   public Command ResetEncodersDistanceCommand() {
     return runOnce(this::resetEncodersDistance);
   }
