@@ -83,11 +83,12 @@ public class SimpleCamera extends SubsystemExBase {
   /** カメラ処理を開始して、色を検出するまで待つコマンド */
   public Command DetectColorCommand() {
     return functional(this::enableProcess, null, (interrupted) -> this.disableProcess(),
-        () -> !getDetectedColor().equals(ColorType.NONE));
+        () -> !getDetectedColor().equals(ColorType.NONE)
+            && !getDetectedColor().equals(ColorType.PREPARING));
   }
 
   /** 検出した色 */
   public static enum ColorType {
-    NONE, RED, BLUE, YELLOW;
+    PREPARING, NONE, RED, BLUE, YELLOW;
   };
 }
