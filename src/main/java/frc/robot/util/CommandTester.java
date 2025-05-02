@@ -49,7 +49,8 @@ public class CommandTester {
     chooser.setDefaultOption("DriveMotor",
         () -> new SequentialCommandGroup(drive.DriveCommand(speed.getDouble(0.0)).withTimeout(5)));
 
-    chooser.addOption("Rotate", () -> drive.RotateCommand(speed.getDouble(0.0)).withTimeout(5));
+    chooser.addOption("Rotate",
+        () -> drive.RotateDistanceCommand(angle.getDouble(0.0)).withTimeout(5));
     chooser.addOption("DriveCorners", () -> new DriveCorners(drive));
     chooser.addOption("DriveTri", () -> new DriveTri(drive));
 
