@@ -34,10 +34,10 @@ public class UltraSonicSensor extends SubsystemExBase {
 
   public UltraSonicSensor() {
     sonars = new Ultrasonic[] {
-        new Ultrasonic(frontLeftEchoPin, frontLeftPingPin),
-        new Ultrasonic(frontRightEchoPin, frontRightPingPin),
-        new Ultrasonic(middleLeftEchoPin, middleLeftPingPin),
-        new Ultrasonic(middleRightEchoPin, middleRightPingPin)
+        new Ultrasonic(frontLeftPingPin, frontLeftEchoPin),
+        new Ultrasonic(frontRightPingPin, frontRightEchoPin),
+        new Ultrasonic(middleLeftPingPin, middleLeftEchoPin),
+        new Ultrasonic(middleRightPingPin, middleRightEchoPin)
     };
 
     final var tab = Shuffleboard.getTab("UltraSonic");
