@@ -3,6 +3,7 @@ package frc.robot.commands;
 import java.util.Arrays;
 import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpiutil.math.MathUtil;
@@ -20,6 +21,13 @@ public class Competitions {
     this.drive = drive;
     this.camera = camera;
     this.sonor = sonor;
+  }
+
+
+
+  public CommandBase moveToPose(double x, double y, double angleDegrees) {
+    return drive.moveToPoseCommand(new Pose2d(x, y, Rotation2d.fromDegrees(angleDegrees)),
+        drive.odometry::getPose);
   }
 
 
