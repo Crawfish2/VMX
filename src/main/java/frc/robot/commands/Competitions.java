@@ -32,6 +32,30 @@ public class Competitions {
         drive.odometry::getPose);
   }
 
+  public CommandBase moveForwardDistanceSensor(Pose2d pose, Direction direction) {
+    final double targetDistanceMM = 80;
+
+    final DoubleSupplier getLateralSpeed =
+        Direction.Left.equals(direction)
+            ? () -> MathUtil.clamp(
+                -(sonor.getRangeMM(UltraSonicPosition.middleLeft) - targetDistanceMM) / 200,
+                -maxSpeed,
+                maxSpeed)
+            : () -> MathUtil.clamp(
+                (sonor.getRangeMM(UltraSonicPosition.middleRight) - targetDistanceMM) / 200,
+                -maxSpeed,
+                maxSpeed);
+
+    return Commands
+        .functional(() -> drive.posDriver.setTarget(pose), () -> {
+          var currentPose = drive.odometry.getPose();
+          currentPose =
+              new Pose2d(currentPose.getTranslation().getX(), pose.getTranslation().getY(),
+                  currentPose.getRotation());
+          var vel = drive.posDriver.getVelocity(currentPose);
+          drive.driveCartesian(getLateralSpeed.getAsDouble(), vel.vx, vel.zRotation);
+        }, null, drive.posDriver::isCompleted, drive);
+  }
 
   /**
    * 前方と横の壁を使って蛇行修正をする
