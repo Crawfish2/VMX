@@ -40,6 +40,11 @@ public class UltraSonicSensor extends SubsystemExBase {
         new Ultrasonic(middleRightPingPin, middleRightEchoPin)
     };
 
+    for (Ultrasonic sonar : sonars) {
+      sonar.setAutomaticMode(true);
+      // sonar.ping();
+    }
+
     final var tab = Shuffleboard.getTab("UltraSonic");
 
     SendableRegistry.addChild(this, getSonar(UltraSonicPosition.frontLeft));
@@ -100,10 +105,7 @@ public class UltraSonicSensor extends SubsystemExBase {
     return getSonar(pos).isRangeValid();
   }
 
-  @Override
-  public void periodic() {
-    for (Ultrasonic sonar : sonars) {
-      sonar.ping();
-    }
-  }
+  // @Override
+  // public void periodic() {
+  // }
 }
