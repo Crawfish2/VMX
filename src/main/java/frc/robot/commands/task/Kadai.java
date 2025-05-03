@@ -35,9 +35,6 @@ public class Kadai {
     return new SequentialCommandGroup(
         camera.DetectColorCommand(),
         drive.odometry.ResetPoseCommand(new Pose2d(0, 600, Rotation2d.fromDegrees(90))),
-        drive.RotateDistanceCommand(-90),
-        drive.odometry.ResetPoseCommand(new Pose2d(0, 600, Rotation2d.fromDegrees(0))),
-
         comp.moveToPose(0, 600, 0),
 
         new ConditionalCommand(
@@ -71,11 +68,18 @@ public class Kadai {
             new SequentialCommandGroup(
                 comp.moveToPose(1 * 600, 1 * 600, 0),
                 comp.moveToPose(1 * 600, 2 * 600, 0),
-                comp.moveToPose(3.5 * 600, 2 * 600, 0),
+                comp.moveForwardDistanceSensor(
+                    new Pose2d(3.5 * 600, 2 * 600, Rotation2d.fromDegrees(0)),
+                    Direction.Right).withTimeout(14),
+                comp.PoseCollection(Direction.Right,
+                    new Pose2d(3.5 * 600, 2 * 600, Rotation2d.fromDegrees(0))),
+                // comp.moveToPose(3.5 * 600, 2 * 600, 0),
 
                 new WaitCommand(5),
                 // 戻る
-                comp.moveToPose(1 * 600, 2 * 600, 0),
+                comp.moveForwardDistanceSensor(
+                    new Pose2d(1 * 600, 2 * 600, Rotation2d.fromDegrees(0)),
+                    Direction.Right).withTimeout(7),
                 comp.moveToPose(1 * 600, 1 * 600, 0)),
 
             () -> !camera.getDetectedColor().equals(ColorType.YELLOW)),
