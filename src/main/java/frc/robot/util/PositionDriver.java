@@ -160,7 +160,7 @@ public class PositionDriver {
     // 簡易的な実装
     // 実際のロボットの特性に合わせて調整が必要
     if (distance < 10)
-      return 0.05;
+      return 0.10;
     if (distance < 75)
       return 0.15;
     if (distance < 300)
