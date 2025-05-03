@@ -44,7 +44,7 @@ public class TitanKilloughDrive extends SubsystemExBase {
   /** コマンド呼び出しのみpublicとして使うこと */
   public final PositionDriver posDriver;
 
-  private double deadband = 0.05;
+  private double deadband = 0.02;
   private double maxOutput = 1.0;
 
   public TitanKilloughDrive() {
