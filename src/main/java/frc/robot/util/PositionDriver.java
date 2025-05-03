@@ -65,7 +65,7 @@ public class PositionDriver {
     switch (phase) {
       case ALIGN_HEADING:
         if (isAngleReached(currentPose)) {
-          phase = Phase.TRANSLATE_POSITION;
+          phase = Phase.FINAL_ADJUST;
           timer.reset();
           return getVelocity(currentPose);
         }
