@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
@@ -30,7 +31,7 @@ public class UltraSonicSensor extends SubsystemExBase {
   }
 
   private final Ultrasonic[] sonars;
-
+  private final Timer timer;
 
   public UltraSonicSensor() {
     sonars = new Ultrasonic[] {
@@ -40,10 +41,8 @@ public class UltraSonicSensor extends SubsystemExBase {
         new Ultrasonic(middleRightPingPin, middleRightEchoPin)
     };
 
-    for (Ultrasonic sonar : sonars) {
-      sonar.setAutomaticMode(true);
-      // sonar.ping();
-    }
+    timer = new Timer();
+    timer.start();
 
     final var tab = Shuffleboard.getTab("UltraSonic");
 
@@ -105,7 +104,12 @@ public class UltraSonicSensor extends SubsystemExBase {
     return getSonar(pos).isRangeValid();
   }
 
-  // @Override
-  // public void periodic() {
-  // }
+  @Override
+  public void periodic() {
+    if (timer.advanceIfElapsed(0.040)) {
+      for (Ultrasonic sonar : sonars) {
+        sonar.ping();
+      }
+    }
+  }
 }
