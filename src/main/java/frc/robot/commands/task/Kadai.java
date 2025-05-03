@@ -2,6 +2,7 @@ package frc.robot.commands.task;
 
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import edu.wpi.first.networktables.NetworkTableValue;
 import edu.wpi.first.wpilibj.Sendable;
@@ -127,32 +128,33 @@ public class Kadai {
     sendColorType.apply("areaColorA", areaColorA);
     sendColorType.apply("areaColorB", areaColorB);
 
-    final CommandBase readIroshiji = Commands.withName("readIroshiji", new SequentialCommandGroup(
-        Commands.runOnce(() -> {
-          areaColorA.set(ColorType.PREPARING);
-          areaColorB.set(ColorType.PREPARING);
-        }, camera),
+    final Supplier<CommandBase> readIroshiji =
+        () -> Commands.withName("readIroshiji", new SequentialCommandGroup(
+            Commands.runOnce(() -> {
+              areaColorA.set(ColorType.PREPARING);
+              areaColorB.set(ColorType.PREPARING);
+            }, camera),
 
-        comp.PoseCollection(Direction.Right, new Pose2d(0, 600, Rotation2d.fromDegrees(90))),
-        // drive.odometry.ResetPoseCommand(new Pose2d(0, 600, Rotation2d.fromDegrees(90))),
+            comp.PoseCollection(Direction.Right, new Pose2d(0, 600, Rotation2d.fromDegrees(90))),
+            // drive.odometry.ResetPoseCommand(new Pose2d(0, 600, Rotation2d.fromDegrees(90))),
 
-        // 色指示板A
-        camera.DetectColorCommand(),
-        Commands.runOnce(() -> areaColorA.set(camera.getDetectedColor()), camera),
+            // 色指示板A
+            camera.DetectColorCommand(),
+            Commands.runOnce(() -> areaColorA.set(camera.getDetectedColor()), camera),
 
-        comp.moveToPose(0, 600, -180),
-        comp.PoseCollection(Direction.Right, new Pose2d(0, 600, Rotation2d.fromDegrees(-180))),
-        comp.moveToPose(0, 600, -90),
+            comp.moveToPose(0, 600, -180),
+            comp.PoseCollection(Direction.Right, new Pose2d(0, 600, Rotation2d.fromDegrees(-180))),
+            comp.moveToPose(0, 600, -90),
 
-        // 色指示板B
-        camera.DetectColorCommand(),
-        Commands.runOnce(() -> areaColorB.set(camera.getDetectedColor()), camera),
+            // 色指示板B
+            camera.DetectColorCommand(),
+            Commands.runOnce(() -> areaColorB.set(camera.getDetectedColor()), camera),
 
-        comp.PoseCollection(Direction.Left, new Pose2d(0, 600, Rotation2d.fromDegrees(-90)))
+            comp.PoseCollection(Direction.Left, new Pose2d(0, 600, Rotation2d.fromDegrees(-90)))
 
-    // 左向きで終了
-    //
-    ));
+        // 左向きで終了
+        //
+        ));
 
 
     final Box<ColorType> alphaPack = new Box<SimpleCamera.ColorType>(ColorType.PREPARING);
@@ -163,40 +165,91 @@ public class Kadai {
     sendColorType.apply("betaPack", betaPack);
     sendColorType.apply("gammaPack", gammaPack);
 
-    final CommandBase captureGammaPack = Commands.withName("captureGammaPack",
-        new SequentialCommandGroup(
+    // パックを運べる状態にする
+    final BiFunction<Box<ColorType>, Double, CommandBase> capturePack =
+        (colorPack, targetX) -> Commands.withName("capturePack", new SequentialCommandGroup(
             // 左向きで開始
             comp.moveToPose(2.5 * 600, 600, -90),
+
+            comp.moveToPose(targetX, 600, -90),
             camera.DetectColorCommand(),
-            Commands.runOnce(() -> gammaPack.set(camera.getDetectedColor()), camera),
+            Commands.runOnce(() -> colorPack.set(camera.getDetectedColor()), camera),
 
             // 回収
             comp.moveToPose(2.5 * 600, 0.25 * 600, -90),
-            comp.moveToPose(2.5 * 600, 0.25 * 600, 0),
+            comp.moveToPose(2.5 * 600, 0.25 * 600, 0)));
 
+
+    // パックを指定回収エリアに運ぶ
+    // パックを回収した状態から開始
+    // 回収エリアから出て終了
+    final Function<Box<ColorType>, CommandBase> carryPack =
+        (packColor) -> Commands.withName("carryPack", new ConditionalCommand(
+            new SequentialCommandGroup(
+                // areaAのとき
+                comp.moveToPose(2.5 * 600, 0, 0),
+                comp.moveToPose(3.5 * 600, 0, 0),
+                comp.PoseCollection(Direction.Right,
+                    new Pose2d(3.5 * 600, 0, Rotation2d.fromDegrees(0))),
+                comp.moveToPose(2.5 * 600, 0, 0)),
             new ConditionalCommand(
                 new SequentialCommandGroup(
-                    // areaAのとき
-                    comp.moveToPose(2.5 * 600, 0, 0),
-                    comp.moveToPose(3.5 * 600, 0, 0)),
-                new ConditionalCommand(
-                    new SequentialCommandGroup(
-                        // areaBのとき
-                        comp.moveToPose(2.5 * 600, 2 * 600, 0),
-                        comp.moveToPose(3.5 * 600, 2 * 600, 0)),
-                    new SequentialCommandGroup(
-                        // 回収エリアのとき
-                        comp.moveToPose(2.5 * 600, 600, 0),
-                        comp.moveToPose(3.5 * 600, 600, 0)),
-                    () -> gammaPack.equals(areaColorB)),
-                () -> gammaPack.equals(areaColorA))
+                    // areaBのとき
+                    comp.moveToPose(2.5 * 600, 2 * 600, 0),
+                    comp.moveToPose(3.5 * 600, 2 * 600, 0),
+                    comp.PoseCollection(Direction.Right,
+                        new Pose2d(3.5 * 600, 2 * 600, Rotation2d.fromDegrees(0))),
+                    comp.moveToPose(2.5 * 600, 2 * 600, 0)),
+                new SequentialCommandGroup(
+                    // 回収エリアのとき
+                    comp.moveToPose(2.5 * 600, 600, 0),
+                    comp.moveToPose(3.5 * 600, 600, 0),
+                    comp.PoseCollection(Direction.Right,
+                        new Pose2d(3.5 * 600, 600, Rotation2d.fromDegrees(0))),
+                    comp.moveToPose(2.5 * 600, 600, 0)),
+                () -> packColor.equals(areaColorB)),
+            () -> packColor.equals(areaColorA)));
+
+    tab.add(readIroshiji.get());
+
+    tab.add("Capture&Carry GammaPack",
+        new SequentialCommandGroup(capturePack.apply(gammaPack, 2.5 * 600),
+            carryPack.apply(gammaPack)));
+    tab.add("Capture&Carry BetaPack",
+        new SequentialCommandGroup(capturePack.apply(betaPack, 1.75 * 600),
+            carryPack.apply(betaPack)));
+    tab.add("Capture&Carry AlphaPack",
+        new SequentialCommandGroup(capturePack.apply(alphaPack, 1.0 * 600),
+            carryPack.apply(alphaPack)));
+
+    // ゴール(スタート)に戻る
+    final Supplier<CommandBase> gotoGoal = () -> Commands.withName("Goto Goal",
+        new SequentialCommandGroup(
+            comp.moveToPose(2.5, 600, -90),
+            comp.PoseCollection(Direction.Right, new Pose2d(3.5, 600, Rotation2d.fromDegrees(-90))),
+
+            comp.moveToPose(0, 600, -90)
         //
         ));
 
+    tab.add(gotoGoal.get());
 
-    tab.add(readIroshiji);
-    tab.add(captureGammaPack);
 
-    return readIroshiji;
+    // SequentialCommandGroupに追加した内部コマンドを個別にスケジュールすることはできない
+    // コマンド作成を関数化することで解決する
+    return new SequentialCommandGroup(
+        readIroshiji.get(),
+        capturePack.apply(gammaPack, 2.5 * 600),
+        carryPack.apply(gammaPack),
+
+        capturePack.apply(betaPack, 1.75 * 600),
+        carryPack.apply(betaPack),
+
+        capturePack.apply(alphaPack, 1.0 * 600),
+        carryPack.apply(alphaPack),
+
+        gotoGoal.get()
+    //
+    );
   }
 }
