@@ -64,6 +64,7 @@ public class PositionDriver {
   public DriveSpeed getVelocity(Pose2d currentPose) {
     switch (phase) {
       case ALIGN_HEADING:
+        // TODO: 回転時に最初の位置を保持するように調整する
         if (isAngleReached(currentPose)) {
           phase = Phase.FINAL_ADJUST;
           timer.reset();
