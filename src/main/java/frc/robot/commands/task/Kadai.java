@@ -26,15 +26,15 @@ import frc.robot.util.Box;
 public class Kadai {
   private final TitanKilloughDrive drive;
   private final SimpleCamera camera;
-  private final UltraSonicSensor sonor;
+  private final UltraSonicSensor sonar;
 
   private final Competitions comp;
 
-  public Kadai(TitanKilloughDrive drive, SimpleCamera camera, UltraSonicSensor sonor) {
+  public Kadai(TitanKilloughDrive drive, SimpleCamera camera, UltraSonicSensor sonar) {
     this.drive = drive;
     this.camera = camera;
-    this.sonor = sonor;
-    comp = new Competitions(drive, camera, sonor);
+    this.sonar = sonar;
+    comp = new Competitions(drive, camera, sonar);
 
     final var tab = Shuffleboard.getTab("Kadai");
     tab.add(Commands.withName("kadai1", kadai1()));

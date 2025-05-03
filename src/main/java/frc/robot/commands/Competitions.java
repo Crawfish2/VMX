@@ -17,14 +17,14 @@ import frc.robot.subsystems.UltraSonicSensor.UltraSonicPosition;
 public class Competitions {
   private final TitanKilloughDrive drive;
   private final SimpleCamera camera;
-  private final UltraSonicSensor sonor;
+  private final UltraSonicSensor sonar;
 
   private static final double maxSpeed = 0.3;
 
-  public Competitions(TitanKilloughDrive drive, SimpleCamera camera, UltraSonicSensor sonor) {
+  public Competitions(TitanKilloughDrive drive, SimpleCamera camera, UltraSonicSensor sonar) {
     this.drive = drive;
     this.camera = camera;
-    this.sonor = sonor;
+    this.sonar = sonar;
 
     final var tab = Shuffleboard.getTab("Comp");
     tab.add("PoseCollection Left", PoseCollection(Direction.Left, new Pose2d()));
@@ -55,11 +55,11 @@ public class Competitions {
     final DoubleSupplier getLateralSpeed =
         Direction.Left.equals(direction)
             ? () -> MathUtil.clamp(
-                -(sonor.getRangeMM(UltraSonicPosition.middleLeft) - targetDistanceMM) / 200,
+                -(sonar.getRangeMM(UltraSonicPosition.middleLeft) - targetDistanceMM) / 200,
                 -maxSpeed,
                 maxSpeed)
             : () -> MathUtil.clamp(
-                (sonor.getRangeMM(UltraSonicPosition.middleRight) - targetDistanceMM) / 200,
+                (sonar.getRangeMM(UltraSonicPosition.middleRight) - targetDistanceMM) / 200,
                 -maxSpeed,
                 maxSpeed);
 
@@ -87,31 +87,31 @@ public class Competitions {
     }
 
     final double timeout = 3.0;
-    final double targetForwarDistanceMM = 100;
+    final double targetForwardDistanceMM = 100;
     final double targetSideDistanceMM = 80;
 
     final DoubleSupplier getForwardSpeed =
-        () -> MathUtil.clamp((sonor.getForwardAvg() - targetForwarDistanceMM) / 200,
+        () -> MathUtil.clamp((sonar.getForwardAvg() - targetForwardDistanceMM) / 200,
             -maxSpeed, maxSpeed);
 
     final DoubleSupplier getLateralSpeed =
         Direction.Left.equals(direction)
             ? () -> MathUtil.clamp(
-                -(sonor.getRangeMM(UltraSonicPosition.middleLeft) - targetSideDistanceMM) / 200,
+                -(sonar.getRangeMM(UltraSonicPosition.middleLeft) - targetSideDistanceMM) / 200,
                 -maxSpeed,
                 maxSpeed)
             : () -> MathUtil.clamp(
-                (sonor.getRangeMM(UltraSonicPosition.middleRight) - targetSideDistanceMM) / 200,
+                (sonar.getRangeMM(UltraSonicPosition.middleRight) - targetSideDistanceMM) / 200,
                 -maxSpeed,
                 maxSpeed);
 
     final DoubleSupplier getRotate =
-        () -> MathUtil.clamp(sonor.getForwardDiff() / 200, -0.15, 0.15);
+        () -> MathUtil.clamp(sonar.getForwardDiff() / 200, -0.15, 0.15);
 
     return Commands.run(
         () -> drive.driveCartesian(getLateralSpeed.getAsDouble(), getForwardSpeed.getAsDouble(),
             getRotate.getAsDouble()),
-        drive, sonor)
+        drive, sonar)
         .withTimeout(timeout)
         .andThen(drive.odometry.ResetPoseCommand(pose));
   }
