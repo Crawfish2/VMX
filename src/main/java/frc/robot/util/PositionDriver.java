@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.Timer;
 // TODO: テスト、調整する
 public class PositionDriver {
   private static enum Phase {
-    ALIGN_HEADING, TRANSLATE_POSITION, FINAL_ADJUST, DONE
+    START, ALIGN_HEADING, TRANSLATE_POSITION, FINAL_ADJUST, DONE
   }
 
   /** 位置の許容誤差（mm） */
@@ -20,10 +20,15 @@ public class PositionDriver {
   /** 加速時間（秒） */
   private static final double accelerationTime = 3.0;
 
+  /** 最終的な目標位置 */
   private Pose2d targetPose;
-  private final Timer timer;
 
+  /** 現在のフェーズ */
   private Phase phase;
+  /** 現在のフェーズでの目標位置 */
+  private Pose2d phaseTargetPose;
+  /** フェーズ開始後からの経過時間用タイマー */
+  private final Timer timer;
 
   /**
    * PositionDriverのコンストラクタ
@@ -31,29 +36,25 @@ public class PositionDriver {
   public PositionDriver() {
     timer = new Timer();
     targetPose = new Pose2d();
-
-    timer.start();
-    restart();
+    phase = Phase.DONE;
   }
 
   /**
-   * 制御を初期状態に戻す
+   * タイマーをリセットする
    */
-  private void restart() {
+  private void resetPhaseTimer() {
     timer.reset();
-    phase = Phase.ALIGN_HEADING;
   }
 
   /**
-   * 目標位置を設定する
+   * 目標位置を設定して開始する
    *
    * @param target 目標位置
    */
   public void setTarget(Pose2d target) {
     targetPose = target;
-    restart();
+    phase = Phase.START;
   }
-
 
   /**
    * 移動速度を計算する
@@ -63,36 +64,49 @@ public class PositionDriver {
    */
   public DriveSpeed getVelocity(Pose2d currentPose) {
     switch (phase) {
+      case START:
+        // 次のフェーズに向けて初期化して移行する
+        timer.start();
+
+        phase = Phase.ALIGN_HEADING;
+        // 現在の座標を維持しつつ回転する
+        phaseTargetPose = new Pose2d(currentPose.getTranslation(), targetPose.getRotation());
+
+        resetPhaseTimer();
+        return getVelocity(currentPose);
       case ALIGN_HEADING:
-        // TODO: 回転時に最初の位置を保持するように調整する
         if (isAngleReached(currentPose)) {
-          phase = Phase.FINAL_ADJUST;
-          timer.reset();
+
+          phase = Phase.TRANSLATE_POSITION;
+          // 姿勢を維持しつつ平行移動する
+          phaseTargetPose = new Pose2d(targetPose.getTranslation(), currentPose.getRotation());
+
+          resetPhaseTimer();
           return getVelocity(currentPose);
         }
-        return new DriveSpeed(0, 0, computeAngularVelocity(currentPose));
-
+        return computeDriveVelocity(currentPose);
       case TRANSLATE_POSITION:
         if (isPositionReached(currentPose)) {
           phase = Phase.FINAL_ADJUST;
-          timer.reset();
+          // 最終的な目標位置、姿勢を目指す
+          phaseTargetPose = targetPose;
+
+          resetPhaseTimer();
           return getVelocity(currentPose);
         }
-        double[] linear = computeLinearVelocity(currentPose);
-        return new DriveSpeed(linear[0], linear[1], 0);
-
+        return computeDriveVelocity(currentPose);
       case FINAL_ADJUST:
-        boolean angleDone = isAngleReached(currentPose);
-        boolean posDone = isPositionReached(currentPose);
-        if (angleDone && posDone) {
+        if (isAngleReached(currentPose) && isPositionReached(currentPose)) {
           phase = Phase.DONE;
-          return new DriveSpeed();
-        }
-        double[] linAdj = computeLinearVelocity(currentPose);
-        double angAdj = computeAngularVelocity(currentPose);
-        return new DriveSpeed(linAdj[0], linAdj[1], angAdj);
+          // 参照はされないが、流れを統一するために、一応設定しておく
+          phaseTargetPose = targetPose;
 
+          resetPhaseTimer();
+          return getVelocity(currentPose);
+        }
+        return computeDriveVelocity(currentPose);
       case DONE:
+        timer.stop();
       default:
         return new DriveSpeed();
     }
@@ -108,7 +122,7 @@ public class PositionDriver {
     double currentAngle = currentPose.getRotation().getRadians();
 
     // 極座標に変換
-    Translation2d diff = targetPose.getTranslation().minus(currentPose.getTranslation());
+    Translation2d diff = phaseTargetPose.getTranslation().minus(currentPose.getTranslation());
     double distance = diff.getNorm();
     double angle = Math.atan2(diff.getY(), diff.getX());
 
@@ -133,7 +147,7 @@ public class PositionDriver {
    */
   private double computeAngularVelocity(Pose2d currentPose) {
     double currentAngleDeg = currentPose.getRotation().getDegrees();
-    double targetAngleDeg = targetPose.getRotation().getDegrees();
+    double targetAngleDeg = phaseTargetPose.getRotation().getDegrees();
 
     // 角度差を計算（度単位）
     double angleDiff = targetAngleDeg - currentAngleDeg;
@@ -148,6 +162,19 @@ public class PositionDriver {
     angularVelocity *= getAccelerationFactor();
 
     return angularVelocity;
+  }
+
+
+  /**
+   * 直線、回転移動の速度を計算する
+   *
+   * @param currentPose 現在の位置
+   * @return 移動速度 (RobotDrive)
+   */
+  private DriveSpeed computeDriveVelocity(Pose2d currentPose) {
+    double[] linear = computeLinearVelocity(currentPose);
+    double rotate = computeAngularVelocity(currentPose);
+    return new DriveSpeed(linear[0], linear[1], rotate);
   }
 
   /**
@@ -207,14 +234,15 @@ public class PositionDriver {
 
 
   private boolean isPositionReached(Pose2d current) {
-    var error = targetPose.getTranslation().minus(current.getTranslation());
+    var error = phaseTargetPose.getTranslation().minus(current.getTranslation());
     return Math.abs(error.getX()) < positionTolerance
         && Math.abs(error.getY()) < positionTolerance;
   }
 
   private boolean isAngleReached(Pose2d current) {
     double error =
-        angleDiffDegrees(current.getRotation().getDegrees(), targetPose.getRotation().getDegrees());
+        angleDiffDegrees(current.getRotation().getDegrees(),
+            phaseTargetPose.getRotation().getDegrees());
     return Math.abs(error) < angleTolerance;
   }
 
