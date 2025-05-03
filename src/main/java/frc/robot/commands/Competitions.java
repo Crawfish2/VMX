@@ -2,8 +2,10 @@ package frc.robot.commands;
 
 import java.util.Arrays;
 import java.util.function.DoubleSupplier;
+import java.util.function.Function;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpiutil.math.MathUtil;
@@ -23,6 +25,21 @@ public class Competitions {
     this.drive = drive;
     this.camera = camera;
     this.sonor = sonor;
+
+    final var tab = Shuffleboard.getTab("Comp");
+    tab.add("PoseCollection Left", PoseCollection(Direction.Left, new Pose2d()));
+    tab.add("PoseCollection Right", PoseCollection(Direction.Right, new Pose2d()));
+
+    Function<Direction, CommandBase> moveForwardDistanceCommand =
+        (Direction direct) -> Commands.defer(() -> {
+          var currentPose = drive.odometry.getPose();
+          var targetPose = new Pose2d(currentPose.getTranslation().getX() + 600,
+              currentPose.getTranslation().getY(),
+              currentPose.getRotation());
+          return moveForwardDistanceSensor(targetPose, direct);
+        }, drive);
+    tab.add("moveForwardDistance Left", moveForwardDistanceCommand.apply(Direction.Left));
+    tab.add("moveForwardDistance Right", moveForwardDistanceCommand.apply(Direction.Right));
   }
 
 
