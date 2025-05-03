@@ -17,6 +17,8 @@ public class Competitions {
   private final SimpleCamera camera;
   private final UltraSonicSensor sonor;
 
+  private static final double maxSpeed = 0.3;
+
   public Competitions(TitanKilloughDrive drive, SimpleCamera camera, UltraSonicSensor sonor) {
     this.drive = drive;
     this.camera = camera;
@@ -44,26 +46,26 @@ public class Competitions {
     }
 
     final double timeout = 3.0;
-    final double maxSpeed = 0.5;
-    final double targetDistanceMM = 10;
+    final double targetForwarDistanceMM = 100;
+    final double targetSideDistanceMM = 80;
 
     final DoubleSupplier getForwardSpeed =
-        () -> MathUtil.clamp((sonor.getForwardAvg() - targetDistanceMM) / 50,
+        () -> MathUtil.clamp((sonor.getForwardAvg() - targetForwarDistanceMM) / 200,
             -maxSpeed, maxSpeed);
 
     final DoubleSupplier getLateralSpeed =
         Direction.Left.equals(direction)
             ? () -> MathUtil.clamp(
-                -(sonor.getRangeMM(UltraSonicPosition.middleLeft) - targetDistanceMM) / 50,
+                -(sonor.getRangeMM(UltraSonicPosition.middleLeft) - targetSideDistanceMM) / 200,
                 -maxSpeed,
                 maxSpeed)
             : () -> MathUtil.clamp(
-                (sonor.getRangeMM(UltraSonicPosition.middleRight) - targetDistanceMM) / 50,
+                (sonor.getRangeMM(UltraSonicPosition.middleRight) - targetSideDistanceMM) / 200,
                 -maxSpeed,
                 maxSpeed);
 
     final DoubleSupplier getRotate =
-        () -> MathUtil.clamp(sonor.getForwardDiff() / 30, -maxSpeed, maxSpeed);
+        () -> MathUtil.clamp(sonor.getForwardDiff() / 200, -0.15, 0.15);
 
     return Commands.run(
         () -> drive.driveCartesian(getLateralSpeed.getAsDouble(), getForwardSpeed.getAsDouble(),
