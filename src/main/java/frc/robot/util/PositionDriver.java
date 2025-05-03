@@ -3,7 +3,6 @@ package frc.robot.util;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.util.Units;
 
 // TODO: テスト、調整する
 public class PositionDriver {
@@ -129,7 +128,7 @@ public class PositionDriver {
    * 回転速度を計算する
    *
    * @param currentPose 現在の位置
-   * @return 角速度（ラジアン/秒）
+   * @return 回転速度（RobotDrive）
    */
   private double computeAngularVelocity(Pose2d currentPose) {
     double currentAngleDeg = currentPose.getRotation().getDegrees();
@@ -147,8 +146,7 @@ public class PositionDriver {
     double angularVelocity = applyAngularProfile(angleDiff);
     angularVelocity *= getAccelerationFactor();
 
-    // ラジアンに変換
-    return Units.degreesToRadians(angularVelocity);
+    return angularVelocity;
   }
 
   /**
@@ -161,11 +159,11 @@ public class PositionDriver {
   private double applyVelocityProfile(double distance) {
     // 簡易的な実装
     // 実際のロボットの特性に合わせて調整が必要
-    if (distance < 0.01)
+    if (distance < 10)
       return 0.05;
-    if (distance < 0.05)
+    if (distance < 75)
       return 0.15;
-    if (distance < 0.1)
+    if (distance < 300)
       return 0.3;
     return 0.5; // 最大速度
   }
@@ -174,7 +172,7 @@ public class PositionDriver {
    * 角速度に非線形プロファイルを適用する
    *
    * @param angleDiff 角度差（度）
-   * @return 適用後の角速度（度/秒）
+   * @return 適用後の角速度（RobotDrive）
    */
   // TODO: 実装を置き換える
   private double applyAngularProfile(double angleDiff) {
@@ -182,10 +180,10 @@ public class PositionDriver {
     if (Math.abs(angleDiff) < 0.5)
       return 0;
     if (Math.abs(angleDiff) < 5)
-      return Math.signum(angleDiff) * 10;
-    if (Math.abs(angleDiff) < 20)
-      return Math.signum(angleDiff) * 30;
-    return Math.signum(angleDiff) * 50; // 最大角速度
+      return Math.copySign(0.05, angleDiff);
+    if (Math.abs(angleDiff) < 30)
+      return Math.copySign(0.10, angleDiff);
+    return Math.copySign(0.15, angleDiff); // 最大角速度
   }
 
   /**
