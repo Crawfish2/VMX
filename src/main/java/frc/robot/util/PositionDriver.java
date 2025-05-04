@@ -208,10 +208,10 @@ public class PositionDriver {
     if (Math.abs(angleDiff) < 0.5)
       return 0;
     if (Math.abs(angleDiff) < 5)
-      return Math.copySign(0.05, angleDiff);
-    if (Math.abs(angleDiff) < 30)
       return Math.copySign(0.10, angleDiff);
-    return Math.copySign(0.15, angleDiff); // 最大角速度
+    if (Math.abs(angleDiff) < 30)
+      return Math.copySign(0.15, angleDiff);
+    return Math.copySign(0.20, angleDiff); // 最大角速度
   }
 
   /**
