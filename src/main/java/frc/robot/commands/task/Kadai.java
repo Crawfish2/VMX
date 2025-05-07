@@ -135,22 +135,22 @@ public class Kadai {
               areaColorB.set(ColorType.PREPARING);
             }, camera),
 
-            comp.PoseCollection(Direction.Right, new Pose2d(0, 600, Rotation2d.fromDegrees(90))),
+            comp.PoseCollection(Direction.Right,
+                new Pose2d(0, 1 * 600, Rotation2d.fromDegrees(90))),
             // drive.odometry.ResetPoseCommand(new Pose2d(0, 600, Rotation2d.fromDegrees(90))),
 
             // 色指示板A
             camera.DetectColorCommand(),
             Commands.runOnce(() -> areaColorA.set(camera.getDetectedColor()), camera),
 
-            comp.moveToPose(0, 600, -180),
-            comp.PoseCollection(Direction.Right, new Pose2d(0, 600, Rotation2d.fromDegrees(-180))),
-            comp.moveToPose(0, 600, -90),
+            comp.moveToPose(600, 600 - 50, 90),
+            comp.moveToPose(600, 600 - 50, -90),
+            comp.moveToPose(0, 600 - 50, -90),
+            comp.PoseCollection(Direction.Left, new Pose2d(0, 600, Rotation2d.fromDegrees(-90))),
 
             // 色指示板B
             camera.DetectColorCommand(),
-            Commands.runOnce(() -> areaColorB.set(camera.getDetectedColor()), camera),
-
-            comp.PoseCollection(Direction.Left, new Pose2d(0, 600, Rotation2d.fromDegrees(-90)))
+            Commands.runOnce(() -> areaColorB.set(camera.getDetectedColor()), camera)
 
         // 左向きで終了
         //
@@ -176,39 +176,55 @@ public class Kadai {
             Commands.runOnce(() -> colorPack.set(camera.getDetectedColor()), camera),
 
             // 回収
-            comp.moveToPose(2.5 * 600, 0.25 * 600, -90),
-            comp.moveToPose(2.5 * 600, 0.25 * 600, 0)));
+            comp.moveToPose(targetX, 0, -90),
+            comp.CollectForward(new Pose2d(targetX, 0, Rotation2d.fromDegrees(-90))),
+            comp.moveToPose(targetX, 0, 0),
+            // (2.5 * 600 + 50, 0, 0)で終わる
+            comp.moveForwardDistanceSensor(
+                new Pose2d(2.5 * 600 + 50, 0, Rotation2d.fromDegrees(0)),
+                Direction.Left)
+        // comp.moveToPose(2.5 * 600 + 50, 0, 0)
+        ));
 
 
     // パックを指定回収エリアに運ぶ
     // パックを回収した状態から開始
     // 回収エリアから出て終了
     final Function<Box<ColorType>, CommandBase> carryPack =
-        (packColor) -> Commands.withName("carryPack", new ConditionalCommand(
-            new SequentialCommandGroup(
-                // areaAのとき
-                comp.moveToPose(2.5 * 600, 0, 0),
-                comp.moveToPose(3.5 * 600, 0, 0),
-                comp.PoseCollection(Direction.Right,
-                    new Pose2d(3.5 * 600, 0, Rotation2d.fromDegrees(0))),
-                comp.moveToPose(2.5 * 600, 0, 0)),
-            new ConditionalCommand(
+        (packColor) -> Commands.withName("carryPack",
+            new SequentialCommandGroup(new ConditionalCommand(
                 new SequentialCommandGroup(
-                    // areaBのとき
-                    comp.moveToPose(2.5 * 600, 2 * 600, 0),
-                    comp.moveToPose(3.5 * 600, 2 * 600, 0),
+                    // areaAのとき
+                    comp.moveToPose(2.5 * 600 + 50, 0, 0),
+                    comp.moveForwardDistanceSensor(
+                        new Pose2d(3.5 * 600, 0, Rotation2d.fromDegrees(0)), Direction.Left),
+                    // comp.moveToPose(3.5 * 600, 0, 0),
                     comp.PoseCollection(Direction.Right,
-                        new Pose2d(3.5 * 600, 2 * 600, Rotation2d.fromDegrees(0))),
-                    comp.moveToPose(2.5 * 600, 2 * 600, 0)),
-                new SequentialCommandGroup(
-                    // 回収エリアのとき
-                    comp.moveToPose(2.5 * 600, 600, 0),
-                    comp.moveToPose(3.5 * 600, 600, 0),
-                    comp.PoseCollection(Direction.Right,
-                        new Pose2d(3.5 * 600, 600, Rotation2d.fromDegrees(0))),
-                    comp.moveToPose(2.5 * 600, 600, 0)),
-                () -> packColor.equals(areaColorB)),
-            () -> packColor.equals(areaColorA)));
+                        new Pose2d(3.5 * 600, 0, Rotation2d.fromDegrees(0))),
+                    comp.moveToPose(2.5 * 600, 0, 0)),
+                new ConditionalCommand(
+                    new SequentialCommandGroup(
+                        // areaBのとき
+                        comp.moveToPose(2.5 * 600 + 50, 600 + 50, 0),
+                        comp.moveToPose(3.5 * 600, 600 + 50, 0),
+                        comp.PoseCollection(Direction.Right,
+                            new Pose2d(3.5 * 600, 600,
+                                Rotation2d.fromDegrees(0))),
+                        comp.moveToPose(2.5 * 600, 600, 0)),
+                    new SequentialCommandGroup(
+                        // 回収エリアのとき
+                        comp.moveToPose(2.5 * 600 + 50, 2 * 600, 0),
+                        comp.moveForwardDistanceSensor(
+                            new Pose2d(3.5 * 600, 2 * 600, Rotation2d.fromDegrees(0)),
+                            Direction.Right),
+                        // comp.moveToPose(3.5 * 600, 2 * 600, 0),
+                        comp.PoseCollection(Direction.Right,
+                            new Pose2d(3.5 * 600, 2 * 600,
+                                Rotation2d.fromDegrees(0))),
+                        comp.moveToPose(2.5 * 600, 2 * 600, 0)),
+                    () -> packColor.equals(areaColorB)),
+                () -> packColor.equals(areaColorA)),
+                comp.moveToPose(2.5 * 600, 600, 0)));
 
     tab.add(readIroshiji.get());
 
@@ -225,10 +241,10 @@ public class Kadai {
     // ゴール(スタート)に戻る
     final Supplier<CommandBase> gotoGoal = () -> Commands.withName("Goto Goal",
         new SequentialCommandGroup(
-            comp.moveToPose(2.5, 600, -90),
-            comp.PoseCollection(Direction.Right, new Pose2d(3.5, 600, Rotation2d.fromDegrees(-90))),
-
-            comp.moveToPose(0, 600, -90)
+            comp.moveToPose(2.5 * 600, 600 - 50, -90),
+            comp.moveToPose(0, 600 - 50, -90),
+            comp.PoseCollection(Direction.Left,
+                new Pose2d(0, 600 - 50, Rotation2d.fromDegrees(-90)))
         //
         ));
 

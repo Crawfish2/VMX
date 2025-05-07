@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.subsystems.SimpleCamera;
 import frc.robot.subsystems.TitanKilloughDrive;
@@ -50,7 +51,7 @@ public class Competitions {
   }
 
   public CommandBase moveForwardDistanceSensor(Pose2d pose, Direction direction) {
-    final double targetDistanceMM = 80;
+    final double targetDistanceMM = 70;
 
     final DoubleSupplier getLateralSpeed =
         Direction.Left.equals(direction)
@@ -71,7 +72,7 @@ public class Competitions {
                   currentPose.getRotation());
           var vel = drive.posDriver.getVelocity(currentPose);
           drive.driveCartesian(getLateralSpeed.getAsDouble(), vel.vx, vel.zRotation);
-        }, null, drive.posDriver::isCompleted, drive);
+        }, (interrupted) -> drive.odometry.resetPose(pose), drive.posDriver::isCompleted, drive);
   }
 
   /**
@@ -88,7 +89,7 @@ public class Competitions {
 
     final double timeout = 3.0;
     final double targetForwardDistanceMM = 100;
-    final double targetSideDistanceMM = 80;
+    final double targetSideDistanceMM = 70;
 
     final DoubleSupplier getForwardSpeed =
         () -> MathUtil.clamp((sonar.getForwardAvg() - targetForwardDistanceMM) / 200,
@@ -114,6 +115,26 @@ public class Competitions {
         drive, sonar)
         .withTimeout(timeout)
         .andThen(drive.odometry.ResetPoseCommand(pose));
+  }
+
+  public CommandBase CollectForward(Pose2d pose) {
+    final double timeout = 3.0;
+    final double targetForwardDistanceMM = 80;
+
+    final DoubleSupplier getRotate =
+        () -> MathUtil.clamp(sonar.getForwardDiff() / 100, -0.15, 0.15);
+    final DoubleSupplier getForwardSpeed =
+        () -> MathUtil.clamp((sonar.getForwardAvg() - targetForwardDistanceMM) / 200,
+            -maxSpeed, maxSpeed);
+    return new SequentialCommandGroup(
+        Commands.run(
+            () -> drive.driveCartesian(0, 0,
+                getRotate.getAsDouble()),
+            drive)
+            .withTimeout(timeout),
+        Commands.run(
+            () -> drive.driveCartesian(0, getForwardSpeed.getAsDouble(), 0), drive))
+                .withTimeout(timeout);
   }
 
   public static enum Direction {
