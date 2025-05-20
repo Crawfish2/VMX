@@ -68,6 +68,11 @@ public class TitanKilloughDrive extends SubsystemExBase {
 
     posDriver = new PositionDriver();
 
+    registerToShuffleboard();
+  }
+
+  /** Shuffleboardへの登録をする */
+  private void registerToShuffleboard() {
     SendableRegistry.addChild(this, drive);
     SendableRegistry.addChild(this, odometry);
 

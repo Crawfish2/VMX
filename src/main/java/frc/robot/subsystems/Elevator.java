@@ -30,6 +30,11 @@ public class Elevator extends SubsystemExBase {
     encoder = new TitanQuadEncoder(motor, ELEVATOR, WHEEL_DIST_PER_TICK);
     drive = new SaferMotor(motor);
 
+    registerToShuffleboard();
+  }
+
+  /** Shuffleboardへの登録をする */
+  private void registerToShuffleboard() {
     SendableRegistry.addChild(this, drive);
 
     Shuffleboard.getTab("Titan").add(this);
