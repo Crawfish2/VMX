@@ -16,13 +16,13 @@ public class StatusHandler {
   private final AnalogInput startButton;
   private final AnalogInput resetButton;
   private final AnalogInput stopButton;
-  private final AnalogInput bumberSensor;
+  private final AnalogInput bumperSensor;
 
   // Analog Input 0-3
   private final int startButtonChannel = 0;
   private final int resetButtonChannel = 1;
   private final int stopButtonChannel = 2;
-  private final int bumberSensorChannel = 3;
+  private final int bumperSensorChannel = 3;
 
   private boolean isIdle = false;
 
@@ -31,7 +31,7 @@ public class StatusHandler {
     startButton = new AnalogInput(startButtonChannel);
     resetButton = new AnalogInput(resetButtonChannel);
     stopButton = new AnalogInput(stopButtonChannel);
-    bumberSensor = new AnalogInput(bumberSensorChannel);
+    bumperSensor = new AnalogInput(bumperSensorChannel);
   }
 
   private boolean getInput(final AnalogInput input) {
@@ -47,7 +47,7 @@ public class StatusHandler {
         ds.disable();
       }
       isIdle = true;
-    } else if ((getInput(stopButton) || getInput(bumberSensor)) && isEnabled) {
+    } else if ((getInput(stopButton) || getInput(bumperSensor)) && isEnabled) {
       ds.disable();
       isIdle = false;
     }
