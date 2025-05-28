@@ -44,6 +44,11 @@ public class UltraSonicSensor extends SubsystemExBase {
     timer = new Timer();
     timer.start();
 
+    registerToShuffleboard();
+  }
+
+  /** Shuffleboardへの登録をする */
+  private void registerToShuffleboard() {
     final var tab = Shuffleboard.getTab("UltraSonic");
 
     SendableRegistry.addChild(this, getSonar(UltraSonicPosition.frontLeft));

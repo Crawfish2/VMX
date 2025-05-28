@@ -16,12 +16,19 @@ public class TitanQuadPID extends TitanQuad implements Sendable {
   public TitanQuadPID(int deviceID, int frequency, int motor) {
     super(deviceID, frequency, motor);
     controller = new PIDController(kP, 0.0, kD);
-    SendableRegistry.addChild(this, controller);
+
+    registerToShuffleboard();
   }
 
   public TitanQuadPID(int deviceID, int motor) {
     super(deviceID, motor);
     controller = new PIDController(kP, 0.0, kD);
+
+    registerToShuffleboard();
+  }
+
+  /** Shuffleboardへの登録をする */
+  private void registerToShuffleboard() {
     SendableRegistry.addChild(this, controller);
   }
 

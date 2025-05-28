@@ -18,6 +18,11 @@ public class Arm extends SubsystemExBase {
     // 掴み続けるために、サーフティを無効にする
     servo.setSafetyEnabled(false);
 
+    registerToShuffleboard();
+  }
+
+  /** Shuffleboardへの登録をする */
+  private void registerToShuffleboard() {
     SendableRegistry.addChild(this, servo);
     SendableRegistry.addLW(servo, getName());
   }

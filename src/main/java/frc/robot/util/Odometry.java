@@ -43,6 +43,11 @@ public class Odometry implements Sendable {
         new KilloughDriveOdometry(kinematics, getGyroAngle(),
             new KilloughDriveWheelPositions());
 
+    registerToShuffleboard();
+  }
+
+  /** Shuffleboardへの登録をする */
+  private void registerToShuffleboard() {
     final var tab = Shuffleboard.getTab("Odometry");
     tab.add(this.ResetPoseCommand(new Pose2d()));
     SendableRegistry.addChild(this, gyro);

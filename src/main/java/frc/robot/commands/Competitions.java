@@ -27,6 +27,11 @@ public class Competitions {
     this.camera = camera;
     this.sonar = sonar;
 
+    registerToShuffleboard();
+  }
+
+  /** Shuffleboardへの登録をする */
+  private void registerToShuffleboard() {
     final var tab = Shuffleboard.getTab("Comp");
     tab.add("PoseCollection Left", PoseCollection(Direction.Left, new Pose2d()));
     tab.add("PoseCollection Right", PoseCollection(Direction.Right, new Pose2d()));
@@ -42,8 +47,6 @@ public class Competitions {
     tab.add("moveForwardDistance Left", moveForwardDistanceCommand.apply(Direction.Left));
     tab.add("moveForwardDistance Right", moveForwardDistanceCommand.apply(Direction.Right));
   }
-
-
 
   public CommandBase moveToPose(double x, double y, double angleDegrees) {
     return drive.moveToPoseCommand(new Pose2d(x, y, Rotation2d.fromDegrees(angleDegrees)),
