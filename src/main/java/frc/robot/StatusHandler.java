@@ -2,6 +2,11 @@ package frc.robot;
 
 import com.studica.frc.MockDS;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.Sendable;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 
 
 /**
@@ -9,7 +14,7 @@ import edu.wpi.first.wpilibj.AnalogInput;
  * Driver StationのEnable, Disableの状態を変える
  * ステータスランプの表示も持つ？
  */
-public class StatusHandler {
+public class StatusHandler implements Sendable {
   // Driver Station
   private final MockDS ds;
 
@@ -32,6 +37,18 @@ public class StatusHandler {
     resetButton = new AnalogInput(resetButtonChannel);
     stopButton = new AnalogInput(stopButtonChannel);
     bumperSensor = new AnalogInput(bumperSensorChannel);
+
+    registerToShuffleboard();
+  }
+
+  private void registerToShuffleboard() {
+    final ShuffleboardTab tab = Shuffleboard.getTab("StatusHandler");
+    tab.add("StatusHandler", this);
+
+    SendableRegistry.addChild(this, startButton);
+    SendableRegistry.addChild(this, resetButton);
+    SendableRegistry.addChild(this, stopButton);
+    SendableRegistry.addChild(this, bumperSensor);
   }
 
   private boolean getInput(final AnalogInput input) {
@@ -51,5 +68,13 @@ public class StatusHandler {
       ds.disable();
       isIdle = false;
     }
+  }
+
+  @Override
+  public void initSendable(SendableBuilder builder) {
+    builder.addDoubleProperty("startButton", startButton::getValue, null);
+    builder.addDoubleProperty("stopButton", stopButton::getValue, null);
+    builder.addDoubleProperty("resetButton", resetButton::getValue, null);
+    builder.addDoubleProperty("bumperSensor", bumperSensor::getValue, null);
   }
 }
