@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.studica.frc.MockDS;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -23,11 +24,19 @@ public class StatusHandler implements Sendable {
   private final AnalogInput stopButton;
   private final AnalogInput bumperSensor;
 
+  private final DigitalOutput idleLamp;
+  private final DigitalOutput runningLamp;
+  private final DigitalOutput stopLamp;
+
   // Analog Input 0-3
   private final int startButtonChannel = 0;
   private final int resetButtonChannel = 1;
   private final int stopButtonChannel = 2;
   private final int bumperSensorChannel = 3;
+
+  private final int idleLampChannel = 13;
+  private final int runningLampChannel = 14;
+  private final int stopLampChannel = 15;
 
   private boolean isIdle = false;
 
@@ -37,6 +46,10 @@ public class StatusHandler implements Sendable {
     resetButton = new AnalogInput(resetButtonChannel);
     stopButton = new AnalogInput(stopButtonChannel);
     bumperSensor = new AnalogInput(bumperSensorChannel);
+
+    idleLamp = new DigitalOutput(idleLampChannel);
+    runningLamp = new DigitalOutput(runningLampChannel);
+    stopLamp = new DigitalOutput(stopLampChannel);
 
     registerToShuffleboard();
   }
@@ -68,6 +81,14 @@ public class StatusHandler implements Sendable {
       ds.disable();
       isIdle = false;
     }
+    updateLamp(isEnabled);
+  }
+
+  // TODO(urneighbor1): テストをする
+  private void updateLamp(boolean isEnabled) {
+    idleLamp.set(isIdle);
+    stopLamp.set(!isEnabled);
+    runningLamp.set(!isIdle && isEnabled);
   }
 
   @Override
@@ -76,5 +97,7 @@ public class StatusHandler implements Sendable {
     builder.addDoubleProperty("stopButton", stopButton::getValue, null);
     builder.addDoubleProperty("resetButton", resetButton::getValue, null);
     builder.addDoubleProperty("bumperSensor", bumperSensor::getValue, null);
+    builder.addBooleanProperty("idleLamp", idleLamp::get, idleLamp::set);
+    builder.addBooleanProperty("runningLamp", runningLamp::get, runningLamp::set);
   }
 }
