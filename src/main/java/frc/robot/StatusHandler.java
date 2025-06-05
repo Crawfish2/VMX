@@ -99,5 +99,6 @@ public class StatusHandler implements Sendable {
     builder.addDoubleProperty("bumperSensor", bumperSensor::getValue, null);
     builder.addBooleanProperty("idleLamp", idleLamp::get, idleLamp::set);
     builder.addBooleanProperty("runningLamp", runningLamp::get, runningLamp::set);
+    builder.addBooleanProperty("stopLamp", stopLamp::get, stopLamp::set);
   }
 }
