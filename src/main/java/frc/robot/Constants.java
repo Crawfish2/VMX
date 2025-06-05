@@ -68,6 +68,18 @@ public final class Constants {
     public static final int SERVO_CHANNEL = 0;
   }
 
+  public static class StatusHandlerConstants {
+    public static final int startButtonChannel = 0;
+    public static final int resetButtonChannel = 1;
+    public static final int stopButtonChannel = 2;
+    public static final int bumperSensorChannel = 3;
+
+    public static final int idleLampChannel = 13;
+    public static final int runningLampChannel = 14;
+    public static final int stopLampChannel = 15;
+
+  }
+
 
   /** 実行環境がVMX-Pi上かどうか */
   public static final boolean isReal =

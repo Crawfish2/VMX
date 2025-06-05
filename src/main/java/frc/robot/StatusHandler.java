@@ -8,7 +8,13 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
-
+import static frc.robot.Constants.StatusHandlerConstants.bumperSensorChannel;
+import static frc.robot.Constants.StatusHandlerConstants.idleLampChannel;
+import static frc.robot.Constants.StatusHandlerConstants.resetButtonChannel;
+import static frc.robot.Constants.StatusHandlerConstants.runningLampChannel;
+import static frc.robot.Constants.StatusHandlerConstants.startButtonChannel;
+import static frc.robot.Constants.StatusHandlerConstants.stopButtonChannel;
+import static frc.robot.Constants.StatusHandlerConstants.stopLampChannel;
 
 /**
  * 競技用のロボットの開始、停止スイッチなどを通して、
@@ -27,16 +33,6 @@ public class StatusHandler implements Sendable {
   private final DigitalOutput idleLamp;
   private final DigitalOutput runningLamp;
   private final DigitalOutput stopLamp;
-
-  // Analog Input 0-3
-  private final int startButtonChannel = 0;
-  private final int resetButtonChannel = 1;
-  private final int stopButtonChannel = 2;
-  private final int bumperSensorChannel = 3;
-
-  private final int idleLampChannel = 13;
-  private final int runningLampChannel = 14;
-  private final int stopLampChannel = 15;
 
   private boolean isIdle = false;
 
