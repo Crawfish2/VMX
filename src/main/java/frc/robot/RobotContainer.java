@@ -10,8 +10,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.task.Kadai;
-import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.NewElevator;
+// import frc.robot.subsystems.Elevator;
 // import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.SimpleCamera;
 import frc.robot.subsystems.TitanKilloughDrive;
@@ -31,7 +31,7 @@ public class RobotContainer {
   private final TitanKilloughDrive drive = new TitanKilloughDrive();
   private final UltraSonicSensor sonar = new UltraSonicSensor();
   private final SimpleCamera camera = new SimpleCamera();
-  private final Elevator elevator = new Elevator();
+  private final NewElevator elevator = new NewElevator();
   // private final Arm arm = new Arm();
 
   private final Kadai kadaiRunner = new Kadai(drive, camera, sonar);
