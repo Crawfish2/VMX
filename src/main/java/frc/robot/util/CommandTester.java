@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.task.DriveCorners;
-import frc.robot.commands.task.PubKadai1;
 import frc.robot.commands.test.DriveTri;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.SimpleCamera;
@@ -61,8 +60,6 @@ public class CommandTester {
     chooser.addOption("RaiseElevator", () -> elevator.RaiseElevatorCommand(distance.getDouble(0)));
 
     chooser.addOption("LowerElevator", () -> elevator.LowerElevatorCommand(distance.getDouble(0)));
-
-    chooser.addOption("Public Kadai 1", () -> new PubKadai1(drive, camera));
     tab.add(chooser);
   }
 
