@@ -7,7 +7,7 @@
 
 package frc.robot;
 
-import com.studica.frc.MockDS;
+// import com.studica.frc.MockDS;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -23,8 +23,8 @@ public class Robot extends TimedRobot {
 
   private RobotContainer robotContainer;
 
-  private MockDS ds;
-  private StatusHandler status;
+  // private MockDS ds;
+  // private StatusHandler status;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -36,8 +36,8 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
 
-    ds = new MockDS();
-    status = new StatusHandler(ds);
+    // ds = new MockDS();
+    // status = new StatusHandler(ds);
   }
 
   /**
@@ -54,9 +54,9 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods. This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    boolean isEnabled = isEnabled();
-    status.updateDS(isEnabled);
-    status.updateLamp(isEnabled);
+    // boolean isEnabled = isEnabled();
+    // status.updateDS(isEnabled);
+    // status.updateLamp(isEnabled);
   }
 
   /**
