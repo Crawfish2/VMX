@@ -40,6 +40,9 @@ public class UltraSonicSensor extends SubsystemExBase {
         new Ultrasonic(middleLeftPingPin, middleLeftEchoPin),
         new Ultrasonic(middleRightPingPin, middleRightEchoPin)
     };
+    for (var sonar : sonars) {
+      sonar.setAutomaticMode(true);
+    }
 
     timer = new Timer();
     timer.start();
@@ -109,12 +112,4 @@ public class UltraSonicSensor extends SubsystemExBase {
     return getSonar(pos).isRangeValid();
   }
 
-  @Override
-  public void periodic() {
-    if (timer.advanceIfElapsed(0.040)) {
-      for (Ultrasonic sonar : sonars) {
-        sonar.ping();
-      }
-    }
-  }
 }
