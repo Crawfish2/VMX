@@ -62,6 +62,6 @@ public class Arm extends SubsystemExBase {
 
   @Override
   public void initSendable(SendableBuilder builder) {
-    builder.addDoubleProperty("Angle", servo::getAngle, null);
+    builder.addDoubleProperty("Angle", servo::getAngle, servo::setAngle);
   }
 }
