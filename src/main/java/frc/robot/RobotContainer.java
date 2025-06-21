@@ -34,7 +34,7 @@ public class RobotContainer {
   private final NewElevator elevator = new NewElevator();
   // private final Arm arm = new Arm();
 
-  private final Kadai kadaiRunner = new Kadai(drive, camera, sonar);
+  private final Kadai_0503 kadaiRunner = new Kadai_0503(drive, camera, sonar);
 
   private final CommandTester tester = new CommandTester(drive, sonar, camera, elevator);
 

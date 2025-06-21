@@ -24,14 +24,14 @@ import frc.robot.subsystems.UltraSonicSensor;
 import frc.robot.subsystems.SimpleCamera.ColorType;
 import frc.robot.util.Box;
 
-public class Kadai {
+public class Kadai_0503 {
   private final TitanKilloughDrive drive;
   private final SimpleCamera camera;
   private final UltraSonicSensor sonar;
 
   private final Competitions comp;
 
-  public Kadai(TitanKilloughDrive drive, SimpleCamera camera, UltraSonicSensor sonar) {
+  public Kadai_0503(TitanKilloughDrive drive, SimpleCamera camera, UltraSonicSensor sonar) {
     this.drive = drive;
     this.camera = camera;
     this.sonar = sonar;
@@ -45,7 +45,8 @@ public class Kadai {
   public CommandBase kadai1() {
     return new SequentialCommandGroup(
         camera.DetectColorCommand(),
-        drive.odometry.ResetPoseCommand(new Pose2d(0, 600, Rotation2d.fromDegrees(90))),
+        drive.odometry.ResetPoseCommand(
+            new Pose2d(0, 600, Rotation2d.fromDegrees(90))),
         comp.moveToPose(0, 600, 0),
 
         new ConditionalCommand(
@@ -53,18 +54,25 @@ public class Kadai {
             new SequentialCommandGroup(
                 comp.moveToPose(2.5 * 600, 600, 0),
                 comp.PoseCollection(Direction.Right,
-                    new Pose2d(2.5 * 600, 600, Rotation2d.fromDegrees(0))),
+                    new Pose2d(2.5 * 600,
+                        600,
+                        Rotation2d.fromDegrees(
+                            0))),
                 comp.moveToPose(2.5 * 600, 0, 0),
 
                 comp.moveToPose(3.5 * 600, 0, 0),
                 new ConditionalCommand(
                     // 青のとき
                     new SequentialCommandGroup(
-                        comp.moveToPose(3.5 * 600, 1 * 600, 0),
+                        comp.moveToPose(3.5
+                            * 600,
+                            1 * 600,
+                            0),
                         new WaitCommand(5)),
                     // 赤のとき
                     new WaitCommand(5),
-                    () -> camera.getDetectedColor().equals(ColorType.BLUE)),
+                    () -> camera.getDetectedColor()
+                        .equals(ColorType.BLUE)),
 
                 // 戻る
                 comp.moveToPose(3.5 * 600, 0, 0),
@@ -72,28 +80,47 @@ public class Kadai {
 
                 comp.moveToPose(2.5 * 600, 600, 0),
                 comp.PoseCollection(Direction.Right,
-                    new Pose2d(2.5 * 600, 600, Rotation2d.fromDegrees(0)))),
+                    new Pose2d(2.5 * 600,
+                        600,
+                        Rotation2d.fromDegrees(
+                            0)))),
 
 
             // 黄のとき
             new SequentialCommandGroup(
-                comp.moveToPose(1 * 600, 1 * 600, 0),
-                comp.moveToPose(1 * 600, 2 * 600, 0),
+                comp.moveToPose(1 * 600, 1 * 600,
+                    0),
+                comp.moveToPose(1 * 600, 2 * 600,
+                    0),
                 comp.moveForwardDistanceSensor(
-                    new Pose2d(3.5 * 600, 2 * 600, Rotation2d.fromDegrees(0)),
-                    Direction.Right).withTimeout(14),
+                    new Pose2d(3.5 * 600,
+                        2 * 600,
+                        Rotation2d.fromDegrees(
+                            0)),
+                    Direction.Right)
+                    .withTimeout(14),
                 comp.PoseCollection(Direction.Right,
-                    new Pose2d(3.5 * 600, 2 * 600, Rotation2d.fromDegrees(0))),
-                // comp.moveToPose(3.5 * 600, 2 * 600, 0),
+                    new Pose2d(3.5 * 600,
+                        2 * 600,
+                        Rotation2d.fromDegrees(
+                            0))),
+                // comp.moveToPose(3.5 * 600, 2 *
+                // 600, 0),
 
                 new WaitCommand(5),
                 // 戻る
                 comp.moveForwardDistanceSensor(
-                    new Pose2d(1 * 600, 2 * 600, Rotation2d.fromDegrees(0)),
-                    Direction.Right).withTimeout(7),
-                comp.moveToPose(1 * 600, 1 * 600, 0)),
+                    new Pose2d(1 * 600,
+                        2 * 600,
+                        Rotation2d.fromDegrees(
+                            0)),
+                    Direction.Right)
+                    .withTimeout(7),
+                comp.moveToPose(1 * 600, 1 * 600,
+                    0)),
 
-            () -> !camera.getDetectedColor().equals(ColorType.YELLOW)),
+            () -> !camera.getDetectedColor()
+                .equals(ColorType.YELLOW)),
 
         comp.moveToPose(0, 600, 0));
   }
@@ -120,8 +147,10 @@ public class Kadai {
     BiFunction<String, Box<ColorType>, Void> sendColorType = (name, colorType) -> {
       tab.add(name,
           createSendable(name,
-              () -> NetworkTableValue.makeString(colorType.get().toString()),
-              (value) -> colorType.set(ColorType.valueOf(value.getString()))));
+              () -> NetworkTableValue.makeString(
+                  colorType.get().toString()),
+              (value) -> colorType.set(ColorType
+                  .valueOf(value.getString()))));
       return null;
     };
 
@@ -136,30 +165,46 @@ public class Kadai {
             }, camera),
 
             comp.PoseCollection(Direction.Right,
-                new Pose2d(0, 1 * 600, Rotation2d.fromDegrees(90))),
-            // drive.odometry.ResetPoseCommand(new Pose2d(0, 600, Rotation2d.fromDegrees(90))),
+                new Pose2d(0, 1 * 600,
+                    Rotation2d.fromDegrees(
+                        90))),
+            // drive.odometry.ResetPoseCommand(new Pose2d(0,
+            // 600,
+            // Rotation2d.fromDegrees(90))),
 
             // 色指示板A
             camera.DetectColorCommand(),
-            Commands.runOnce(() -> areaColorA.set(camera.getDetectedColor()), camera),
+            Commands.runOnce(
+                () -> areaColorA.set(
+                    camera.getDetectedColor()),
+                camera),
 
             comp.moveToPose(600, 600 - 50, 90),
             comp.moveToPose(600, 600 - 50, -90),
             comp.moveToPose(0, 600 - 50, -90),
-            comp.PoseCollection(Direction.Left, new Pose2d(0, 600, Rotation2d.fromDegrees(-90))),
+            comp.PoseCollection(Direction.Left,
+                new Pose2d(0, 600,
+                    Rotation2d.fromDegrees(
+                        -90))),
 
             // 色指示板B
             camera.DetectColorCommand(),
-            Commands.runOnce(() -> areaColorB.set(camera.getDetectedColor()), camera)
+            Commands.runOnce(
+                () -> areaColorB.set(
+                    camera.getDetectedColor()),
+                camera)
 
         // 左向きで終了
         //
         ));
 
 
-    final Box<ColorType> alphaPack = new Box<SimpleCamera.ColorType>(ColorType.PREPARING);
-    final Box<ColorType> betaPack = new Box<SimpleCamera.ColorType>(ColorType.PREPARING);
-    final Box<ColorType> gammaPack = new Box<SimpleCamera.ColorType>(ColorType.PREPARING);
+    final Box<ColorType> alphaPack =
+        new Box<SimpleCamera.ColorType>(ColorType.PREPARING);
+    final Box<ColorType> betaPack =
+        new Box<SimpleCamera.ColorType>(ColorType.PREPARING);
+    final Box<ColorType> gammaPack =
+        new Box<SimpleCamera.ColorType>(ColorType.PREPARING);
 
     sendColorType.apply("alphaPack", alphaPack);
     sendColorType.apply("betaPack", betaPack);
@@ -167,24 +212,36 @@ public class Kadai {
 
     // パックを運べる状態にする
     final BiFunction<Box<ColorType>, Double, CommandBase> capturePack =
-        (colorPack, targetX) -> Commands.withName("capturePack", new SequentialCommandGroup(
-            // 左向きで開始
-            comp.moveToPose(2.5 * 600, 600, -90),
+        (colorPack, targetX) -> Commands.withName("capturePack",
+            new SequentialCommandGroup(
+                // 左向きで開始
+                comp.moveToPose(2.5 * 600, 600,
+                    -90),
 
-            comp.moveToPose(targetX, 600, -90),
-            camera.DetectColorCommand(),
-            Commands.runOnce(() -> colorPack.set(camera.getDetectedColor()), camera),
+                comp.moveToPose(targetX, 600, -90),
+                camera.DetectColorCommand(),
+                Commands.runOnce(
+                    () -> colorPack.set(
+                        camera.getDetectedColor()),
+                    camera),
 
-            // 回収
-            comp.moveToPose(targetX, 0, -90),
-            comp.CollectForward(new Pose2d(targetX, 0, Rotation2d.fromDegrees(-90))),
-            comp.moveToPose(targetX, 0, 0),
-            // (2.5 * 600 + 50, 0, 0)で終わる
-            comp.moveForwardDistanceSensor(
-                new Pose2d(2.5 * 600 + 50, 0, Rotation2d.fromDegrees(0)),
-                Direction.Left)
-        // comp.moveToPose(2.5 * 600 + 50, 0, 0)
-        ));
+                // 回収
+                comp.moveToPose(targetX, 0, -90),
+                comp.CollectForward(new Pose2d(
+                    targetX, 0,
+                    Rotation2d.fromDegrees(
+                        -90))),
+                comp.moveToPose(targetX, 0, 0),
+                // (2.5 * 600 + 50, 0, 0)で終わる
+                comp.moveForwardDistanceSensor(
+                    new Pose2d(2.5 * 600
+                        + 50,
+                        0,
+                        Rotation2d.fromDegrees(
+                            0)),
+                    Direction.Left)
+            // comp.moveToPose(2.5 * 600 + 50, 0, 0)
+            ));
 
 
     // パックを指定回収エリアに運ぶ
@@ -195,36 +252,87 @@ public class Kadai {
             new SequentialCommandGroup(new ConditionalCommand(
                 new SequentialCommandGroup(
                     // areaAのとき
-                    comp.moveToPose(2.5 * 600 + 50, 0, 0),
+                    comp.moveToPose(2.5
+                        * 600
+                        + 50,
+                        0,
+                        0),
                     comp.moveForwardDistanceSensor(
-                        new Pose2d(3.5 * 600, 0, Rotation2d.fromDegrees(0)), Direction.Left),
-                    // comp.moveToPose(3.5 * 600, 0, 0),
-                    comp.PoseCollection(Direction.Right,
-                        new Pose2d(3.5 * 600, 0, Rotation2d.fromDegrees(0))),
-                    comp.moveToPose(2.5 * 600, 0, 0)),
+                        new Pose2d(3.5 * 600,
+                            0,
+                            Rotation2d.fromDegrees(
+                                0)),
+                        Direction.Left),
+                    // comp.moveToPose(3.5
+                    // *
+                    // 600, 0, 0),
+                    comp.PoseCollection(
+                        Direction.Right,
+                        new Pose2d(3.5 * 600,
+                            0,
+                            Rotation2d.fromDegrees(
+                                0))),
+                    comp.moveToPose(2.5
+                        * 600,
+                        0,
+                        0)),
                 new ConditionalCommand(
                     new SequentialCommandGroup(
                         // areaBのとき
-                        comp.moveToPose(2.5 * 600 + 50, 600 + 50, 0),
-                        comp.moveToPose(3.5 * 600, 600 + 50, 0),
-                        comp.PoseCollection(Direction.Right,
-                            new Pose2d(3.5 * 600, 600,
-                                Rotation2d.fromDegrees(0))),
-                        comp.moveToPose(2.5 * 600, 600, 0)),
+                        comp.moveToPose(2.5
+                            * 600
+                            + 50,
+                            600 + 50,
+                            0),
+                        comp.moveToPose(3.5
+                            * 600,
+                            600 + 50,
+                            0),
+                        comp.PoseCollection(
+                            Direction.Right,
+                            new Pose2d(3.5 * 600,
+                                600,
+                                Rotation2d.fromDegrees(
+                                    0))),
+                        comp.moveToPose(2.5
+                            * 600,
+                            600,
+                            0)),
                     new SequentialCommandGroup(
                         // 回収エリアのとき
-                        comp.moveToPose(2.5 * 600 + 50, 2 * 600, 0),
+                        comp.moveToPose(2.5
+                            * 600
+                            + 50,
+                            2 * 600,
+                            0),
                         comp.moveForwardDistanceSensor(
-                            new Pose2d(3.5 * 600, 2 * 600, Rotation2d.fromDegrees(0)),
+                            new Pose2d(3.5 * 600,
+                                2 * 600,
+                                Rotation2d.fromDegrees(
+                                    0)),
                             Direction.Right),
-                        // comp.moveToPose(3.5 * 600, 2 * 600, 0),
-                        comp.PoseCollection(Direction.Right,
-                            new Pose2d(3.5 * 600, 2 * 600,
-                                Rotation2d.fromDegrees(0))),
-                        comp.moveToPose(2.5 * 600, 2 * 600, 0)),
-                    () -> packColor.equals(areaColorB)),
+                        // comp.moveToPose(3.5
+                        // *
+                        // 600,
+                        // 2
+                        // *
+                        // 600,
+                        // 0),
+                        comp.PoseCollection(
+                            Direction.Right,
+                            new Pose2d(3.5 * 600,
+                                2 * 600,
+                                Rotation2d.fromDegrees(
+                                    0))),
+                        comp.moveToPose(2.5
+                            * 600,
+                            2 * 600,
+                            0)),
+                    () -> packColor.equals(
+                        areaColorB)),
                 () -> packColor.equals(areaColorA)),
-                comp.moveToPose(2.5 * 600, 600, 0)));
+                comp.moveToPose(2.5 * 600, 600,
+                    0)));
 
     tab.add(readIroshiji.get());
 
@@ -244,7 +352,8 @@ public class Kadai {
             comp.moveToPose(2.5 * 600, 600 - 50, -90),
             comp.moveToPose(0, 600 - 50, -90),
             comp.PoseCollection(Direction.Left,
-                new Pose2d(0, 600 - 50, Rotation2d.fromDegrees(-90)))
+                new Pose2d(0, 600 - 50, Rotation2d
+                    .fromDegrees(-90)))
         //
         ));
 
