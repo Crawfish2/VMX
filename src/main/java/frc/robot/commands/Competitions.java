@@ -22,6 +22,9 @@ public class Competitions {
 
   private static final double maxSpeed = 0.3;
 
+  final double targetForwardDistanceMM = 150;
+  final double targetSideDistanceMM = 120;
+
   public Competitions(TitanKilloughDrive drive, SimpleCamera camera, UltraSonicSensor sonar) {
     this.drive = drive;
     this.camera = camera;
@@ -54,16 +57,17 @@ public class Competitions {
   }
 
   public CommandBase moveForwardDistanceSensor(Pose2d pose, Direction direction) {
-    final double targetDistanceMM = 70;
 
     final DoubleSupplier getLateralSpeed =
         Direction.Left.equals(direction)
             ? () -> MathUtil.clamp(
-                -(sonar.getRangeMM(UltraSonicPosition.middleLeft) - targetDistanceMM) / 200,
+                -(sonar.getRangeMM(UltraSonicPosition.middleLeft)
+                    - targetSideDistanceMM) / 200,
                 -maxSpeed,
                 maxSpeed)
             : () -> MathUtil.clamp(
-                (sonar.getRangeMM(UltraSonicPosition.middleRight) - targetDistanceMM) / 200,
+                (sonar.getRangeMM(UltraSonicPosition.middleRight)
+                    - targetSideDistanceMM) / 200,
                 -maxSpeed,
                 maxSpeed);
 
@@ -91,8 +95,6 @@ public class Competitions {
     }
 
     final double timeout = 3.0;
-    final double targetForwardDistanceMM = 100;
-    final double targetSideDistanceMM = 70;
 
     final DoubleSupplier getForwardSpeed =
         () -> MathUtil.clamp((sonar.getForwardAvg() - targetForwardDistanceMM) / 200,
@@ -110,7 +112,7 @@ public class Competitions {
                 maxSpeed);
 
     final DoubleSupplier getRotate =
-        () -> MathUtil.clamp(sonar.getForwardDiff() / 200, -0.15, 0.15);
+        () -> MathUtil.clamp(sonar.getForwardDiff() / 100, -0.15, 0.15);
 
     return Commands.run(
         () -> drive.driveCartesian(getLateralSpeed.getAsDouble(), getForwardSpeed.getAsDouble(),
@@ -122,7 +124,6 @@ public class Competitions {
 
   public CommandBase CollectForward(Pose2d pose) {
     final double timeout = 3.0;
-    final double targetForwardDistanceMM = 80;
 
     final DoubleSupplier getRotate =
         () -> MathUtil.clamp(sonar.getForwardDiff() / 100, -0.15, 0.15);
