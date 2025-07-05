@@ -5,6 +5,8 @@ import edu.wpi.cscore.VideoMode;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Sendable;
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemExBase;
 
@@ -88,7 +90,12 @@ public class SimpleCamera extends SubsystemExBase {
   }
 
   /** 検出した色 */
-  public static enum ColorType {
+  public static enum ColorType implements Sendable {
     PREPARING, NONE, RED, BLUE, YELLOW;
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+      builder.addStringProperty("color", () -> this.toString(), null);
+    }
   };
 }
