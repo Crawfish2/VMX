@@ -17,7 +17,7 @@ import frc.robot.commands.task.Kadai_0621;
 import frc.robot.subsystems.SimpleCamera;
 import frc.robot.subsystems.TitanKilloughDrive;
 import frc.robot.subsystems.UltraSonicSensor;
-import frc.robot.util.CommandTester;
+// import frc.robot.util.CommandTester;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
@@ -37,7 +37,7 @@ public class RobotContainer {
 
   private final Kadai_0621 kadaiRunner = new Kadai_0621(drive, camera, sonar);
 
-  private final CommandTester tester = new CommandTester(drive, sonar, camera, elevator);
+  // private final CommandTester tester = new CommandTester(drive, sonar, camera, elevator);
 
   private final PS4Controller controller = new PS4Controller(0);
 
@@ -98,7 +98,8 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    Command command = tester.getSelectedCommand();
-    return command;
+    // Command command = tester.getSelectedCommand();
+    // return command;
+    return null;
   }
 }
