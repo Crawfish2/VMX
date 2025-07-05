@@ -1,16 +1,11 @@
 package frc.robot.commands.task;
 
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import edu.wpi.first.networktables.NetworkTableValue;
-import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
-import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -23,6 +18,7 @@ import frc.robot.subsystems.TitanKilloughDrive;
 import frc.robot.subsystems.UltraSonicSensor;
 import frc.robot.subsystems.SimpleCamera.ColorType;
 import frc.robot.util.Box;
+import frc.robot.util.SendableBox;
 
 public class Kadai_0503 {
   private final TitanKilloughDrive drive;
@@ -125,37 +121,15 @@ public class Kadai_0503 {
         comp.moveToPose(0, 600, 0));
   }
 
-  public Sendable createSendable(String name, Supplier<NetworkTableValue> getter,
-      Consumer<NetworkTableValue> setter) {
-    final var sendable = new Sendable() {
-      @Override
-      public void initSendable(SendableBuilder builder) {
-        builder.addValueProperty("value", getter, setter);
-      }
-    };
-    SendableRegistry.setName(sendable, name);
-    return sendable;
-  }
-
   public CommandBase kadai2() {
     // 初期の向き: 右
-    final Box<ColorType> areaColorA = new Box<ColorType>(ColorType.PREPARING); // 右側
-    final Box<ColorType> areaColorB = new Box<ColorType>(ColorType.PREPARING); // 左側
+    final SendableBox<ColorType> areaColorA = new SendableBox<>(ColorType.PREPARING); // 右側
+    final SendableBox<ColorType> areaColorB = new SendableBox<>(ColorType.PREPARING); // 左側
 
     final var tab = Shuffleboard.getTab("Kadai");
 
-    BiFunction<String, Box<ColorType>, Void> sendColorType = (name, colorType) -> {
-      tab.add(name,
-          createSendable(name,
-              () -> NetworkTableValue.makeString(
-                  colorType.get().toString()),
-              (value) -> colorType.set(ColorType
-                  .valueOf(value.getString()))));
-      return null;
-    };
-
-    sendColorType.apply("areaColorA", areaColorA);
-    sendColorType.apply("areaColorB", areaColorB);
+    tab.add("areaColorA", areaColorA);
+    tab.add("areaColorB", areaColorB);
 
     final Supplier<CommandBase> readIroshiji =
         () -> Commands.withName("readIroshiji", new SequentialCommandGroup(
@@ -199,16 +173,13 @@ public class Kadai_0503 {
         ));
 
 
-    final Box<ColorType> alphaPack =
-        new Box<SimpleCamera.ColorType>(ColorType.PREPARING);
-    final Box<ColorType> betaPack =
-        new Box<SimpleCamera.ColorType>(ColorType.PREPARING);
-    final Box<ColorType> gammaPack =
-        new Box<SimpleCamera.ColorType>(ColorType.PREPARING);
+    final SendableBox<ColorType> alphaPack = new SendableBox<>(ColorType.PREPARING);
+    final SendableBox<ColorType> betaPack = new SendableBox<>(ColorType.PREPARING);
+    final SendableBox<ColorType> gammaPack = new SendableBox<>(ColorType.PREPARING);
 
-    sendColorType.apply("alphaPack", alphaPack);
-    sendColorType.apply("betaPack", betaPack);
-    sendColorType.apply("gammaPack", gammaPack);
+    tab.add("alphaPack", alphaPack);
+    tab.add("betaPack", betaPack);
+    tab.add("gammaPack", gammaPack);
 
     // パックを運べる状態にする
     final BiFunction<Box<ColorType>, Double, CommandBase> capturePack =

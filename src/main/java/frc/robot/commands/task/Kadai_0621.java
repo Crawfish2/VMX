@@ -1,15 +1,9 @@
 package frc.robot.commands.task;
 
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
-import edu.wpi.first.networktables.NetworkTableValue;
-import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
-import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -22,6 +16,7 @@ import frc.robot.subsystems.TitanKilloughDrive;
 import frc.robot.subsystems.UltraSonicSensor;
 import frc.robot.subsystems.SimpleCamera.ColorType;
 import frc.robot.util.Box;
+import frc.robot.util.SendableBox;
 
 public class Kadai_0621 {
   private final TitanKilloughDrive drive;
@@ -38,18 +33,6 @@ public class Kadai_0621 {
 
     final var tab = Shuffleboard.getTab("Kadai");
     tab.add(Commands.withName("basicMove", basicMove()));
-  }
-
-  public Sendable createSendable(String name, Supplier<NetworkTableValue> getter,
-      Consumer<NetworkTableValue> setter) {
-    final var sendable = new Sendable() {
-      @Override
-      public void initSendable(SendableBuilder builder) {
-        builder.addValueProperty("value", getter, setter);
-      }
-    };
-    SendableRegistry.setName(sendable, name);
-    return sendable;
   }
 
   private Pose2d pose(double x, double y, double deg) {
@@ -92,23 +75,11 @@ public class Kadai_0621 {
             //
             ));
 
-    final Box<ColorType> alphaPack =
-        new Box<ColorType>(ColorType.PREPARING);
-    final Box<ColorType> betaPack =
-        new Box<ColorType>(ColorType.PREPARING);
+    final SendableBox<ColorType> alphaPack = new SendableBox<>(ColorType.PREPARING);
+    final SendableBox<ColorType> betaPack = new SendableBox<>(ColorType.PREPARING);
 
-    BiFunction<String, Box<ColorType>, Void> sendColorType = (name, colorType) -> {
-      tab.add(name,
-          createSendable(name,
-              () -> NetworkTableValue.makeString(
-                  colorType.get().toString()),
-              (value) -> colorType.set(ColorType
-                  .valueOf(value.getString()))));
-      return null;
-    };
-
-    sendColorType.apply("alphaPack", alphaPack);
-    sendColorType.apply("betaPack", betaPack);
+    tab.add("alphaPack", alphaPack);
+    tab.add("betaPack", betaPack);
 
     // 正面向きで開始
     Supplier<CommandBase> move2 =
