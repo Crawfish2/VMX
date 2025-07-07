@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.NewElevator;
 import frc.robot.commands.task.Kadai_0621;
 // import frc.robot.subsystems.Elevator;
-// import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.SimpleCamera;
 import frc.robot.subsystems.TitanKilloughDrive;
 import frc.robot.subsystems.UltraSonicSensor;
@@ -33,7 +33,7 @@ public class RobotContainer {
   private final UltraSonicSensor sonar = new UltraSonicSensor();
   private final SimpleCamera camera = new SimpleCamera();
   private final NewElevator elevator = new NewElevator();
-  // private final Arm arm = new Arm();
+  private final Arm arm = new Arm();
 
   private final Kadai_0621 kadaiRunner = new Kadai_0621(drive, camera, sonar);
 
@@ -71,15 +71,15 @@ public class RobotContainer {
       }
     }, elevator));
 
-    // arm.setDefaultCommand(Commands.run(() -> {
-    // if (controller.getL1Button()) {
-    // arm.grab();
-    // } else if (controller.getL2Button()) {
-    // arm.release();
-    // } else {
-    // arm.stopMotor();
-    // }
-    // }, arm));
+    arm.setDefaultCommand(Commands.run(() -> {
+      if (controller.getL1Button()) {
+        arm.grab();
+      } else if (controller.getL2Button()) {
+        arm.release();
+      } else {
+        arm.stopMotor();
+      }
+    }, arm));
   }
 
   /**
