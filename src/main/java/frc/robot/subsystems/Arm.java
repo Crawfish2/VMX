@@ -9,8 +9,8 @@ import static frc.robot.Constants.ArmConstants.SERVO_CHANNEL;
 
 public class Arm extends SubsystemExBase {
   private final Servo servo;
-  private static final double GRAB = 135;
-  private static final double RELEASE = 165;
+  private static final double GRAB = 80;
+  private static final double RELEASE = 0;
 
   public Arm() {
     servo = new Servo(SERVO_CHANNEL);
