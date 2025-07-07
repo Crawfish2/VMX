@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.task.DriveCorners;
 import frc.robot.commands.test.DriveTri;
-import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.NewElevator;
 import frc.robot.subsystems.SimpleCamera;
 import frc.robot.subsystems.TitanKilloughDrive;
 import frc.robot.subsystems.UltraSonicSensor;
@@ -25,7 +25,7 @@ public class CommandTester {
   private final NetworkTableEntry distance;
 
   public CommandTester(TitanKilloughDrive drive, UltraSonicSensor sonar, SimpleCamera camera,
-      Elevator elevator) {
+      NewElevator elevator) {
     final ShuffleboardTab tab = Shuffleboard.getTab("CommandTester");
 
     speed = tab.add("Speed", 0.0)

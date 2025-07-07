@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemExBase;
+import frc.robot.util.SaferMotor;
 
 /** アームのエレベーター */
 // TODO: エレベーターのテストをする
