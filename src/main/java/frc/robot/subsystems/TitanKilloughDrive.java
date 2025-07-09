@@ -206,6 +206,7 @@ public class TitanKilloughDrive extends SubsystemExBase {
    * @param angle [-180..180] 取得したい角度
    * @return 指定した角度の方向に進んだ距離
    */
+  @Deprecated
   public double getDistancePolar(double angle) {
     // 各モーターのエンコーダー距離を取得
     double d_l = encoderLeft.getEncoderDistance();
@@ -238,6 +239,7 @@ public class TitanKilloughDrive extends SubsystemExBase {
    *
    * @param angle [-180..180] 回転する角度
    */
+  @Deprecated
   public Command RotateDistanceCommand(double angle) {
     double speed = Math.copySign(0.3, angle); // 左(負)向きなら、左回転する
 
