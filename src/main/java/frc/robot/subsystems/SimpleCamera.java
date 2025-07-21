@@ -73,12 +73,12 @@ public class SimpleCamera extends SubsystemExBase {
   }
 
   /** 検出した色の中心座標のX軸(左右)を返す */
-  public double getDetectedCentorAreaX() {
+  public double getDetectedCenterAreaX() {
     return detectedAreaX.getDouble(0.0);
   }
 
   /** 検出した色の中心座標のY軸(上下)を返す */
-  public double getDetectedCentorAreaY() {
+  public double getDetectedCenterAreaY() {
     return detectedAreaY.getDouble(0.0);
   }
 
