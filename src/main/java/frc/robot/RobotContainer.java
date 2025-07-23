@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.NewElevator;
-import frc.robot.commands.task.Kadai_0621;
+import frc.robot.commands.task.Kadai_0721;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.SimpleCamera;
 import frc.robot.subsystems.TitanKilloughDrive;
@@ -34,7 +34,7 @@ public class RobotContainer {
   private final NewElevator elevator = new NewElevator();
   private final Arm arm = new Arm();
 
-  private final Kadai_0621 kadaiRunner = new Kadai_0621(drive, camera, sonar);
+  private final Kadai_0721 kadaiRunner = new Kadai_0721(drive, camera, sonar);
 
   // private final CommandTester tester = new CommandTester(drive, sonar, camera, elevator);
 

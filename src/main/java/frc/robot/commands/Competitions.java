@@ -22,7 +22,7 @@ public class Competitions {
 
   private static final double maxSpeed = 0.3;
 
-  final double targetForwardDistanceMM = 150;
+  final double targetForwardDistanceMM = 200;
   final double targetSideDistanceMM = 120;
 
   public Competitions(TitanKilloughDrive drive, SimpleCamera camera, UltraSonicSensor sonar) {
