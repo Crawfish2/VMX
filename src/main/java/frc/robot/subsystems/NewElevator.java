@@ -100,6 +100,24 @@ public class NewElevator extends SubsystemExBase {
         (() -> getPosition() < position));
   }
 
+  /**
+   * 上昇するコマンド
+   */
+  public CommandBase RaiseCommand() {
+    return run(this::raise);
+  }
+
+  /**
+   * 下降するコマンド
+   */
+  public CommandBase LowerCommand() {
+    return run(this::lower);
+  }
+
+  public CommandBase StopCommand() {
+    return runOnce(this::stopMotor);
+  }
+
   @Override
   public void initSendable(SendableBuilder builder) {
     builder.setActuator(true);
