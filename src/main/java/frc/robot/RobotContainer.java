@@ -34,6 +34,8 @@ public class RobotContainer {
   private final NewElevator elevator = new NewElevator();
   private final Arm arm = new Arm();
 
+  // コンストラクタを走らせることが重要なだけなので、変数を使用しなくてもよい
+  @SuppressWarnings("unused")
   private final Kadai_0721 kadaiRunner = new Kadai_0721(drive, camera, sonar);
 
   // private final CommandTester tester = new CommandTester(drive, sonar, camera, elevator);
