@@ -159,21 +159,6 @@ public class TitanKilloughDrive extends SubsystemExBase {
   }
 
   /**
-   * エンコーダーを値をもとに、指定した距離進むコマンド
-   * コマンド初期化時に、エンコーダーの値をリセットする
-   *
-   * @param angle [-180..180] 進行方向の速度、角度に対して正の方向は前
-   * @param distance [mm] 移動したい距離
-   * @deprecated 代わりにmoveToPoseCommand()を使用すること
-   */
-  @Deprecated
-  public Command DriveDistanceCommand(double angle, double distance) {
-    final double speed = 0.3;
-    return functional(this::resetEncodersDistance, () -> drivePolar(speed, angle, 0), null,
-        () -> getDistancePolar(angle) > distance);
-  }
-
-  /**
    * モーターを停止する
    */
   public void stopMotor() {
@@ -200,30 +185,6 @@ public class TitanKilloughDrive extends SubsystemExBase {
   }
 
   /**
-   * 進んだ距離を角度指定で取得する
-   *
-   * @apiNote 回転を含む移動をした場合、進んだ距離は正確に取得できない
-   * @param angle [-180..180] 取得したい角度
-   * @return 指定した角度の方向に進んだ距離
-   */
-  @Deprecated
-  public double getDistancePolar(double angle) {
-    // 各モーターのエンコーダー距離を取得
-    double d_l = encoderLeft.getEncoderDistance();
-    double d_r = encoderRight.getEncoderDistance();
-    double d_b = encoderBack.getEncoderDistance();
-
-    // 各ホイールの寄与を計算
-    double contribution_left = d_l * Math.sin(Math.toRadians(angle + WHEEL_LEFT_ANGLE));
-    double contribution_right = d_r * Math.sin(Math.toRadians(angle + WHEEL_RIGHT_ANGLE));
-    double contribution_back = d_b * Math.sin(Math.toRadians(angle + WHEEL_BACK_ANGLE));
-
-    // 3つの寄与の平均を取ることで、指定方向の距離を得る
-    // FIXME: 距離が実際よりもかなり小さい値を返すので、修正する
-    return (contribution_left + contribution_right + contribution_back) / 3.0;
-  }
-
-  /**
    * 回転する距離を取得する
    *
    * @param angle [-180..180] 回転する角度
@@ -232,22 +193,6 @@ public class TitanKilloughDrive extends SubsystemExBase {
   public double getRotateDistance(double angle) {
     double distance = Math.toRadians(angle) * wheelDistanceFromCenter;
     return distance;
-  }
-
-  /**
-   * 指定した角度だけ回転するコマンド
-   *
-   * @param angle [-180..180] 回転する角度
-   */
-  @Deprecated
-  public Command RotateDistanceCommand(double angle) {
-    double speed = Math.copySign(0.3, angle); // 左(負)向きなら、左回転する
-
-    double distance = getRotateDistance(Math.abs(angle));
-    return functional(this::resetEncodersDistance,
-        () -> drivePolar(0, 0, speed), null,
-        // TODO: 3つのエンコーダーの距離の平均をとるようにする
-        () -> Math.abs(encoderLeft.getEncoderDistance()) > distance);
   }
 
   /**
