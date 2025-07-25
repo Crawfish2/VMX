@@ -17,6 +17,7 @@ import frc.robot.subsystems.UltraSonicSensor.UltraSonicPosition;
 
 public class Competitions {
   private final TitanKilloughDrive drive;
+  @SuppressWarnings("unused") // 後で作る
   private final SimpleCamera camera;
   private final UltraSonicSensor sonar;
 

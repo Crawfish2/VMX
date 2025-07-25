@@ -20,7 +20,6 @@ import frc.robot.util.SendableBox;
 
 public class Kadai_0621 {
   private final TitanKilloughDrive drive;
-  private final UltraSonicSensor sonar;
   private final SimpleCamera camera;
 
   private final Competitions comp;
@@ -28,7 +27,6 @@ public class Kadai_0621 {
   public Kadai_0621(TitanKilloughDrive drive, SimpleCamera camera, UltraSonicSensor sonar) {
     this.drive = drive;
     this.camera = camera;
-    this.sonar = sonar;
     comp = new Competitions(drive, camera, sonar);
 
     final var tab = Shuffleboard.getTab("Kadai");
