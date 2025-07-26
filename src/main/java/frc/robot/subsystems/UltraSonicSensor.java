@@ -15,13 +15,17 @@ import static frc.robot.Constants.Ultrasonic.middleLeftEchoPin;
 import static frc.robot.Constants.Ultrasonic.middleLeftPingPin;
 import static frc.robot.Constants.Ultrasonic.middleRightEchoPin;
 import static frc.robot.Constants.Ultrasonic.middleRightPingPin;
+import static frc.robot.Constants.Ultrasonic.rearLeftEchoPin;
+import static frc.robot.Constants.Ultrasonic.rearLeftPingPin;
+import static frc.robot.Constants.Ultrasonic.rearRightEchoPin;
+import static frc.robot.Constants.Ultrasonic.rearRightPingPin;
 
 /**
  * 超音波距離センサー
  */
 public class UltraSonicSensor extends SubsystemExBase {
   public static enum UltraSonicPosition {
-    frontLeft(0), frontRight(1), middleLeft(2), middleRight(3);
+    frontLeft(0), frontRight(1), middleLeft(2), middleRight(3), rearLeft(4), rearRight(5);
 
     private final int index;
 
@@ -38,7 +42,9 @@ public class UltraSonicSensor extends SubsystemExBase {
         new Ultrasonic(frontLeftPingPin, frontLeftEchoPin),
         new Ultrasonic(frontRightPingPin, frontRightEchoPin),
         new Ultrasonic(middleLeftPingPin, middleLeftEchoPin),
-        new Ultrasonic(middleRightPingPin, middleRightEchoPin)
+        new Ultrasonic(middleRightPingPin, middleRightEchoPin),
+        new Ultrasonic(rearLeftPingPin, rearLeftEchoPin),
+        new Ultrasonic(rearRightPingPin, rearRightEchoPin)
     };
     for (var sonar : sonars) {
       sonar.setAutomaticMode(true);
@@ -58,11 +64,15 @@ public class UltraSonicSensor extends SubsystemExBase {
     SendableRegistry.addChild(this, getSonar(UltraSonicPosition.frontRight));
     SendableRegistry.addChild(this, getSonar(UltraSonicPosition.middleLeft));
     SendableRegistry.addChild(this, getSonar(UltraSonicPosition.middleRight));
+    SendableRegistry.addChild(this, getSonar(UltraSonicPosition.rearLeft));
+    SendableRegistry.addChild(this, getSonar(UltraSonicPosition.rearRight));
 
     tab.add("FrontLeft", getSonar(UltraSonicPosition.frontLeft));
     tab.add("FrontRight", getSonar(UltraSonicPosition.frontRight));
     tab.add("MiddleLeft", getSonar(UltraSonicPosition.middleLeft));
     tab.add("MiddleRight", getSonar(UltraSonicPosition.middleRight));
+    tab.add("RearLeft", getSonar(UltraSonicPosition.rearLeft));
+    tab.add("RearRight", getSonar(UltraSonicPosition.rearRight));
   }
 
   private Ultrasonic getSonar(UltraSonicPosition pos) {

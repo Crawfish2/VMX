@@ -62,6 +62,11 @@ public final class Constants {
     public static final int middleLeftEchoPin = 7;
     public static final int middleRightPingPin = 0;
     public static final int middleRightEchoPin = 1;
+
+    public static final int rearLeftPingPin = 8;
+    public static final int rearLeftEchoPin = 9;
+    public static final int rearRightPingPin = 10;
+    public static final int rearRightEchoPin = 11;
   }
 
   public static class ArmConstants {
