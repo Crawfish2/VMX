@@ -15,9 +15,9 @@ public final class Constants {
     public static final double pulsePerRevolution = 1464;
 
     public static class DriveConstants {
-      public static final int WHEEL_LEFT = MOTOR2;
-      public static final int WHEEL_RIGHT = MOTOR0;
-      public static final int WHEEL_BACK = MOTOR3;
+      public static final int WHEEL_LEFT = MOTOR0;
+      public static final int WHEEL_RIGHT = MOTOR2;
+      public static final int WHEEL_BACK = MOTOR1;
 
       public static final int WHEEL_LEFT_ANGLE = 60;
       public static final int WHEEL_RIGHT_ANGLE = -60;
