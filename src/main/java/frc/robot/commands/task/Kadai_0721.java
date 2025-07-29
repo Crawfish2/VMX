@@ -1,11 +1,9 @@
 package frc.robot.commands.task;
 
 import java.util.function.Supplier;
-import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -17,6 +15,7 @@ import frc.robot.subsystems.UltraSonicSensor;
 import frc.robot.subsystems.SimpleCamera.ColorType;
 import frc.robot.util.Box;
 import frc.robot.util.SendableBox;
+import frc.robot.util.SendableDoubleBox;
 
 public class Kadai_0721 {
   private final SimpleCamera camera;
@@ -90,17 +89,5 @@ public class Kadai_0721 {
     tab.add(startGoal.get());
 
     return new SequentialCommandGroup(start.get(), catchLineA.get());
-  }
-}
-
-
-class SendableDoubleBox extends Box<Double> implements Sendable {
-  public SendableDoubleBox(double value) {
-    super(value);
-  }
-
-  @Override
-  public void initSendable(SendableBuilder builder) {
-    builder.addDoubleProperty("value", this::get, this::set);
   }
 }
