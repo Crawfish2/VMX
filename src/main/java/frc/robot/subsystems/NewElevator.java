@@ -1,18 +1,23 @@
 package frc.robot.subsystems;
 
 import com.studica.frc.ServoContinuous;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemExBase;
 import frc.robot.util.SaferMotor;
+import static frc.robot.Constants.TitanConstants.ElevatorConstants.safeLimitSwitchPin;;
 
 /** アームのエレベーター */
 // TODO: エレベーターのテストをする
 public class NewElevator extends SubsystemExBase {
   private final ServoContinuous servo;
   private final SaferMotor drive;
+
+  /** 下側のリミットスイッチ */
+  private final AnalogInput safeLimitSwitch;
 
   private static final double SPEED = 0.3;
 
@@ -21,8 +26,13 @@ public class NewElevator extends SubsystemExBase {
   public NewElevator() {
     servo = new ServoContinuous(ELEVATOR_CHANNEL);
     drive = new SaferMotor(servo);
+    safeLimitSwitch = new AnalogInput(safeLimitSwitchPin);
 
     registerToShuffleboard();
+  }
+
+  private boolean getInput(final AnalogInput input) {
+    return safeLimitSwitch.getValue() >= 4000;
   }
 
   /** Shuffleboardへの登録をする */
@@ -47,6 +57,14 @@ public class NewElevator extends SubsystemExBase {
     drive.stopMotor();
   }
 
+  /** エレベーターを下げる、リミットスイッチに接触すると止まる */
+  public void lowerSafe() {
+    // 接触していない
+    if (getInput(safeLimitSwitch)) {
+      lower();
+    }
+  }
+
   /**
    * 上昇するコマンド
    */
@@ -58,7 +76,7 @@ public class NewElevator extends SubsystemExBase {
    * 下降するコマンド
    */
   public CommandBase LowerCommand() {
-    return run(this::lower);
+    return run(this::lowerSafe); // 安全のため
   }
 
   public CommandBase StopCommand() {

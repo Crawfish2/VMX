@@ -40,6 +40,8 @@ public final class Constants {
     public static class ElevatorConstants {
       public static final int ELEVATOR = MOTOR1;
 
+      public static final int safeLimitSwitchPin = 2;
+
       /** gear radius(mm) */
       public static final double gearRadius = 6; // 3?
       /** Gear Ratio between encoder and wheel */
