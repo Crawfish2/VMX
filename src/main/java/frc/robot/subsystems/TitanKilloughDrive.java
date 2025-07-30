@@ -82,16 +82,16 @@ public class TitanKilloughDrive extends SubsystemExBase {
     tab.add(drive);
     tab.add(odometry);
 
-    tab.add(odometry.ResetPoseCommand(new Pose2d()));
+    tab.add(withName("Odometry Reset Pose", odometry.ResetPoseCommand(new Pose2d())));
 
-    final var targetX = tab.add("Target X", 0.0).getEntry();
-    final var targetY = tab.add("Target Y", 0.0).getEntry();
-    final var targetAngle = tab.add("Target Angle", 0.0).getEntry();
+    final var targetX = tab.add("Pos Driver Target X", 0.0).getEntry();
+    final var targetY = tab.add("Pos Driver Target Y", 0.0).getEntry();
+    final var targetAngle = tab.add("Pos Driver Target Angle", 0.0).getEntry();
 
-    tab.add(defer(() -> moveToPoseCommand(
+    tab.add(withName("Test Pos Driver", defer(() -> moveToPoseCommand(
         new Pose2d(targetX.getDouble(0.0), targetY.getDouble(0.0),
             Rotation2d.fromDegrees(targetAngle.getDouble(0.0))),
-        odometry::getPose)));
+        odometry::getPose))));
   }
 
   public void setDeadband(double deadband) {
