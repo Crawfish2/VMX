@@ -183,17 +183,10 @@ public class PositionDriver {
    * @param distance 目標までの距離
    * @return 適用後の速度
    */
-  // TODO: 実装を置き換える
   private double applyVelocityProfile(double distance) {
-    // 簡易的な実装
-    // 実際のロボットの特性に合わせて調整が必要
-    if (distance < 10)
-      return 0.10;
-    if (distance < 75)
-      return 0.15;
-    if (distance < 300)
-      return 0.3;
-    return 0.5; // 最大速度
+    final double[] inRange = {0, 2, 2, 30, 50};
+    final double[] outRange = {0, 0, 0.15, 0.2, 0.5};
+    return TransferFunction.transferFunction(distance, inRange, outRange);
   }
 
   /**
@@ -202,16 +195,10 @@ public class PositionDriver {
    * @param angleDiff 角度差（度）
    * @return 適用後の角速度（RobotDrive）
    */
-  // TODO: 実装を置き換える
   private double applyAngularProfile(double angleDiff) {
-    // 簡易的な実装
-    if (Math.abs(angleDiff) < 0.5)
-      return 0;
-    if (Math.abs(angleDiff) < 5)
-      return Math.copySign(0.10, angleDiff);
-    if (Math.abs(angleDiff) < 30)
-      return Math.copySign(0.15, angleDiff);
-    return Math.copySign(0.20, angleDiff); // 最大角速度
+    final double[] inRange = {0, 0.5, 0.5, 20};
+    final double[] outRange = {0, 0, 0.1, 0.3};
+    return TransferFunction.transferFunction(angleDiff, inRange, outRange);
   }
 
   /**
