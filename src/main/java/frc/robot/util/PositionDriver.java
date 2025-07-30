@@ -150,7 +150,7 @@ public class PositionDriver {
     double targetAngleDeg = phaseTargetPose.getRotation().getDegrees();
 
     // 角度差を計算（度単位）
-    double angleDiff = angleDiffDegrees(targetAngleDeg, currentAngleDeg);
+    double angleDiff = angleDiffDegrees(currentAngleDeg, targetAngleDeg);
 
     // 角速度計算
     double angularVelocity = applyAngularProfile(angleDiff);
