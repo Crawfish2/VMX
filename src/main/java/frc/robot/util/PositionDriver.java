@@ -150,12 +150,7 @@ public class PositionDriver {
     double targetAngleDeg = phaseTargetPose.getRotation().getDegrees();
 
     // 角度差を計算（度単位）
-    double angleDiff = targetAngleDeg - currentAngleDeg;
-    // -180 ～ +180 の範囲に正規化
-    while (angleDiff > 180)
-      angleDiff -= 360;
-    while (angleDiff < -180)
-      angleDiff += 360;
+    double angleDiff = angleDiffDegrees(targetAngleDeg, currentAngleDeg);
 
     // 角速度計算
     double angularVelocity = applyAngularProfile(angleDiff);
@@ -210,7 +205,14 @@ public class PositionDriver {
     return Math.min(timer.get() / accelerationTime, 1.0);
   }
 
-  private double angleDiffDegrees(double from, double to) {
+  /**
+   * 角度の差分(to - from)を計算する
+   *
+   * @param from もとの角度（度）
+   * @param to 次の角度?（度）
+   * @return -180 ～ +180 の範囲に正規化された角度の差分（度）
+   */
+  private static double angleDiffDegrees(double from, double to) {
     double diff = to - from;
     while (diff > 180)
       diff -= 360;
