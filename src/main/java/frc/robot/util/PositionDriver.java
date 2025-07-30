@@ -193,7 +193,9 @@ public class PositionDriver {
   private double applyAngularProfile(double angleDiff) {
     final double[] inRange = {0, 0.5, 0.5, 20};
     final double[] outRange = {0, 0, 0.1, 0.3};
-    return TransferFunction.transferFunction(angleDiff, inRange, outRange);
+
+    final double vel = TransferFunction.transferFunction(Math.abs(angleDiff), inRange, outRange);
+    return Math.copySign(vel, angleDiff);
   }
 
   /**
