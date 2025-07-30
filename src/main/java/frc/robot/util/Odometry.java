@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -48,8 +47,6 @@ public class Odometry implements Sendable {
 
   /** Shuffleboardへの登録をする */
   private void registerToShuffleboard() {
-    final var tab = Shuffleboard.getTab("Odometry");
-    tab.add(this.ResetPoseCommand(new Pose2d()));
     SendableRegistry.addChild(this, gyro);
     SendableRegistry.addLW(this, "Odometry");
   }

@@ -82,12 +82,13 @@ public class TitanKilloughDrive extends SubsystemExBase {
     tab.add(drive);
     tab.add(odometry);
 
-    final var posTab = Shuffleboard.getTab("Pos Driver");
-    final var targetX = posTab.add("Target X", 0.0).getEntry();
-    final var targetY = posTab.add("Target Y", 0.0).getEntry();
-    final var targetAngle = posTab.add("Target Angle", 0.0).getEntry();
+    tab.add(odometry.ResetPoseCommand(new Pose2d()));
 
-    posTab.add(defer(() -> moveToPoseCommand(
+    final var targetX = tab.add("Target X", 0.0).getEntry();
+    final var targetY = tab.add("Target Y", 0.0).getEntry();
+    final var targetAngle = tab.add("Target Angle", 0.0).getEntry();
+
+    tab.add(defer(() -> moveToPoseCommand(
         new Pose2d(targetX.getDouble(0.0), targetY.getDouble(0.0),
             Rotation2d.fromDegrees(targetAngle.getDouble(0.0))),
         odometry::getPose)));
