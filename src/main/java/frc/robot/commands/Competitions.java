@@ -14,6 +14,7 @@ import frc.robot.subsystems.SimpleCamera;
 import frc.robot.subsystems.TitanKilloughDrive;
 import frc.robot.subsystems.UltraSonicSensor;
 import frc.robot.subsystems.UltraSonicSensor.UltraSonicPosition;
+import frc.robot.util.TransferFunction;
 
 public class Competitions {
   private final TitanKilloughDrive drive;
@@ -39,6 +40,10 @@ public class Competitions {
     final var tab = Shuffleboard.getTab("Comp");
     tab.add("PoseCollection Left", PoseCollection(Direction.Left, new Pose2d()));
     tab.add("PoseCollection Right", PoseCollection(Direction.Right, new Pose2d()));
+    tab.add("PoseCollection Forward", PoseCollection(Direction.Left, new Pose2d()));
+
+    tab.add("PoseCollection Rear Left", PoseCollectionBack(Direction.Left, new Pose2d()));
+    tab.add("PoseCollection Rear Right", PoseCollectionBack(Direction.Right, new Pose2d()));
 
     Function<Direction, CommandBase> moveForwardDistanceCommand =
         (Direction direct) -> Commands.defer(() -> {
@@ -139,6 +144,56 @@ public class Competitions {
         Commands.run(
             () -> drive.driveCartesian(0, getForwardSpeed.getAsDouble(), 0), drive))
                 .withTimeout(timeout);
+  }
+
+  public CommandBase PoseCollectionBack(Direction direction, Pose2d pose) {
+    if (!Arrays.asList(new Direction[] {Direction.Left, Direction.Right}).contains(direction)) {
+      throw new RuntimeException("蛇行修正に使用する壁に左右どちらかを指定する必要がある");
+    }
+
+    final double timeout = 3.0;
+    final double[] RotateInRange = {-50, -30, -5, 0, 5, 30, 50};
+    final double[] RotateOutRange = {-0.2, -0.1, 0, 0, 0, 0.1, 0.2};
+
+    final double[] ForwardInRange = {-50, -30, -5, 0, 5, 30, 50};
+    final double[] ForwardOutRange = {-0.2, -0.1, 0, 0, 0, 0.1, 0.2};
+
+    final double[] LateralInRange = {-50, -30, -5, 0, 5, 30, 50};
+    final double[] LateralOutRange = {-0.2, -0.1, 0, 0, 0, 0.1, 0.2};
+
+    final DoubleSupplier getRotate =
+        () -> TransferFunction.transferFunction(
+            sonar.getRangeMM(UltraSonicPosition.rearRight)
+                - sonar.getRangeMM(UltraSonicPosition.rearLeft),
+            RotateInRange, RotateOutRange);
+
+
+    final DoubleSupplier getForwardSpeed =
+        () -> TransferFunction.transferFunction(
+            -(((sonar.getRangeMM(UltraSonicPosition.rearLeft)
+                + sonar.getRangeMM(UltraSonicPosition.rearRight)) / 2) - targetForwardDistanceMM),
+            ForwardInRange, ForwardOutRange);
+
+
+    final DoubleSupplier getLateralSpeed =
+        Direction.Left.equals(direction)
+            ? () -> -TransferFunction.transferFunction(
+                (sonar.getRangeMM(UltraSonicPosition.middleLeft)
+                    - targetSideDistanceMM),
+                LateralInRange,
+                LateralOutRange)
+            : () -> TransferFunction.transferFunction(
+                (sonar.getRangeMM(UltraSonicPosition.middleRight)
+                    - targetSideDistanceMM),
+                LateralInRange,
+                LateralOutRange);
+
+    return Commands.run(
+        () -> drive.driveCartesian(getLateralSpeed.getAsDouble(), getForwardSpeed.getAsDouble(),
+            getRotate.getAsDouble()),
+        drive, sonar)
+        .withTimeout(timeout)
+        .andThen(drive.odometry.ResetPoseCommand(pose));
   }
 
   public static enum Direction {
