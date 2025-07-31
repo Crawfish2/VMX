@@ -55,6 +55,7 @@ public final class Constants {
   }
 
   public static class Ultrasonic {
+    // https://docs.wsr.studica.com/en/latest/docs/Sensors/ultrasonic.html
     public static final int frontLeftPingPin = 10;
     public static final int frontRightPingPin = 8;
 
