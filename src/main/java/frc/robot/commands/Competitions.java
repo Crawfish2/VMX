@@ -90,8 +90,7 @@ public class Competitions {
    * @param pose 修正後の現在位置
    */
   public CommandBase PoseCollection(Direction direction, Pose2d pose) {
-    if (!Arrays.stream(new Direction[] {Direction.Left, Direction.Right})
-        .anyMatch(direct -> direct.equals(direction))) {
+    if (!Arrays.asList(new Direction[] {Direction.Left, Direction.Right}).contains(direction)) {
       throw new RuntimeException("蛇行修正に使用する壁に左右どちらかを指定する必要がある");
     }
 
