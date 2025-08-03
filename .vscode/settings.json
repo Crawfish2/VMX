@@ -17,6 +17,7 @@
     "JAVA_HOME": "C:\\Users\\Public\\wpilib\\2020\\jdk",
     "PATH": "C:\\Users\\Public\\wpilib\\2020\\jdk\\bin;${env:PATH}"
   },
+  "java.import.gradle.java.home": "C:\\Users\\Public\\wpilib\\2020\\jdk",
 
   "files.autoSave": "onFocusChange",
   "editor.formatOnSave": true,
