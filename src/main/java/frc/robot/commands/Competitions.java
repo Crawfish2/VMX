@@ -1,8 +1,11 @@
 package frc.robot.commands;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Set;
 import java.util.function.DoubleSupplier;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -14,6 +17,7 @@ import frc.robot.subsystems.SimpleCamera;
 import frc.robot.subsystems.TitanKilloughDrive;
 import frc.robot.subsystems.UltraSonicSensor;
 import frc.robot.subsystems.UltraSonicSensor.UltraSonicPosition;
+import frc.robot.util.DriveSpeed;
 import frc.robot.util.TransferFunction;
 
 public class Competitions {
@@ -81,11 +85,13 @@ public class Competitions {
         .functional(() -> drive.posDriver.setTarget(pose), () -> {
           var currentPose = drive.odometry.getPose();
           currentPose =
-              new Pose2d(currentPose.getTranslation().getX(), pose.getTranslation().getY(),
+              new Pose2d(currentPose.getTranslation().getX(),
+                  pose.getTranslation().getY(),
                   currentPose.getRotation());
           var vel = drive.posDriver.getVelocity(currentPose);
           drive.driveCartesian(getLateralSpeed.getAsDouble(), vel.vx, vel.zRotation);
-        }, (interrupted) -> drive.odometry.resetPose(pose), drive.posDriver::isCompleted, drive);
+        }, (interrupted) -> drive.odometry.resetPose(pose), drive.posDriver::isCompleted,
+            drive);
   }
 
   /**
@@ -108,11 +114,13 @@ public class Competitions {
     final DoubleSupplier getLateralSpeed =
         Direction.Left.equals(direction)
             ? () -> MathUtil.clamp(
-                -(sonar.getRangeMM(UltraSonicPosition.middleLeft) - targetSideDistanceMM) / 200,
+                -(sonar.getRangeMM(UltraSonicPosition.middleLeft)
+                    - targetSideDistanceMM) / 200,
                 -maxSpeed,
                 maxSpeed)
             : () -> MathUtil.clamp(
-                (sonar.getRangeMM(UltraSonicPosition.middleRight) - targetSideDistanceMM) / 200,
+                (sonar.getRangeMM(UltraSonicPosition.middleRight)
+                    - targetSideDistanceMM) / 200,
                 -maxSpeed,
                 maxSpeed);
 
@@ -120,7 +128,8 @@ public class Competitions {
         () -> MathUtil.clamp(sonar.getForwardDiff() / 100, -0.15, 0.15);
 
     return Commands.run(
-        () -> drive.driveCartesian(getLateralSpeed.getAsDouble(), getForwardSpeed.getAsDouble(),
+        () -> drive.driveCartesian(getLateralSpeed.getAsDouble(),
+            getForwardSpeed.getAsDouble(),
             getRotate.getAsDouble()),
         drive, sonar)
         .withTimeout(timeout)
@@ -171,7 +180,8 @@ public class Competitions {
     final DoubleSupplier getForwardSpeed =
         () -> TransferFunction.transferFunction(
             -(((sonar.getRangeMM(UltraSonicPosition.rearLeft)
-                + sonar.getRangeMM(UltraSonicPosition.rearRight)) / 2) - targetForwardDistanceMM),
+                + sonar.getRangeMM(UltraSonicPosition.rearRight)) / 2)
+                - targetForwardDistanceMM),
             ForwardInRange, ForwardOutRange);
 
 
@@ -189,11 +199,56 @@ public class Competitions {
                 LateralOutRange);
 
     return Commands.run(
-        () -> drive.driveCartesian(getLateralSpeed.getAsDouble(), getForwardSpeed.getAsDouble(),
+        () -> drive.driveCartesian(getLateralSpeed.getAsDouble(),
+            getForwardSpeed.getAsDouble(),
             getRotate.getAsDouble()),
         drive, sonar)
         .withTimeout(timeout)
         .andThen(drive.odometry.ResetPoseCommand(pose));
+  }
+
+
+  /**
+   * 新しい蛇行修正
+   *
+   * @param directions 調整に使う壁
+   * @return
+   * @deprecated 実装途中
+   */
+  @Deprecated // TODO: 実装する
+  public CommandBase newPoseCollection(final Set<Direction> directions) {
+    if (directions.isEmpty()) {
+      throw new RuntimeException("蛇行修正に使用する壁を一つ以上指定する必要がある");
+    }
+    ArrayList<Supplier<DriveSpeed>> speedSuppliers = new ArrayList<>();
+    for (Direction direction : directions) {
+      switch (direction) {
+        case Forward:
+          speedSuppliers.add(() -> {
+            return new DriveSpeed();
+          });
+          break;
+        case Back:
+          speedSuppliers.add(() -> {
+            return new DriveSpeed();
+          });
+          break;
+        case Right:
+          speedSuppliers.add(() -> {
+            return new DriveSpeed();
+          });
+          break;
+        case Left:
+          speedSuppliers.add(() -> {
+            return new DriveSpeed();
+          });
+          break;
+      }
+    }
+    return Commands
+        .run(() -> speedSuppliers.stream().reduce(new DriveSpeed(),
+            (a, b) -> a.plus(b.get()),
+            (a, b) -> a));
   }
 
   public static enum Direction {

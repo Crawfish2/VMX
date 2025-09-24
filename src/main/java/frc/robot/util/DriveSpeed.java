@@ -16,4 +16,8 @@ public class DriveSpeed {
     this.vy = vy;
     this.zRotation = zRotation;
   }
+
+  public DriveSpeed plus(DriveSpeed other) {
+    return new DriveSpeed(vx + other.vx, vy + other.vy, zRotation + other.zRotation);
+  }
 }
