@@ -119,11 +119,11 @@ public class PositionDriver {
    * @return [vx, vy]の速度ベクトル
    */
   private double[] computeLinearVelocity(Pose2d currentPose) {
-    double currentAngle = currentPose.getRotation().getRadians();
+    final double currentAngle = currentPose.getRotation().getRadians();
 
     // 極座標に変換
-    Translation2d diff = phaseTargetPose.getTranslation().minus(currentPose.getTranslation());
-    double distance = diff.getNorm();
+    final Translation2d diff = phaseTargetPose.getTranslation().minus(currentPose.getTranslation());
+    final double distance = diff.getNorm();
     double angle = Math.atan2(diff.getY(), diff.getX());
 
     // 速度調整
@@ -146,11 +146,11 @@ public class PositionDriver {
    * @return 回転速度（RobotDrive）
    */
   private double computeAngularVelocity(Pose2d currentPose) {
-    double currentAngleDeg = currentPose.getRotation().getDegrees();
-    double targetAngleDeg = phaseTargetPose.getRotation().getDegrees();
+    final double currentAngleDeg = currentPose.getRotation().getDegrees();
+    final double targetAngleDeg = phaseTargetPose.getRotation().getDegrees();
 
     // 角度差を計算（度単位）
-    double angleDiff = angleDiffDegrees(currentAngleDeg, targetAngleDeg);
+    final double angleDiff = angleDiffDegrees(currentAngleDeg, targetAngleDeg);
 
     // 角速度計算
     double angularVelocity = applyAngularProfile(angleDiff);
@@ -167,8 +167,8 @@ public class PositionDriver {
    * @return 移動速度 (RobotDrive)
    */
   private DriveSpeed computeDriveVelocity(Pose2d currentPose) {
-    double[] linear = computeLinearVelocity(currentPose);
-    double rotate = computeAngularVelocity(currentPose);
+    final double[] linear = computeLinearVelocity(currentPose);
+    final double rotate = computeAngularVelocity(currentPose);
     return new DriveSpeed(linear[0], linear[1], rotate);
   }
 
@@ -225,13 +225,13 @@ public class PositionDriver {
 
 
   private boolean isPositionReached(Pose2d current) {
-    var error = phaseTargetPose.getTranslation().minus(current.getTranslation());
+    final var error = phaseTargetPose.getTranslation().minus(current.getTranslation());
     return Math.abs(error.getX()) < positionTolerance
         && Math.abs(error.getY()) < positionTolerance;
   }
 
   private boolean isAngleReached(Pose2d current) {
-    double error =
+    final double error =
         angleDiffDegrees(current.getRotation().getDegrees(),
             phaseTargetPose.getRotation().getDegrees());
     return Math.abs(error) < angleTolerance;
